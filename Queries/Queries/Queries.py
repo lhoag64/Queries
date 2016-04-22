@@ -1,21 +1,83 @@
 import logging
-import sqlite3
-from   logconfig        import LogConfig
-from   activity         import Activity
-from   createweekstable import CreateWeeksTable
-from   lvt              import LvT
-from   utilcf           import UtilizationCF
+from   logconfig          import LogConfig
+from   database           import Database as Db
+from   timesheet.calendar import Calendar
+from   timesheet.faeteam  import FaeTeam
+from   timesheet.fldata   import FlData
+from   timesheet.tsdata   import TsData
+from   summary            import Summary
 
+#----------------------------------------------------------------------
+def InitializeDatabase():
+  Db()
+  Db.Connect(r'X:\Reporting\Timesheets','timesheets.db')
+
+  tblList = []
+  #tblList.append('fae_lbrtype')
+  #tblList.append('fae_loc')
+  #tblList.append('fae_prdtm')
+  #tblList.append('fae_region')
+  #tblList.append('fae_team')
+  tblList.append('ts_code')
+  #tblList.append('ts_loc')
+  #tblList.append('ts_act')
+  #tblList.append('ts_prd')
+  #tblList.append('ts_lts')
+  #tblList.append('ts_file')
+  #tblList.append('ts_entry')
+  #tblList.append('weeks')
+
+  Db.CreateTables(tblList)
+
+#----------------------------------------------------------------------
+def InitializeTimesheetData():
+
+  Calendar(2016)
+
+  rng = range(1,13+1)
+  #rng = range(1,1+1)
+
+  emea_team = FaeTeam('EMEA')
+  am_team   = FaeTeam('AM')
+  gc_team   = FaeTeam('GC')
+
+  #fldata = FlData(r'X:\Reporting\Timesheets\EMEA',emea_team)
+  #tsdata = TsData('EMEA',emea_team,rng,fldata)
+  #Db.InsertTimesheets(tsdata)
+
+  #fldata = FlData(r'X:\Reporting\Timesheets\AM',am_team)
+  #tsdata = TsData('AM',am_team,rng,fldata)
+  #Db.InsertTimesheets(tsdata)
+
+  #fldata = FlData(r'X:\Reporting\Timesheets\GC',gc_team)
+  #tsdata = TsData('GC',gc_team,rng,fldata)
+  #Db.InsertTimesheets(tsdata)
+
+  #db.close()
+
+#----------------------------------------------------------------------
 if (__name__ == '__main__'):
+
   LogConfig('queries.log')
   logging.debug('Start of Program')
 
-  db = sqlite3.connect(r'X:\Reporting\Timesheets\timesheets.db')
+  InitializeDatabase()
+  InitializeTimesheetData()
+
+  summary = Summary()
+  summary.AddMatrix('EMEA','METRICS','ALL')
+  #summary.AddMatrix('EMEA','FAE','ALL')
+  #summary.AddMatrix('EMEA','METRICS','JAN')
+
+  summary.Save('test.xlsx')
+
 
   #CreateWeeksTable(db) 
   #Activity(db) 
   #LvT(db)
-  UtilizationCF(db)
+  #UtilizationCF(db)
+  #UtilizationLS(db)
+  #Overtime(db)
 
   logging.debug('End of Program')
 

@@ -1,0 +1,79 @@
+import logging
+import re
+import sqlite3
+from   database.tables.table import Table
+
+#----------------------------------------------------------------------
+class TsCodeTable(Table):
+  def __init__(self):
+    pass
+
+  def Create(self,db,list):
+
+    c = db.cursor()
+
+    try:
+      c.execute('DROP TABLE ts_code')
+    except sqlite3.OperationalError:
+      pass
+
+    c.execute \
+      ( \
+        '''
+           CREATE TABLE ts_code
+             (
+               code     TEXT UNIQUE PRIMARY KEY,
+               desc     TEXT,
+               downtime INTEGER,
+               leave    INTEGER,
+               gkacct   INTEGER
+             )
+        '''
+      )
+
+    codes = set([])
+    rows = []
+    for item in list:
+      matches = []
+      for match in re.finditer('[-|–]',item):
+        matches.append((match.start(),match.end()))
+      if (len(matches) == 0):
+        if (item.find('DOWNTIME CODES') < 0):
+          logging.error('Can\'t find \'-\' in Code string:\'' + item + '\'')
+        continue
+      loc = matches[-1]
+      code = item[loc[1]:].strip()
+      desc = item[:loc[0]].strip()
+
+      if (code not in codes):
+        codes.add(code)
+      else:
+        logging.error('Code is already used:\'' + item + '\',skipping')
+        continue
+
+      downtime = 0
+      leave    = 0
+      gka      = 0
+
+# downtime - 4804,4807,4803,4901,1006
+
+      if (len(code) == 5):
+        if (code[:1] == 'X'):
+          if (code in ['X4804','X4807','X4803','X4901','X1006']):
+            downtime = 1
+          else:
+            leave = 1
+        else:
+          logging.error('Invalid Code:' + code)
+      elif (len(code) == 3):
+        if (code in ['ERC','NOK','NSN','ALU']):
+          gka = 1
+
+      row = (code,desc,downtime,leave,gka)
+      rows.append(row)
+
+    c.executemany('INSERT INTO ts_code VALUES (?,?,?,?,?)',rows)
+
+    db.commit()
+
+

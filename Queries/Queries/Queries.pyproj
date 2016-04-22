@@ -22,15 +22,283 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="activity.py" />
-    <Compile Include="createweekstable.py" />
-    <Compile Include="join.py">
+    <Compile Include="database\database.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="database\tables\faedata.py" />
+    <Compile Include="database\tables\faeloc.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="database\tables\faelbrtype.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="database\tables\faeprdteam.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="database\tables\faeregion.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="database\tables\faeteam.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="database\tables\masterts.py" />
+    <Compile Include="database\tables\table.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="database\tables\tsentry.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="database\tables\tsact.py" />
+    <Compile Include="database\tables\tscode.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="database\tables\tsfile.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="database\tables\tsloc.py" />
+    <Compile Include="database\tables\tslts.py" />
+    <Compile Include="database\tables\tsprd.py" />
+    <Compile Include="database\tables\weeks.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="database\tables\__init__.py" />
+    <Compile Include="database\tsdatabase.py" />
+    <Compile Include="database\__init__.py" />
     <Compile Include="logconfig.py" />
-    <Compile Include="lvt.py" />
+    <Compile Include="openpyxl\cell\cell.py" />
+    <Compile Include="openpyxl\cell\interface.py" />
+    <Compile Include="openpyxl\cell\read_only.py" />
+    <Compile Include="openpyxl\cell\text.py" />
+    <Compile Include="openpyxl\cell\__init__.py" />
+    <Compile Include="openpyxl\chartsheet\chartsheet.py" />
+    <Compile Include="openpyxl\chartsheet\custom.py" />
+    <Compile Include="openpyxl\chartsheet\properties.py" />
+    <Compile Include="openpyxl\chartsheet\protection.py" />
+    <Compile Include="openpyxl\chartsheet\publish.py" />
+    <Compile Include="openpyxl\chartsheet\relation.py" />
+    <Compile Include="openpyxl\chartsheet\views.py" />
+    <Compile Include="openpyxl\chartsheet\__init__.py" />
+    <Compile Include="openpyxl\chart\area_chart.py" />
+    <Compile Include="openpyxl\chart\axis.py" />
+    <Compile Include="openpyxl\chart\bar_chart.py" />
+    <Compile Include="openpyxl\chart\bubble_chart.py" />
+    <Compile Include="openpyxl\chart\chartspace.py" />
+    <Compile Include="openpyxl\chart\data_source.py" />
+    <Compile Include="openpyxl\chart\descriptors.py" />
+    <Compile Include="openpyxl\chart\error_bar.py" />
+    <Compile Include="openpyxl\chart\label.py" />
+    <Compile Include="openpyxl\chart\layout.py" />
+    <Compile Include="openpyxl\chart\legend.py" />
+    <Compile Include="openpyxl\chart\line_chart.py" />
+    <Compile Include="openpyxl\chart\marker.py" />
+    <Compile Include="openpyxl\chart\picture.py" />
+    <Compile Include="openpyxl\chart\pie_chart.py" />
+    <Compile Include="openpyxl\chart\radar_chart.py" />
+    <Compile Include="openpyxl\chart\reference.py" />
+    <Compile Include="openpyxl\chart\scatter_chart.py" />
+    <Compile Include="openpyxl\chart\series.py" />
+    <Compile Include="openpyxl\chart\series_factory.py" />
+    <Compile Include="openpyxl\chart\shapes.py" />
+    <Compile Include="openpyxl\chart\stock_chart.py" />
+    <Compile Include="openpyxl\chart\surface_chart.py" />
+    <Compile Include="openpyxl\chart\text.py" />
+    <Compile Include="openpyxl\chart\title.py" />
+    <Compile Include="openpyxl\chart\trendline.py" />
+    <Compile Include="openpyxl\chart\updown_bars.py" />
+    <Compile Include="openpyxl\chart\_3d.py" />
+    <Compile Include="openpyxl\chart\_chart.py" />
+    <Compile Include="openpyxl\chart\__init__.py" />
+    <Compile Include="openpyxl\comments\author.py" />
+    <Compile Include="openpyxl\comments\comments.py" />
+    <Compile Include="openpyxl\comments\properties.py" />
+    <Compile Include="openpyxl\comments\reader.py" />
+    <Compile Include="openpyxl\comments\writer.py" />
+    <Compile Include="openpyxl\comments\__init__.py" />
+    <Compile Include="openpyxl\compat\abc.py" />
+    <Compile Include="openpyxl\compat\functools.py" />
+    <Compile Include="openpyxl\compat\itertools.py" />
+    <Compile Include="openpyxl\compat\numbers.py" />
+    <Compile Include="openpyxl\compat\odict.py" />
+    <Compile Include="openpyxl\compat\singleton.py" />
+    <Compile Include="openpyxl\compat\strings.py" />
+    <Compile Include="openpyxl\compat\__init__.py" />
+    <Compile Include="openpyxl\conftest.py" />
+    <Compile Include="openpyxl\descriptors\base.py" />
+    <Compile Include="openpyxl\descriptors\excel.py" />
+    <Compile Include="openpyxl\descriptors\namespace.py" />
+    <Compile Include="openpyxl\descriptors\nested.py" />
+    <Compile Include="openpyxl\descriptors\sequence.py" />
+    <Compile Include="openpyxl\descriptors\serialisable.py" />
+    <Compile Include="openpyxl\descriptors\slots.py" />
+    <Compile Include="openpyxl\descriptors\__init__.py" />
+    <Compile Include="openpyxl\drawing\colors.py" />
+    <Compile Include="openpyxl\drawing\drawing.py" />
+    <Compile Include="openpyxl\drawing\effect.py" />
+    <Compile Include="openpyxl\drawing\fill.py" />
+    <Compile Include="openpyxl\drawing\graphic.py" />
+    <Compile Include="openpyxl\drawing\image.py" />
+    <Compile Include="openpyxl\drawing\line.py" />
+    <Compile Include="openpyxl\drawing\shape.py" />
+    <Compile Include="openpyxl\drawing\shapes.py" />
+    <Compile Include="openpyxl\drawing\spreadsheet_drawing.py" />
+    <Compile Include="openpyxl\drawing\text.py" />
+    <Compile Include="openpyxl\drawing\__init__.py" />
+    <Compile Include="openpyxl\formatting\formatting.py" />
+    <Compile Include="openpyxl\formatting\rule.py" />
+    <Compile Include="openpyxl\formatting\__init__.py" />
+    <Compile Include="openpyxl\formula\tokenizer.py" />
+    <Compile Include="openpyxl\formula\translate.py" />
+    <Compile Include="openpyxl\formula\__init__.py" />
+    <Compile Include="openpyxl\packaging\manifest.py" />
+    <Compile Include="openpyxl\packaging\relationship.py" />
+    <Compile Include="openpyxl\packaging\__init__.py" />
+    <Compile Include="openpyxl\reader\excel.py" />
+    <Compile Include="openpyxl\reader\strings.py" />
+    <Compile Include="openpyxl\reader\style.py" />
+    <Compile Include="openpyxl\reader\workbook.py" />
+    <Compile Include="openpyxl\reader\worksheet.py" />
+    <Compile Include="openpyxl\reader\__init__.py" />
+    <Compile Include="openpyxl\styles\alignment.py" />
+    <Compile Include="openpyxl\styles\borders.py" />
+    <Compile Include="openpyxl\styles\colors.py" />
+    <Compile Include="openpyxl\styles\differential.py" />
+    <Compile Include="openpyxl\styles\fills.py" />
+    <Compile Include="openpyxl\styles\fonts.py" />
+    <Compile Include="openpyxl\styles\hashable.py" />
+    <Compile Include="openpyxl\styles\named_styles.py" />
+    <Compile Include="openpyxl\styles\numbers.py" />
+    <Compile Include="openpyxl\styles\protection.py" />
+    <Compile Include="openpyxl\styles\proxy.py" />
+    <Compile Include="openpyxl\styles\styleable.py" />
+    <Compile Include="openpyxl\styles\__init__.py" />
+    <Compile Include="openpyxl\utils\bound_dictionary.py" />
+    <Compile Include="openpyxl\utils\datetime.py" />
+    <Compile Include="openpyxl\utils\exceptions.py" />
+    <Compile Include="openpyxl\utils\formulas.py" />
+    <Compile Include="openpyxl\utils\indexed_list.py" />
+    <Compile Include="openpyxl\utils\units.py" />
+    <Compile Include="openpyxl\utils\__init__.py" />
+    <Compile Include="openpyxl\workbook\child.py" />
+    <Compile Include="openpyxl\workbook\interface.py" />
+    <Compile Include="openpyxl\workbook\names\external.py" />
+    <Compile Include="openpyxl\workbook\names\named_range.py" />
+    <Compile Include="openpyxl\workbook\names\__init__.py" />
+    <Compile Include="openpyxl\workbook\properties.py" />
+    <Compile Include="openpyxl\workbook\read_only.py" />
+    <Compile Include="openpyxl\workbook\workbook.py" />
+    <Compile Include="openpyxl\workbook\__init__.py" />
+    <Compile Include="openpyxl\worksheet\datavalidation.py" />
+    <Compile Include="openpyxl\worksheet\dimensions.py" />
+    <Compile Include="openpyxl\worksheet\drawing.py" />
+    <Compile Include="openpyxl\worksheet\filters.py" />
+    <Compile Include="openpyxl\worksheet\header_footer.py" />
+    <Compile Include="openpyxl\worksheet\hyperlink.py" />
+    <Compile Include="openpyxl\worksheet\interface.py" />
+    <Compile Include="openpyxl\worksheet\page.py" />
+    <Compile Include="openpyxl\worksheet\pagebreak.py" />
+    <Compile Include="openpyxl\worksheet\pivot.py" />
+    <Compile Include="openpyxl\worksheet\properties.py" />
+    <Compile Include="openpyxl\worksheet\protection.py" />
+    <Compile Include="openpyxl\worksheet\read_only.py" />
+    <Compile Include="openpyxl\worksheet\related.py" />
+    <Compile Include="openpyxl\worksheet\views.py" />
+    <Compile Include="openpyxl\worksheet\worksheet.py" />
+    <Compile Include="openpyxl\worksheet\__init__.py" />
+    <Compile Include="openpyxl\writer\dump_worksheet.py" />
+    <Compile Include="openpyxl\writer\etree_worksheet.py" />
+    <Compile Include="openpyxl\writer\excel.py" />
+    <Compile Include="openpyxl\writer\lxml_worksheet.py" />
+    <Compile Include="openpyxl\writer\relations.py" />
+    <Compile Include="openpyxl\writer\strings.py" />
+    <Compile Include="openpyxl\writer\styles.py" />
+    <Compile Include="openpyxl\writer\theme.py" />
+    <Compile Include="openpyxl\writer\workbook.py" />
+    <Compile Include="openpyxl\writer\worksheet.py" />
+    <Compile Include="openpyxl\writer\write_only.py" />
+    <Compile Include="openpyxl\writer\__init__.py" />
+    <Compile Include="openpyxl\xml\constants.py" />
+    <Compile Include="openpyxl\xml\functions.py" />
+    <Compile Include="openpyxl\xml\namespace.py" />
+    <Compile Include="openpyxl\xml\__init__.py" />
+    <Compile Include="openpyxl\__init__.py" />
     <Compile Include="Queries.py" />
-    <Compile Include="utilcf.py" />
+    <Compile Include="summary\matrix\actvitivydata.py" />
+    <Compile Include="summary\matrix\faesheet.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="summary\matrix\actbylocdata.py" />
+    <Compile Include="summary\matrix\ltsdata.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="summary\matrix\matrix.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="summary\matrix\matrixsheet.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="summary\matrix\matrixdata.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="summary\matrix\matrixtable.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="summary\matrix\metricsheet.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="summary\matrix\utlcfdata.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="summary\matrix\utldtdata.py" />
+    <Compile Include="summary\matrix\overtimedata.py" />
+    <Compile Include="summary\matrix\utllsdata.py" />
+    <Compile Include="summary\matrix\gkadata.py" />
+    <Compile Include="summary\matrix\utlpsdata.py" />
+    <Compile Include="summary\matrix\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="summary\summary.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="summary\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="timesheet\calendar.py" />
+    <Compile Include="timesheet\faeteam.py" />
+    <Compile Include="timesheet\fldata.py" />
+    <Compile Include="timesheet\timesheet.py" />
+    <Compile Include="timesheet\tsdata.py" />
+    <Compile Include="timesheet\__init__.py" />
+    <Compile Include="xlinterface\colortable.py" />
+    <Compile Include="xlinterface\wrkbook.py" />
+    <Compile Include="xlinterface\wrksheet.py" />
+    <Compile Include="xlinterface\__init__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="database\" />
+    <Folder Include="database\tables\" />
+    <Folder Include="summary\" />
+    <Folder Include="openpyxl\" />
+    <Folder Include="openpyxl\cell\" />
+    <Folder Include="openpyxl\chartsheet\" />
+    <Folder Include="openpyxl\chart\" />
+    <Folder Include="openpyxl\comments\" />
+    <Folder Include="openpyxl\compat\" />
+    <Folder Include="openpyxl\descriptors\" />
+    <Folder Include="openpyxl\drawing\" />
+    <Folder Include="openpyxl\formatting\" />
+    <Folder Include="openpyxl\formula\" />
+    <Folder Include="openpyxl\packaging\" />
+    <Folder Include="openpyxl\reader\" />
+    <Folder Include="openpyxl\styles\" />
+    <Folder Include="openpyxl\utils\" />
+    <Folder Include="openpyxl\workbook\" />
+    <Folder Include="openpyxl\workbook\names\" />
+    <Folder Include="openpyxl\worksheet\" />
+    <Folder Include="openpyxl\writer\" />
+    <Folder Include="openpyxl\xml\" />
+    <Folder Include="summary\matrix\" />
+    <Folder Include="timesheet\" />
+    <Folder Include="xlinterface\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
