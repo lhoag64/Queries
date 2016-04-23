@@ -11,6 +11,8 @@ from   summary.matrix.gkadata       import GkaData
 from   summary.matrix.actbylocdata  import ActByLocData
 from   summary.matrix.faeawhdata    import FaeAwhData
 from   summary.matrix.faewhdata     import FaeWhData
+from   summary.matrix.faeltdata     import FaeLtData
+from   summary.matrix.faeotdata     import FaeOtData
 
 #----------------------------------------------------------------------
 class MatrixData:
@@ -43,4 +45,8 @@ class MatrixData:
       self.table = FaeAwhData(region,type,period)
     elif (type == 'FAE-WH'):
       self.table = FaeWhData(region,type,period)
+    elif (type == 'FAE-LT'):
+      self.table = FaeLtData(region,type,period)
+    elif (type == 'FAE-OT'):
+      self.table = FaeOtData(region,type,period)
 

@@ -223,6 +223,8 @@
     <Compile Include="openpyxl\__init__.py" />
     <Compile Include="Queries.py" />
     <Compile Include="summary\matrix\actvitivydata.py" />
+    <Compile Include="summary\matrix\faeotdata.py" />
+    <Compile Include="summary\matrix\faeltdata.py" />
     <Compile Include="summary\matrix\faewhdata.py" />
     <Compile Include="summary\matrix\faesheet.py">
       <SubType>Code</SubType>

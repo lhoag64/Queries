@@ -27,5 +27,9 @@ class FaeSheet:
     table = MatrixTable(ws,startRow,startCol,data)
     startRow += data.table.dataRows + 2
 
+    data  = MatrixData(region,'FAE-OT',period)
+    table = MatrixTable(ws,startRow,startCol,data)
+    startRow += data.table.dataRows + 2
+
 
 
