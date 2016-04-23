@@ -10,10 +10,10 @@ class MatrixSheet:
     self.ws = ws
     self.region = region
     self.type   = type
-    self.period = type
+    self.period = period
 
-    if (type == 'METRICS'):
-      self.sheet = MetricSheet(ws,region,type,period)
+#    if (type == 'METRICS'):
+#      self.sheet = MetricSheet(ws,region,type,period)
     if (type == 'FAE'):
       self.sheet = FaeSheet(ws,region,type,period)
 

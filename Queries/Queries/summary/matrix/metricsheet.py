@@ -16,7 +16,6 @@ class MetricSheet:
     startRow = 2
     startCol = 2
 
-
     data  = MatrixData(region,'ACTIVITY',period)
     table = MatrixTable(ws,startRow,startCol,data)
     startRow += data.table.dataRows + 2

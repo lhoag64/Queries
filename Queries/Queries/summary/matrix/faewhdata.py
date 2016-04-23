@@ -3,7 +3,7 @@ from   database.database     import Database as Db
 from   summary.matrix.matrix import Matrix
 
 #----------------------------------------------------------------------
-class FaeAwhData(Matrix):
+class FaeWhData(Matrix):
 #----------------------------------------------------------------------
   def __init__(self,region,type,period):
 
@@ -18,7 +18,7 @@ class FaeAwhData(Matrix):
         faeDict[(fae[0],fae[1])] = [fae[2],fae[3],fae[4]]
 
     weekList = Db.tsdb.weeksTbl.GetWeeks(Db.db,period)
-    result = Db.tsdb.tsEntryTbl.GetFaeAwhSum(Db.db,region,weekList)
+    result = Db.tsdb.tsEntryTbl.GetFaeWhSum(Db.db,region,weekList)
 
     data = [[None for i in range(len(result[0]))] for j in range(len(result))]
     for i in range(len(result)):
@@ -33,24 +33,22 @@ class FaeAwhData(Matrix):
 
     rowAvgList = super().calcRowAvg(rowSumList,weeks)
     conHrsList = []
-    maxHrsList = []
     for fae in faeList:
       conHrsList.append(fae[2])
-      maxHrsList.append(fae[3])
-    self.compData = [rowAvgList,conHrsList,maxHrsList]
+    self.compData = [rowAvgList,conHrsList]
 
     self.data     = super().calcData(data,len(faeList),weeks)
 
     self.dataCols = len(self.data)
     self.dataRows = len(self.data[0])
 
-    self.title = 'Actual Working Hours'
+    self.title = 'Working Hours'
     self.colDesc = []
     for i in range(self.dataCols):
       self.colDesc.append('Week ' + str(i+1))
 
     self.compCols = len(self.compData)
-    self.colCompDesc = ['Avg','ConHour','EUWTD']
+    self.colCompDesc = ['Avg','ConHour']
 
     self.rowDesc = []
     for fae in faeList:

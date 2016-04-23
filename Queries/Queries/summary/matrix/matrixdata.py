@@ -9,6 +9,8 @@ from   summary.matrix.utllsdata     import UtlLsData
 from   summary.matrix.overtimedata  import OverTimeData
 from   summary.matrix.gkadata       import GkaData
 from   summary.matrix.actbylocdata  import ActByLocData
+from   summary.matrix.faeawhdata    import FaeAwhData
+from   summary.matrix.faewhdata     import FaeWhData
 
 #----------------------------------------------------------------------
 class MatrixData:
@@ -39,4 +41,6 @@ class MatrixData:
       self.table = ActByLocData(region,type,period,**kwargs)
     elif (type == 'FAE-AWH'):
       self.table = FaeAwhData(region,type,period)
+    elif (type == 'FAE-WH'):
+      self.table = FaeWhData(region,type,period)
 

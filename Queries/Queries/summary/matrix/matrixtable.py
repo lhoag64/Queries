@@ -65,8 +65,8 @@ class MatrixTable:
         wsRow += 1
       wsCol += 1
 
-    wsRow = tRow + 1
     for i in range(len(table.compData)):
+      wsRow = tRow + 1
       for j in range(len(table.compData[i])):
         ws.SetCell(wsRow,wsCol,table.compData[i][j],table.dataFmt)
         wsRow += 1

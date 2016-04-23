@@ -513,6 +513,139 @@ class TsEntryTable(Table):
 
     return weekList
 
+ #--------------------------------------------------------------------
+  def GetFaeList(self,db,region,weeks):
+    c = db.cursor()
+    c.execute \
+      ( \
+        '''
+          SELECT fae.fname,fae.lname,fae.norm_hours,fae.max_hours,fae.lbr_type
+          FROM fae_team AS fae
+          WHERE region = ?
+          ORDER BY fae.lname,fae.fname
+        ''',(region,))
+    faeList = c.fetchall()
+
+    result = []
+    for fae in faeList:
+      result.append([fae[0],fae[1],fae[2],fae[3],fae[4]])
+
+    return result
+
+ #--------------------------------------------------------------------
+  def GetFaeAwhSum(self,db,region,weeks):
+
+    c = db.cursor()
+
+    c.execute \
+      ( \
+        '''
+          SELECT fae.fname,fae.lname,fae.norm_hours,fae.max_hours,lbr_type
+          FROM fae_team AS fae
+          WHERE region = ?
+          ORDER BY fae.lname,fae.fname
+        ''',(region,))
+    faes = c.fetchall()
+    faeList = []
+    faeDict = {}
+    for fae in faes:
+      faeList.append((fae[0],fae[1]))
+      faeDict[(fae[0],fae[1])] = (fae[2],fae[3],fae[4])
+
+    weekList = []
+    for i in range(len(weeks)):
+
+      wcDate = weeks[i][0]
+      weDate = self.getWeDate(wcDate)
+
+      c.execute \
+        ( \
+          '''
+            SELECT ts.fname,ts.lname,sum(ts.hours)
+            FROM ts_entry AS ts
+            INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)
+            INNER JOIN ts_code  AS wbs ON (ts.wbs_code = wbs.code)
+            WHERE ts.region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and wbs.leave = 0
+            GROUP BY ts.fname,ts.lname
+          ''',(region,wcDate,weDate))
+
+      hoursList = c.fetchall()
+      hoursDict = {}
+      for fae in hoursList:
+        if ((fae[0],fae[1]) not in hoursDict):
+          hoursDict[(fae[0],fae[1])] = float(fae[2])
+        else:
+          logging.error('Duplicate name in query results: ' + fae[0] + ' ' + fae[1])
+
+      data = []
+      for fae in faeList:
+        if ((fae[0],fae[1]) in hoursDict):
+          actHours = hoursDict[(fae[0],fae[1])]
+          data.append((fae[0],fae[1],actHours))
+        else:
+          data.append((fae[0],fae[1],0.0))
+
+      weekList.append(data)
+
+    return weekList
+
+ #--------------------------------------------------------------------
+  def GetFaeWhSum(self,db,region,weeks):
+
+    c = db.cursor()
+
+    c.execute \
+      ( \
+        '''
+          SELECT fae.fname,fae.lname,fae.norm_hours,fae.max_hours,lbr_type
+          FROM fae_team AS fae
+          WHERE region = ?
+          ORDER BY fae.lname,fae.fname
+        ''',(region,))
+    faes = c.fetchall()
+    faeList = []
+    faeDict = {}
+    for fae in faes:
+      faeList.append((fae[0],fae[1]))
+      faeDict[(fae[0],fae[1])] = (fae[2],fae[3],fae[4])
+
+    weekList = []
+    for i in range(len(weeks)):
+
+      wcDate = weeks[i][0]
+      weDate = self.getWeDate(wcDate)
+
+      c.execute \
+        ( \
+          '''
+            SELECT ts.fname,ts.lname,sum(ts.hours)
+            FROM ts_entry AS ts
+            INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)
+            INNER JOIN ts_code  AS wbs ON (ts.wbs_code = wbs.code)
+            WHERE ts.region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
+            GROUP BY ts.fname,ts.lname
+          ''',(region,wcDate,weDate))
+
+      hoursList = c.fetchall()
+      hoursDict = {}
+      for fae in hoursList:
+        if ((fae[0],fae[1]) not in hoursDict):
+          hoursDict[(fae[0],fae[1])] = float(fae[2])
+        else:
+          logging.error('Duplicate name in query results: ' + fae[0] + ' ' + fae[1])
+
+      data = []
+      for fae in faeList:
+        if ((fae[0],fae[1]) in hoursDict):
+          actHours = hoursDict[(fae[0],fae[1])]
+          data.append((fae[0],fae[1],actHours))
+        else:
+          data.append((fae[0],fae[1],0.0))
+
+      weekList.append(data)
+
+    return weekList
+
   #--------------------------------------------------------------------
   def generateEntry(self,db,region,ts,entry,check):
 

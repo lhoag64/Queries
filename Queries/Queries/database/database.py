@@ -73,6 +73,10 @@ class Database:
   def GetActByLocSum(region,act,loc,period):
     return Database.tsdb.GetActByLocSum(region,act,loc,period)
 
+  #--------------------------------------------------------------------
+  def GetFaeAwhSum(region,period):
+    return Database.tsdb.GetFaeAwhSum(region,period)
+
 
 
 

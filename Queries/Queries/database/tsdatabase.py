@@ -132,6 +132,10 @@ class TsDatabase:
     return self.tsEntryTbl.GetActByLocSum(self.db,region,act,loc,period)
 
   #--------------------------------------------------------------------
+  def GetFaeAwhSum(self,region,period):
+    return self.tsEntryTbl.GetFaeAwhSum(self.db,region,period)
+
+  #--------------------------------------------------------------------
   def createFaeLbrTypeTbl(self):
     self.faeLbrTypeTbl.Create(self.db,Fae.LaborTypes)
 
