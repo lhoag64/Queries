@@ -17,6 +17,8 @@ class UtlDtData(Matrix):
     colSumList = super().calcColSum(data)
     rowSumList = super().calcRowSum(data)
     weeks      = super().calcCols(colSumList)
+    if (weeks != len(weekList)):
+      weeks = len(weekList)
     rowAvgList = super().calcRowAvg(rowSumList,weeks)
 
     self.compData = [rowAvgList]

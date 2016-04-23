@@ -1,4 +1,5 @@
 import logging
+import datetime
 import re
 import sqlite3
 from   database.tables.table import Table
@@ -7,6 +8,14 @@ from   database.tables.table import Table
 class TsEntryTable(Table):
   def __init__(self):
     pass
+
+  #--------------------------------------------------------------------
+  def getWeDate(self,wc):
+    stxt = wc.split('-')
+    wcDate = datetime.date(int(stxt[0]),int(stxt[1]),int(stxt[2]))
+    weDate = wcDate + datetime.timedelta(days=6)
+    weDate = weDate.strftime('%Y-%m-%d')
+    return weDate
 
   #--------------------------------------------------------------------
   def Create(self,db):
@@ -95,15 +104,19 @@ class TsEntryTable(Table):
     c = db.cursor()
 
     weekList = []
-    for i in range(len(weeks)-1):
+    for i in range(len(weeks)):
+
+      wcDate = weeks[i][0]
+      weDate = self.getWeDate(wcDate)
+
       c.execute \
         ( \
           '''
             SELECT activity, SUM(hours) AS total
             FROM ts_entry AS ts
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date < ?)
+            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
             GROUP BY activity
-          ''',(region,weeks[i][0],weeks[i+1][0]))
+          ''',(region,wcDate,weDate))
 
       resultList = c.fetchall()
       resultDict = {}
@@ -128,15 +141,19 @@ class TsEntryTable(Table):
     c = db.cursor()
 
     weekList = []
-    for i in range(len(weeks)-1):
+    for i in range(len(weeks)):
+
+      wcDate = weeks[i][0]
+      weDate = self.getWeDate(wcDate)
+
       c.execute \
         ( \
           '''
             SELECT work_type, SUM(hours) AS total
             FROM ts_entry AS ts
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date < ?)
+            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
             GROUP BY work_type
-          ''',(region,weeks[i][0],weeks[i+1][0]))
+          ''',(region,wcDate,weDate))
 
       resultList = c.fetchall()
       resultDict = {}
@@ -161,7 +178,10 @@ class TsEntryTable(Table):
     c = db.cursor()
 
     weekList = []
-    for i in range(len(weeks)-1):
+    for i in range(len(weeks)):
+
+      wcDate = weeks[i][0]
+      weDate = self.getWeDate(wcDate)
 
       c.execute \
         ( \
@@ -169,9 +189,9 @@ class TsEntryTable(Table):
             SELECT act.billable,sum(ts.hours)
             FROM ts_entry AS ts
             INNER JOIN ts_act AS act ON ts.activity = act.act
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date < ?)
+            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
             GROUP BY act.billable
-          ''',(region,weeks[i][0],weeks[i+1][0]))
+          ''',(region,wcDate,weDate))
 
       utlList = c.fetchall()
 
@@ -180,16 +200,22 @@ class TsEntryTable(Table):
           '''
             SELECT sum(ts.hours)
             FROM ts_entry AS ts
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date < ?)
-          ''',(region,weeks[i][0],weeks[i+1][0]))
+            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
+          ''',(region,wcDate,weDate))
 
       totList = c.fetchall()
 
+      billable = 0.0
+      for item in utlList:
+        if (item[0] == 1):
+          billable = item[1]
+          break
+
       if (len(utlList) > 0):
-        data = [utlList[1][1],totList[0][0],utlList[1][1]/totList[0][0] * 100.0]
+        data = [billable,totList[0][0],billable/totList[0][0] * 100.0]
       else:
         data = [0.0,0.0,0.0]
-      logging.debug(str(data[0]).rjust(5) + ' ' + str(data[1]).rjust(5))
+      #logging.debug(str(data[0]).rjust(5) + ' ' + str(data[1]).rjust(5))
 
       weekList.append(data)
 
@@ -201,7 +227,10 @@ class TsEntryTable(Table):
     c = db.cursor()
 
     weekList = []
-    for i in range(len(weeks)-1):
+    for i in range(len(weeks)):
+
+      wcDate = weeks[i][0]
+      weDate = self.getWeDate(wcDate)
 
       c.execute \
         ( \
@@ -209,9 +238,9 @@ class TsEntryTable(Table):
             SELECT act.pre_sales,sum(ts.hours)
             FROM ts_entry AS ts
             INNER JOIN ts_act AS act ON ts.activity = act.act
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date < ?)
+            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
             GROUP BY act.billable
-          ''',(region,weeks[i][0],weeks[i+1][0]))
+          ''',(region,wcDate,weDate))
 
       utlList = c.fetchall()
 
@@ -220,16 +249,22 @@ class TsEntryTable(Table):
           '''
             SELECT sum(ts.hours)
             FROM ts_entry AS ts
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date < ?)
-          ''',(region,weeks[i][0],weeks[i+1][0]))
+            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
+          ''',(region,wcDate,weDate))
 
       totList = c.fetchall()
 
+      presale = 0.0
+      for item in utlList:
+        if (item[0] == 1):
+          presale = item[1]
+          break
+
       if (len(utlList) > 0):
-        data = [utlList[0][1],totList[0][0],utlList[0][1]/totList[0][0] * 100.0]
+        data = [presale,totList[0][0],presale/totList[0][0] * 100.0]
       else:
         data = [0.0,0.0,0.0]
-      logging.debug(str(data[0]).rjust(5) + ' ' + str(data[1]).rjust(5))
+      #logging.debug(str(data[0]).rjust(5) + ' ' + str(data[1]).rjust(5))
 
       weekList.append(data)
 
@@ -241,7 +276,10 @@ class TsEntryTable(Table):
     c = db.cursor()
 
     weekList = []
-    for i in range(len(weeks)-1):
+    for i in range(len(weeks)):
+
+      wcDate = weeks[i][0]
+      weDate = self.getWeDate(wcDate)
 
       c.execute \
         ( \
@@ -249,9 +287,9 @@ class TsEntryTable(Table):
             SELECT wbs.code,wbs.downtime,wbs.leave,sum(ts.hours)
             FROM ts_entry AS ts
             INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date < ?) and (wbs.downtime = 1)
+            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and (wbs.downtime = 1)
             GROUP BY wbs.code
-          ''',(region,weeks[i][0],weeks[i+1][0]))
+          ''',(region,wcDate,weDate))
 
       utlList = c.fetchall()
 
@@ -260,8 +298,8 @@ class TsEntryTable(Table):
           '''
             SELECT sum(ts.hours)
             FROM ts_entry AS ts
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date < ?)
-          ''',(region,weeks[i][0],weeks[i+1][0]))
+            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
+          ''',(region,wcDate,weDate))
 
       totList = c.fetchall()
 
@@ -273,7 +311,7 @@ class TsEntryTable(Table):
         data = [sum,tot,sum/tot * 100.0]
       else:
         data = [0.0,0.0,0.0]
-      logging.debug(str(data[0]).rjust(5) + ' ' + str(data[1]).rjust(5))
+      #logging.debug(str(data[0]).rjust(5) + ' ' + str(data[1]).rjust(5))
 
       weekList.append(data)
 
@@ -285,7 +323,10 @@ class TsEntryTable(Table):
     c = db.cursor()
 
     weekList = []
-    for i in range(len(weeks)-1):
+    for i in range(len(weeks)):
+
+      wcDate = weeks[i][0]
+      weDate = self.getWeDate(wcDate)
 
       c.execute \
         ( \
@@ -293,9 +334,9 @@ class TsEntryTable(Table):
             SELECT wbs.code,wbs.downtime,wbs.leave,sum(ts.hours)
             FROM ts_entry AS ts
             INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date < ?) and (wbs.leave = 1)
+            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and (wbs.leave = 1)
             GROUP BY wbs.code
-          ''',(region,weeks[i][0],weeks[i+1][0]))
+          ''',(region,wcDate,weDate))
 
       utlList = c.fetchall()
 
@@ -304,8 +345,8 @@ class TsEntryTable(Table):
           '''
             SELECT sum(ts.hours)
             FROM ts_entry AS ts
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date < ?)
-          ''',(region,weeks[i][0],weeks[i+1][0]))
+            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
+          ''',(region,wcDate,weDate))
 
       totList = c.fetchall()
 
@@ -317,7 +358,7 @@ class TsEntryTable(Table):
         data = [sum,tot,sum/tot * 100.0]
       else:
         data = [0.0,0.0,0.0]
-      logging.debug(str(data[0]).rjust(5) + ' ' + str(data[1]).rjust(5))
+      #logging.debug(str(data[0]).rjust(5) + ' ' + str(data[1]).rjust(5))
 
       weekList.append(data)
 
@@ -328,7 +369,10 @@ class TsEntryTable(Table):
 
     c = db.cursor()
     weekList = []
-    for i in range(len(weeks)-1):
+    for i in range(len(weeks)):
+
+      wcDate = weeks[i][0]
+      weDate = self.getWeDate(wcDate)
 
       c.execute \
         ( \
@@ -343,8 +387,8 @@ class TsEntryTable(Table):
           '''
             SELECT sum(hours)
             FROM ts_entry AS ts
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date < ?)
-          ''',(region,weeks[i][0],weeks[i+1][0]))
+            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
+          ''',(region,wcDate,weDate))
 
       totList = c.fetchall()
 
@@ -355,7 +399,7 @@ class TsEntryTable(Table):
         data = [ot,nrm,ot/tot * 100.0]
       else:
         data = [0.0,0.0,0.0]
-      logging.debug(str(data[0]).rjust(5) + ' ' + str(data[1]).rjust(5))
+      #logging.debug(str(data[0]).rjust(5) + ' ' + str(data[1]).rjust(5))
 
       weekList.append(data)
 
@@ -366,7 +410,10 @@ class TsEntryTable(Table):
 
     c = db.cursor()
     weekList = []
-    for i in range(len(weeks)-1):
+    for i in range(len(weeks)):
+
+      wcDate = weeks[i][0]
+      weDate = self.getWeDate(wcDate)
 
       c.execute \
         ( \
@@ -374,10 +421,10 @@ class TsEntryTable(Table):
             SELECT wbs.code,sum(ts.hours)
             FROM ts_entry AS ts
             INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date < ?) and 
+            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and 
               (wbs.gkacct = 1 or wbs.code = 'TTT' or wbs_code = 'COB' or wbs_code = 'OTH')
             GROUP BY wbs.code
-          ''',(region,weeks[i][0],weeks[i+1][0]))
+          ''',(region,wcDate,weDate))
 
       codesList = c.fetchall()
       codesDict = {}
@@ -395,11 +442,10 @@ class TsEntryTable(Table):
             SELECT wbs.code,sum(ts.hours)
             FROM ts_entry AS ts
             INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date < ?) and 
+            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and 
               (wbs.gkacct = 0 and wbs.code <> 'TTT' and wbs_code <> 'COB' and wbs_code <> 'OTH')
-
             GROUP BY wbs.code
-          ''',(region,weeks[i][0],weeks[i+1][0]))
+          ''',(region,wcDate,weDate))
       
       otherList = c.fetchall()
       otherSum = 0.0
@@ -425,22 +471,45 @@ class TsEntryTable(Table):
  #--------------------------------------------------------------------
   def GetActByLocSum(self,db,region,act,loc,weeks):
 
+    locSet = set([])
+    for item in loc:
+      locSet.add(item)
+
     c = db.cursor()
     weekList = []
-    for i in range(len(weeks)-1):
+    for i in range(len(weeks)):
+
+      wcDate = weeks[i][0]
+      weDate = self.getWeDate(wcDate)
 
       c.execute \
         ( \
           '''
-            SELECT ts.activity,ts.fae_loc,sum(ts.hours)
+            SELECT ts.activity,loc.loc,loc.desc,sum(ts.hours)
             FROM ts_entry AS ts
-            WHERE ts.region = ? and (ts.entry_date >= ? and ts.entry_date < ?) and ts.activity = ?
-            GROUP BY ts.fae_loc
-          ''',(region,weeks[i][0],weeks[i+1][0],act))
+            INNER JOIN ts_loc AS loc ON ts.work_loc = loc.loc
+            WHERE ts.region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and ts.activity = ?
+            GROUP BY ts.work_loc
+          ''',(region,wcDate,weDate,act))
 
       resultList = c.fetchall()
+      resultDict = {}
+      resultDict['Other (EMEA)'] = 0
+      for result in resultList:
+        if (result[0] and len(result[0]) > 0):
+          if (result[2] in locSet):
+            resultDict[result[2]] = result[3]
+          else:
+            resultDict['Other (EMEA)'] += result[3]
 
-      weekList.append(resultList)
+      data = []
+      for item in loc:
+        if (item in resultDict):
+          data.append(resultDict[item])
+        else:
+          data.append(0.0)
+
+      weekList.append(data)
 
     return weekList
 

@@ -66,7 +66,7 @@ if (__name__ == '__main__'):
 
   summary = Summary()
   summary.AddMatrix('EMEA','METRICS','ALL')
-  #summary.AddMatrix('EMEA','FAE','ALL')
+  summary.AddMatrix('EMEA','FAE','ALL')
   #summary.AddMatrix('EMEA','METRICS','JAN')
 
   summary.Save('test.xlsx')

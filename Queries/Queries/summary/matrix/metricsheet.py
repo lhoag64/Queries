@@ -50,10 +50,10 @@ class MetricSheet:
     startRow += data.table.dataRows + 2
 
     actList = [10,11,12,13,14,15,16,17,18,19,20,21,22,23]
-    locList = ['UK','SE','FI','FR','DE']
+    locList = ['UK','Sweden','Finland','France','Germany','Other (EMEA)']
     for act in actList:
       data  = MatrixData(region,'ACT-BY-LOC',period,act=act,loc=locList)
-      table = MatrixTable(ws,startRow,startCol,act,loc,data)
+      table = MatrixTable(ws,startRow,startCol,data)
       startRow += data.table.dataRows + 2
 
 

@@ -36,7 +36,7 @@ class MatrixData:
     elif (type == 'GKA'):
       self.table = GkaData(region,type,period)
     elif (type == 'ACT-BY-LOC'):
-      #logging.debug(kwargs[0])
-      #logging.debug(kwargs[1])
       self.table = ActByLocData(region,type,period,**kwargs)
+    elif (type == 'FAE-AWH'):
+      self.table = FaeAwhData(region,type,period)
 

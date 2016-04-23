@@ -55,10 +55,21 @@ class WeeksTable(Table):
     c = db.cursor()
 
     if (period == 'ALL'):
+
+      c.execute \
+        ( \
+          '''
+             SELECT MAX(entry_date) FROM ts_entry
+          '''
+        )
+      resultList = c.fetchall()
+
       now = datetime.date.today().strftime("%Y-%m-%d")
+      max = resultList[0][0]
 
       weekStart = '2016-01-04'
       weekEnd   = now
+      weekEnd   = max
 
     c.execute \
       ( \
@@ -68,5 +79,5 @@ class WeeksTable(Table):
         '''
       ,(weekStart,weekEnd))
 
-    return c.fetchall()
-
+    resultList =  c.fetchall()
+    return resultList
