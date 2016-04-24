@@ -109,14 +109,24 @@ class TsEntryTable(Table):
       wcDate = weeks[i][0]
       weDate = self.getWeDate(wcDate)
 
-      c.execute \
-        ( \
-          '''
-            SELECT activity, SUM(hours) AS total
-            FROM ts_entry AS ts
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
-            GROUP BY activity
-          ''',(region,wcDate,weDate))
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT activity, SUM(hours) AS total
+              FROM ts_entry AS ts
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?)
+              GROUP BY activity
+            ''',(wcDate,weDate))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT activity, SUM(hours) AS total
+              FROM ts_entry AS ts
+              WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
+              GROUP BY activity
+            ''',(region,wcDate,weDate))
 
       resultList = c.fetchall()
       resultDict = {}
@@ -146,14 +156,24 @@ class TsEntryTable(Table):
       wcDate = weeks[i][0]
       weDate = self.getWeDate(wcDate)
 
-      c.execute \
-        ( \
-          '''
-            SELECT work_type, SUM(hours) AS total
-            FROM ts_entry AS ts
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
-            GROUP BY work_type
-          ''',(region,wcDate,weDate))
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT work_type, SUM(hours) AS total
+              FROM ts_entry AS ts
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?)
+              GROUP BY work_type
+            ''',(wcDate,weDate))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT work_type, SUM(hours) AS total
+              FROM ts_entry AS ts
+              WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
+              GROUP BY work_type
+            ''',(region,wcDate,weDate))
 
       resultList = c.fetchall()
       resultDict = {}
@@ -183,25 +203,45 @@ class TsEntryTable(Table):
       wcDate = weeks[i][0]
       weDate = self.getWeDate(wcDate)
 
-      c.execute \
-        ( \
-          '''
-            SELECT act.billable,sum(ts.hours)
-            FROM ts_entry AS ts
-            INNER JOIN ts_act AS act ON ts.activity = act.act
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
-            GROUP BY act.billable
-          ''',(region,wcDate,weDate))
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT act.billable,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN ts_act AS act ON ts.activity = act.act
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?)
+              GROUP BY act.billable
+            ''',(wcDate,weDate))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT act.billable,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN ts_act AS act ON ts.activity = act.act
+              WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
+              GROUP BY act.billable
+            ''',(region,wcDate,weDate))
 
       utlList = c.fetchall()
 
-      c.execute \
-        ( \
-          '''
-            SELECT sum(ts.hours)
-            FROM ts_entry AS ts
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
-          ''',(region,wcDate,weDate))
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT sum(ts.hours)
+              FROM ts_entry AS ts
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?)
+            ''',(wcDate,weDate))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT sum(ts.hours)
+              FROM ts_entry AS ts
+              WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
+            ''',(region,wcDate,weDate))
 
       totList = c.fetchall()
 
@@ -232,25 +272,45 @@ class TsEntryTable(Table):
       wcDate = weeks[i][0]
       weDate = self.getWeDate(wcDate)
 
-      c.execute \
-        ( \
-          '''
-            SELECT act.pre_sales,sum(ts.hours)
-            FROM ts_entry AS ts
-            INNER JOIN ts_act AS act ON ts.activity = act.act
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
-            GROUP BY act.billable
-          ''',(region,wcDate,weDate))
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT act.pre_sales,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN ts_act AS act ON ts.activity = act.act
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?)
+              GROUP BY act.billable
+            ''',(wcDate,weDate))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT act.pre_sales,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN ts_act AS act ON ts.activity = act.act
+              WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
+              GROUP BY act.billable
+            ''',(region,wcDate,weDate))
 
       utlList = c.fetchall()
 
-      c.execute \
-        ( \
-          '''
-            SELECT sum(ts.hours)
-            FROM ts_entry AS ts
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
-          ''',(region,wcDate,weDate))
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT sum(ts.hours)
+              FROM ts_entry AS ts
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?)
+            ''',(wcDate,weDate))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT sum(ts.hours)
+              FROM ts_entry AS ts
+              WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
+            ''',(region,wcDate,weDate))
 
       totList = c.fetchall()
 
@@ -264,7 +324,6 @@ class TsEntryTable(Table):
         data = [presale,totList[0][0],presale/totList[0][0] * 100.0]
       else:
         data = [0.0,0.0,0.0]
-      #logging.debug(str(data[0]).rjust(5) + ' ' + str(data[1]).rjust(5))
 
       weekList.append(data)
 
@@ -281,25 +340,45 @@ class TsEntryTable(Table):
       wcDate = weeks[i][0]
       weDate = self.getWeDate(wcDate)
 
-      c.execute \
-        ( \
-          '''
-            SELECT wbs.code,wbs.downtime,wbs.leave,sum(ts.hours)
-            FROM ts_entry AS ts
-            INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and (wbs.downtime = 1)
-            GROUP BY wbs.code
-          ''',(region,wcDate,weDate))
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT wbs.code,wbs.downtime,wbs.leave,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?) and (wbs.downtime = 1)
+              GROUP BY wbs.code
+            ''',(wcDate,weDate))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT wbs.code,wbs.downtime,wbs.leave,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
+              WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and (wbs.downtime = 1)
+              GROUP BY wbs.code
+            ''',(region,wcDate,weDate))
 
       utlList = c.fetchall()
 
-      c.execute \
-        ( \
-          '''
-            SELECT sum(ts.hours)
-            FROM ts_entry AS ts
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
-          ''',(region,wcDate,weDate))
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT sum(ts.hours)
+              FROM ts_entry AS ts
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?)
+            ''',(wcDate,weDate))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT sum(ts.hours)
+              FROM ts_entry AS ts
+              WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
+            ''',(region,wcDate,weDate))
 
       totList = c.fetchall()
 
@@ -328,25 +407,45 @@ class TsEntryTable(Table):
       wcDate = weeks[i][0]
       weDate = self.getWeDate(wcDate)
 
-      c.execute \
-        ( \
-          '''
-            SELECT wbs.code,wbs.downtime,wbs.leave,sum(ts.hours)
-            FROM ts_entry AS ts
-            INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and (wbs.leave = 1)
-            GROUP BY wbs.code
-          ''',(region,wcDate,weDate))
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT wbs.code,wbs.downtime,wbs.leave,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?) and (wbs.leave = 1)
+              GROUP BY wbs.code
+            ''',(wcDate,weDate))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT wbs.code,wbs.downtime,wbs.leave,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
+              WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and (wbs.leave = 1)
+              GROUP BY wbs.code
+            ''',(region,wcDate,weDate))
 
       utlList = c.fetchall()
 
-      c.execute \
-        ( \
-          '''
-            SELECT sum(ts.hours)
-            FROM ts_entry AS ts
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
-          ''',(region,wcDate,weDate))
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT sum(ts.hours)
+              FROM ts_entry AS ts
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?)
+            ''',(wcDate,weDate))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT sum(ts.hours)
+              FROM ts_entry AS ts
+              WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
+            ''',(region,wcDate,weDate))
 
       totList = c.fetchall()
 
@@ -358,7 +457,6 @@ class TsEntryTable(Table):
         data = [sum,tot,sum/tot * 100.0]
       else:
         data = [0.0,0.0,0.0]
-      #logging.debug(str(data[0]).rjust(5) + ' ' + str(data[1]).rjust(5))
 
       weekList.append(data)
 
@@ -374,21 +472,37 @@ class TsEntryTable(Table):
       wcDate = weeks[i][0]
       weDate = self.getWeDate(wcDate)
 
-      c.execute \
-        ( \
-          '''
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT sum(norm_hours) FROM fae_team
+            ''')
+      else:
+        c.execute \
+          ( \
+            '''
             SELECT sum(norm_hours) FROM fae_team WHERE region = ?
-          ''',(region,))
+            ''',(region,))
 
       nrmList = c.fetchall()
 
-      c.execute \
-      ( \
-          '''
-            SELECT sum(hours)
-            FROM ts_entry AS ts
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
-          ''',(region,wcDate,weDate))
+      if (region == 'ALL'):
+        c.execute \
+        ( \
+            '''
+              SELECT sum(hours)
+              FROM ts_entry AS ts
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?)
+            ''',(wcDate,weDate))
+      else:
+        c.execute \
+        ( \
+            '''
+              SELECT sum(hours)
+              FROM ts_entry AS ts
+              WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
+            ''',(region,wcDate,weDate))
 
       totList = c.fetchall()
 
@@ -415,16 +529,28 @@ class TsEntryTable(Table):
       wcDate = weeks[i][0]
       weDate = self.getWeDate(wcDate)
 
-      c.execute \
-        ( \
-          '''
-            SELECT wbs.code,sum(ts.hours)
-            FROM ts_entry AS ts
-            INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and 
-              (wbs.gkacct = 1 or wbs.code = 'TTT' or wbs_code = 'COB' or wbs_code = 'OTH')
-            GROUP BY wbs.code
-          ''',(region,wcDate,weDate))
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT wbs.code,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?) and 
+                (wbs.gkacct = 1 or wbs.code = 'TTT' or wbs_code = 'COB' or wbs_code = 'OTH')
+              GROUP BY wbs.code
+            ''',(wcDate,weDate))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT wbs.code,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
+              WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and 
+                (wbs.gkacct = 1 or wbs.code = 'TTT' or wbs_code = 'COB' or wbs_code = 'OTH')
+              GROUP BY wbs.code
+            ''',(region,wcDate,weDate))
 
       codesList = c.fetchall()
       codesDict = {}
@@ -436,16 +562,28 @@ class TsEntryTable(Table):
           else:
             codesDict[code[0]] = code[1]
 
-      c.execute \
-        ( \
-          '''
-            SELECT wbs.code,sum(ts.hours)
-            FROM ts_entry AS ts
-            INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
-            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and 
-              (wbs.gkacct = 0 and wbs.code <> 'TTT' and wbs_code <> 'COB' and wbs_code <> 'OTH')
-            GROUP BY wbs.code
-          ''',(region,wcDate,weDate))
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT wbs.code,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?) and 
+                (wbs.gkacct = 0 and wbs.code <> 'TTT' and wbs_code <> 'COB' and wbs_code <> 'OTH')
+              GROUP BY wbs.code
+            ''',(wcDate,weDate))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT wbs.code,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
+              WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and 
+                (wbs.gkacct = 0 and wbs.code <> 'TTT' and wbs_code <> 'COB' and wbs_code <> 'OTH')
+              GROUP BY wbs.code
+            ''',(region,wcDate,weDate))
       
       otherList = c.fetchall()
       otherSum = 0.0
@@ -482,15 +620,26 @@ class TsEntryTable(Table):
       wcDate = weeks[i][0]
       weDate = self.getWeDate(wcDate)
 
-      c.execute \
-        ( \
-          '''
-            SELECT ts.activity,loc.loc,loc.desc,sum(ts.hours)
-            FROM ts_entry AS ts
-            INNER JOIN ts_loc AS loc ON ts.work_loc = loc.loc
-            WHERE ts.region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and ts.activity = ?
-            GROUP BY ts.work_loc
-          ''',(region,wcDate,weDate,act))
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT ts.activity,loc.loc,loc.desc,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN ts_loc AS loc ON ts.work_loc = loc.loc
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?) and ts.activity = ?
+              GROUP BY ts.work_loc
+            ''',(wcDate,weDate,act))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT ts.activity,loc.loc,loc.desc,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN ts_loc AS loc ON ts.work_loc = loc.loc
+              WHERE ts.region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and ts.activity = ?
+              GROUP BY ts.work_loc
+            ''',(region,wcDate,weDate,act))
 
       resultList = c.fetchall()
       resultDict = {}
@@ -516,14 +665,25 @@ class TsEntryTable(Table):
  #--------------------------------------------------------------------
   def GetFaeList(self,db,region,weeks):
     c = db.cursor()
-    c.execute \
-      ( \
-        '''
-          SELECT fae.fname,fae.lname,fae.norm_hours,fae.max_hours,fae.lbr_type
-          FROM fae_team AS fae
-          WHERE region = ?
-          ORDER BY fae.lname,fae.fname
-        ''',(region,))
+
+    if (region == 'ALL'):
+      c.execute \
+        ( \
+          '''
+            SELECT fae.fname,fae.lname,fae.norm_hours,fae.max_hours,fae.lbr_type
+            FROM fae_team AS fae
+            ORDER BY fae.lname,fae.fname
+          ''')
+    else:
+      c.execute \
+        ( \
+          '''
+            SELECT fae.fname,fae.lname,fae.norm_hours,fae.max_hours,fae.lbr_type
+            FROM fae_team AS fae
+            WHERE region = ?
+            ORDER BY fae.lname,fae.fname
+          ''',(region,))
+
     faeList = c.fetchall()
 
     result = []
@@ -537,14 +697,24 @@ class TsEntryTable(Table):
 
     c = db.cursor()
 
-    c.execute \
-      ( \
-        '''
-          SELECT fae.fname,fae.lname,fae.norm_hours,fae.max_hours,lbr_type
-          FROM fae_team AS fae
-          WHERE region = ?
-          ORDER BY fae.lname,fae.fname
-        ''',(region,))
+    if (region == 'ALL'):
+      c.execute \
+        ( \
+          '''
+            SELECT fae.fname,fae.lname,fae.norm_hours,fae.max_hours,lbr_type
+            FROM fae_team AS fae
+            ORDER BY fae.lname,fae.fname
+          ''')
+    else:
+      c.execute \
+        ( \
+          '''
+            SELECT fae.fname,fae.lname,fae.norm_hours,fae.max_hours,lbr_type
+            FROM fae_team AS fae
+            WHERE region = ?
+            ORDER BY fae.lname,fae.fname
+          ''',(region,))
+
     faes = c.fetchall()
     faeList = []
     faeDict = {}
@@ -558,16 +728,28 @@ class TsEntryTable(Table):
       wcDate = weeks[i][0]
       weDate = self.getWeDate(wcDate)
 
-      c.execute \
-        ( \
-          '''
-            SELECT ts.fname,ts.lname,sum(ts.hours)
-            FROM ts_entry AS ts
-            INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)
-            INNER JOIN ts_code  AS wbs ON (ts.wbs_code = wbs.code)
-            WHERE ts.region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and wbs.leave = 0
-            GROUP BY ts.fname,ts.lname
-          ''',(region,wcDate,weDate))
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT ts.fname,ts.lname,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)
+              INNER JOIN ts_code  AS wbs ON (ts.wbs_code = wbs.code)
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?) and wbs.leave = 0
+              GROUP BY ts.fname,ts.lname
+            ''',(wcDate,weDate))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT ts.fname,ts.lname,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)
+              INNER JOIN ts_code  AS wbs ON (ts.wbs_code = wbs.code)
+              WHERE ts.region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and wbs.leave = 0
+              GROUP BY ts.fname,ts.lname
+            ''',(region,wcDate,weDate))
 
       hoursList = c.fetchall()
       hoursDict = {}
@@ -594,14 +776,24 @@ class TsEntryTable(Table):
 
     c = db.cursor()
 
-    c.execute \
-      ( \
-        '''
-          SELECT fae.fname,fae.lname,fae.norm_hours,fae.max_hours,lbr_type
-          FROM fae_team AS fae
-          WHERE region = ?
-          ORDER BY fae.lname,fae.fname
-        ''',(region,))
+    if (region == 'ALL'):
+      c.execute \
+        ( \
+          '''
+            SELECT fae.fname,fae.lname,fae.norm_hours,fae.max_hours,lbr_type
+            FROM fae_team AS fae
+            ORDER BY fae.lname,fae.fname
+          ''')
+    else:
+      c.execute \
+        ( \
+          '''
+            SELECT fae.fname,fae.lname,fae.norm_hours,fae.max_hours,lbr_type
+            FROM fae_team AS fae
+            WHERE region = ?
+            ORDER BY fae.lname,fae.fname
+          ''',(region,))
+
     faes = c.fetchall()
     faeList = []
     faeDict = {}
@@ -615,16 +807,28 @@ class TsEntryTable(Table):
       wcDate = weeks[i][0]
       weDate = self.getWeDate(wcDate)
 
-      c.execute \
-        ( \
-          '''
-            SELECT ts.fname,ts.lname,wbs.leave,sum(ts.hours)
-            FROM ts_entry AS ts
-            INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)
-            INNER JOIN ts_code  AS wbs ON (ts.wbs_code = wbs.code)
-            WHERE ts.region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
-            GROUP BY ts.fname,ts.lname,wbs.leave
-          ''',(region,wcDate,weDate))
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT ts.fname,ts.lname,wbs.leave,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)
+              INNER JOIN ts_code  AS wbs ON (ts.wbs_code = wbs.code)
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?)
+              GROUP BY ts.fname,ts.lname,wbs.leave
+            ''',(wcDate,weDate))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT ts.fname,ts.lname,wbs.leave,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)
+              INNER JOIN ts_code  AS wbs ON (ts.wbs_code = wbs.code)
+              WHERE ts.region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
+              GROUP BY ts.fname,ts.lname,wbs.leave
+            ''',(region,wcDate,weDate))
 
       hoursList = c.fetchall()
       resultSet = set([])
@@ -670,14 +874,24 @@ class TsEntryTable(Table):
 
     c = db.cursor()
 
-    c.execute \
-      ( \
-        '''
-          SELECT fae.fname,fae.lname,fae.norm_hours,fae.max_hours,lbr_type
-          FROM fae_team AS fae
-          WHERE region = ?
-          ORDER BY fae.lname,fae.fname
-        ''',(region,))
+    if (region == 'ALL'):
+      c.execute \
+        ( \
+          '''
+            SELECT fae.fname,fae.lname,fae.norm_hours,fae.max_hours,lbr_type
+            FROM fae_team AS fae
+            ORDER BY fae.lname,fae.fname
+          ''')
+    else:
+      c.execute \
+        ( \
+          '''
+            SELECT fae.fname,fae.lname,fae.norm_hours,fae.max_hours,lbr_type
+            FROM fae_team AS fae
+            WHERE region = ?
+            ORDER BY fae.lname,fae.fname
+          ''',(region,))
+
     faes = c.fetchall()
     faeList = []
     faeDict = {}
@@ -691,16 +905,28 @@ class TsEntryTable(Table):
       wcDate = weeks[i][0]
       weDate = self.getWeDate(wcDate)
 
-      c.execute \
-        ( \
-          '''
-            SELECT ts.fname,ts.lname,sum(ts.hours)
-            FROM ts_entry AS ts
-            INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)
-            INNER JOIN ts_code  AS wbs ON (ts.wbs_code = wbs.code)
-            WHERE ts.region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
-            GROUP BY ts.fname,ts.lname
-          ''',(region,wcDate,weDate))
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT ts.fname,ts.lname,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)
+              INNER JOIN ts_code  AS wbs ON (ts.wbs_code = wbs.code)
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?)
+              GROUP BY ts.fname,ts.lname
+            ''',(wcDate,weDate))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT ts.fname,ts.lname,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)
+              INNER JOIN ts_code  AS wbs ON (ts.wbs_code = wbs.code)
+              WHERE ts.region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
+              GROUP BY ts.fname,ts.lname
+            ''',(region,wcDate,weDate))
 
       hoursList = c.fetchall()
       hoursDict = {}
@@ -733,15 +959,26 @@ class TsEntryTable(Table):
       wcDate = weeks[i][0]
       weDate = self.getWeDate(wcDate)
 
-      c.execute \
-        ( \
-          '''
-            SELECT fae.lbr_type,sum(ts.hours)
-            FROM ts_entry AS ts
-            INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)
-            WHERE ts.region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
-            GROUP BY fae.lbr_type
-          ''',(region,wcDate,weDate))
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT fae.lbr_type,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?)
+              GROUP BY fae.lbr_type
+            ''',(wcDate,weDate))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT fae.lbr_type,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)
+              WHERE ts.region = ? and (ts.entry_date >= ? and ts.entry_date <= ?)
+              GROUP BY fae.lbr_type
+            ''',(region,wcDate,weDate))
 
       hoursList = c.fetchall()
       hoursDict = {}

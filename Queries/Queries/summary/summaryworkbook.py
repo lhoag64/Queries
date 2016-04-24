@@ -21,7 +21,7 @@ class SummaryWorkBook:
     if (period == 'ALL'):
       p = 'YTD'
     else:
-      p = '???'
+      p = period
 
     if (type == 'METRICS'):
       name = 'Matrix (' + region + '-' + p + ')'
