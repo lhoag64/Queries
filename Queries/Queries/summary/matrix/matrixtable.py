@@ -1,6 +1,6 @@
 import logging
-from   xlinterface                import WrkBook
-from   xlinterface                import WrkSheet
+from   xlinterface.xlworkbook     import XlWorkBook
+from   xlinterface.xlworksheet    import XlWorkSheet
 from   summary.matrix.matrixdata  import MatrixData
 
 #----------------------------------------------------------------------
@@ -88,12 +88,16 @@ class MatrixTable:
     bottomRow = tRow + dRows
     ws.DrawBorder(topRow,leftCol,bottomRow,rightCol,'medium')
 
+    self.fullDim = (topRow,leftCol,bottomRow,rightCol)
+
     # Across the top
     leftCol   = tCol
     rightCol  = tCol+dCols+cCols
     topRow    = tRow
     bottomRow = tRow
     ws.DrawBorder(topRow,leftCol,bottomRow,rightCol,'medium')
+
+    self.topDescDim = (topRow,leftCol+1,bottomRow,rightCol)
 
     # Along the left side
     leftCol   = tCol
@@ -102,11 +106,19 @@ class MatrixTable:
     bottomRow = tRow + dRows
     ws.DrawBorder(topRow,leftCol,bottomRow,rightCol,'medium')
 
+    self.leftDescDim = (topRow+1,leftCol,bottomRow,rightCol)
+
     # Along the right side
     leftCol   = tCol+1+dCols
     rightCol  = tCol+dCols+cCols
     topRow    = tRow
     bottomRow = tRow + dRows
     ws.DrawBorder(topRow,leftCol,bottomRow,rightCol,'medium')
+
+    topRow   = tRow
+    botRow   = tRow + dRows + cRows
+    leftCol  = tCol
+    rightCol = tCol + dCols + cCols
+
 
     logging.debug('')

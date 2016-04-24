@@ -1,6 +1,6 @@
 
 
-ColorTable =                             \
+XlColorTable =                             \
   {                                      \
     'Black'               : '00000000',  \
     'White'               : '00FFFFFF',  \
@@ -74,5 +74,12 @@ ColorTable =                             \
     'Sky Blue'            : '0087CEEB',  \
     'Light Sky Blue'      : '0087CEFA',  \
     'Midnight Blue'       : '00191970',  \
-    'Dark Blue'           : '0000008B'   \
+    'Dark Blue'           : '0000008B',  \
+    'Blue 1'              : '00538DD5',  \
+    'Blue 2'              : '008DB4E2',  \
+    'Blue 3'              : '00C5D9F1',  \
+    'Green 1'             : '0092D050',  \
+    'Yellow 1'            : '00FFFF00',  \
+    'Orange 1'            : '00FFC000',  \
+    'Red 1'               : '00FF0000'   \
   }

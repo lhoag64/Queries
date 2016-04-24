@@ -222,11 +222,27 @@
     <Compile Include="openpyxl\xml\__init__.py" />
     <Compile Include="openpyxl\__init__.py" />
     <Compile Include="Queries.py" />
+    <Compile Include="summary\charts\chart.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="summary\charts\chartdata.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="summary\charts\chartssheet.py" />
+    <Compile Include="summary\charts\faechartsheet.py" />
+    <Compile Include="summary\charts\linechart.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="summary\charts\metricchartsheet.py" />
+    <Compile Include="summary\charts\utldata.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="summary\charts\__init__.py" />
     <Compile Include="summary\matrix\actvitivydata.py" />
     <Compile Include="summary\matrix\faeotdata.py" />
     <Compile Include="summary\matrix\faeltdata.py" />
     <Compile Include="summary\matrix\faewhdata.py" />
-    <Compile Include="summary\matrix\faesheet.py">
+    <Compile Include="summary\matrix\faeworksheet.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="summary\matrix\actbylocdata.py" />
@@ -246,7 +262,7 @@
     <Compile Include="summary\matrix\matrixtable.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="summary\matrix\metricsheet.py">
+    <Compile Include="summary\matrix\metricworksheet.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="summary\matrix\utlcfdata.py">
@@ -260,9 +276,15 @@
     <Compile Include="summary\matrix\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="summary\summary.py">
+    <Compile Include="summary\summaryworkbook.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="summary\summary\faesummarysheet.py" />
+    <Compile Include="summary\summary\metricsummarysheet.py" />
+    <Compile Include="summary\summary\summarysheet.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="summary\summary\__init__.py" />
     <Compile Include="summary\__init__.py">
       <SubType>Code</SubType>
     </Compile>
@@ -272,9 +294,10 @@
     <Compile Include="timesheet\timesheet.py" />
     <Compile Include="timesheet\tsdata.py" />
     <Compile Include="timesheet\__init__.py" />
-    <Compile Include="xlinterface\colortable.py" />
-    <Compile Include="xlinterface\wrkbook.py" />
-    <Compile Include="xlinterface\wrksheet.py" />
+    <Compile Include="xlinterface\xlcolortable.py" />
+    <Compile Include="xlinterface\xlworkbook.py" />
+    <Compile Include="xlinterface\xlchrtsheet.py" />
+    <Compile Include="xlinterface\xlworksheet.py" />
     <Compile Include="xlinterface\__init__.py" />
   </ItemGroup>
   <ItemGroup>
@@ -301,6 +324,8 @@
     <Folder Include="openpyxl\writer\" />
     <Folder Include="openpyxl\xml\" />
     <Folder Include="summary\matrix\" />
+    <Folder Include="summary\charts\" />
+    <Folder Include="summary\summary\" />
     <Folder Include="timesheet\" />
     <Folder Include="xlinterface\" />
   </ItemGroup>

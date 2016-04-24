@@ -1,14 +1,14 @@
 import logging
 import openpyxl
-from   openpyxl.styles         import Font,Border,Alignment,Color,Style,PatternFill
-from   openpyxl.styles.borders import Side
-from   openpyxl.styles.fills   import FILL_SOLID
-from   .colortable             import ColorTable
+from   openpyxl.styles          import Font,Border,Alignment,Color,Style,PatternFill
+from   openpyxl.styles.borders  import Side
+from   openpyxl.styles.fills    import FILL_SOLID
+from   xlinterface.xlcolortable import XlColorTable as ColorTable
 
 alignType = {'C':'center','L':'left','R':'right'}
 colorType = {'Black':0,'Red':2,'Green':3,'Orange':19}
 
-class WrkSheet:
+class XlWorkSheet:
   def __init__(self,wb,ws,name):
     self.wb   = wb
     self.ws   = ws
@@ -29,6 +29,26 @@ class WrkSheet:
   #-------------------------------------------------------------------
   def SetRowHgt(self,col,hgt):
     self.ws.row_dimensions[col].height = hgt
+
+  #-------------------------------------------------------------------
+  def DrawRegion(self,tRow,lCol,bRow,rCol,bType=None,color=None):
+    ws = self.ws
+    if (color):
+      cFmt = {'fill':color}
+      for i in range(lCol,rCol+1):
+        for j in range(tRow,bRow+1):
+          self.SetFormat(j,i,cFmt)
+    if (bType):
+      for i in range(lCol,rCol+1):
+        tFmt = {'border':{'T':bType}}
+        self.SetFormat(tRow,i,tFmt)
+        bFmt = {'border':{'B':bType}}
+        self.SetFormat(bRow,i,bFmt)
+      for j in range(tRow,bRow+1):
+        lFmt = {'border':{'L':bType}}
+        self.SetFormat(j,lCol,lFmt)
+        rFmt = {'border':{'R':bType}}
+        self.SetFormat(j,rCol,rFmt)
 
   #-------------------------------------------------------------------
   def DrawBorder(self,tRow,lCol,bRow,rCol,type):
@@ -53,6 +73,8 @@ class WrkSheet:
   #-------------------------------------------------------------------
   def SetFormat(self,row,col,fmt):
     ws     = self.ws
+    font   = None
+    color  = None
     align  = None
     fill   = None
     numFmt = None
@@ -70,6 +92,18 @@ class WrkSheet:
         if (not align): align = Alignment()
         align.vertical   = alignType[fmt[i]]
 
+      elif (i == 'font'):
+        name = 'Calibri'
+        bold = False
+        size = 11
+        dict = fmt[i]
+        if ('emph' in dict):
+          if (dict['emph'] == 'B'):
+            bold = True
+        if ('size' in dict):
+          size = dict['size']
+        if (not font):
+            font = Font(name=name,size=size,bold=bold)
       elif (i == 'border'):
         dict = fmt[i]
         color = None
@@ -126,6 +160,9 @@ class WrkSheet:
         numFmt = fmt[i]
 
     #-------------------------------------------------------------------------
+    if (font):
+      c.font = font.copy()
+
     if (align):
       c.alignment = align.copy()
 

@@ -1,11 +1,11 @@
 import logging
-from   logconfig          import LogConfig
-from   database           import Database as Db
-from   timesheet.calendar import Calendar
-from   timesheet.faeteam  import FaeTeam
-from   timesheet.fldata   import FlData
-from   timesheet.tsdata   import TsData
-from   summary            import Summary
+from   logconfig               import LogConfig
+from   database                import Database as Db
+from   timesheet.calendar      import Calendar
+from   timesheet.faeteam       import FaeTeam
+from   timesheet.fldata        import FlData
+from   timesheet.tsdata        import TsData
+from   summary.summaryworkbook import SummaryWorkBook
 
 #----------------------------------------------------------------------
 def InitializeDatabase():
@@ -64,9 +64,12 @@ if (__name__ == '__main__'):
   InitializeDatabase()
   InitializeTimesheetData()
 
-  summary = Summary()
-#  summary.AddMatrix('EMEA','METRICS','ALL')
+  summary = SummaryWorkBook()
+  summary.AddMatrix('EMEA','METRICS','ALL')
+  summary.AddCharts('EMEA','METRICS','ALL')
+  summary.AddSummary('EMEA','METRICS','ALL')
   summary.AddMatrix('EMEA','FAE','ALL')
+  summary.AddCharts('EMEA','FAE','ALL')
   #summary.AddMatrix('EMEA','METRICS','JAN')
 
   summary.Save('test.xlsx')

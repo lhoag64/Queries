@@ -1,11 +1,11 @@
 import logging
-from   xlinterface    import WrkBook
-from   xlinterface    import WrkSheet
+from   xlinterface.xlworkbook     import XlWorkBook
+from   xlinterface.xlworksheet    import XlWorkSheet
 from   summary.matrix.matrixdata  import MatrixData 
 from   summary.matrix.matrixtable import MatrixTable
 
 #----------------------------------------------------------------------
-class FaeSheet:
+class FaeWorkSheet:
   def __init__(self,ws,region,type,period):
     self.ws     = ws
     self.region = region
