@@ -34,9 +34,17 @@ class ActivityData(Matrix):
 
     self.colCompDesc = ['Avg']
 
+    gSet = set([10,11,14,15,16,17,18,23])
     self.rowDesc = []
+    self.descRowFmt = []
+    gFmt = {'hAlign':'L','vAlign':'C','border':{'A':'thin'},'fill':'Green 1'}
+    oFmt = {'hAlign':'L','vAlign':'C','border':{'A':'thin'},'fill':'Orange 1'}
     for i in range(self.dataRows):
       self.rowDesc.append(act[i][1] + '-' + str(act[i][0]))
+      if (act[i][0] in gSet):
+        self.descRowFmt.append(gFmt)
+      else:
+        self.descRowFmt.append(oFmt)
 
     self.rowCompDesc = []
 

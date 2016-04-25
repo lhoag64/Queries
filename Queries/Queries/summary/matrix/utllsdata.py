@@ -28,6 +28,8 @@ class UtlLsData(Matrix):
     self.dataRows = len(self.data[0])
 
     self.title = 'Utilisation (Leave and Sickness)'
+    self.titleFmt = {'hAlign':'C','vAlign':'C','border':{'A':'thin'},'fill':'Yellow 1'}
+
     self.colDesc = []
     for i in range(self.dataCols):
       self.colDesc.append('Week ' + str(i+1))

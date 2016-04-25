@@ -28,6 +28,8 @@ class UtlPsData(Matrix):
     self.dataRows = len(self.data[0])
 
     self.title = 'Utilisation (On Pre-Sales Work)'
+    self.titleFmt = {'hAlign':'C','vAlign':'C','border':{'A':'thin'},'fill':'Orange 1'}
+
     self.colDesc = []
     for i in range(self.dataCols):
       self.colDesc.append('Week ' + str(i+1))

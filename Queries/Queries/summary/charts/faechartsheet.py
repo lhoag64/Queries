@@ -4,6 +4,9 @@ from   xlinterface.xlworksheet    import XlWorkSheet
 from   summary.matrix.matrixdata  import MatrixData 
 from   summary.matrix.matrixtable import MatrixTable
 
+from openpyxl import Workbook
+from openpyxl.chart import BarChart,Series,Reference
+
 #----------------------------------------------------------------------
 class FaeChartSheet:
   def __init__(self,ws,region,type,period):
@@ -31,5 +34,22 @@ class FaeChartSheet:
     table = MatrixTable(ws,startRow,startCol,data)
     startRow += data.table.dataRows + 2
 
+    self.drawOtChart()
+#    self.drawLtrChart()
 
+  #--------------------------------------------------------------------
+  def drawOtChart(self):
+
+    chart = BarChart()
+    chart.type = 'col'
+    chart.style = 10
+    chart.title = 'Additional Hours'
+    chart.y_axis.title = 'Hours'
+    chart.x_axis.title = 'Weeks'
+    mincol = self.ws.GetColumnIndex('GS')
+    maxcol = self.ws.GetColumnIndex('HE')
+    data = Reference(self.ws.ws,min_row=242,min_col=mincol,max_row=259,max_col=maxcol)
+    chart.add_data(data)
+
+    self.ws.ws.add_chart(chart,'B2')
 

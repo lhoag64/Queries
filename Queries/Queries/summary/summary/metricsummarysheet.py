@@ -201,7 +201,7 @@ class MetricSummarySheet:
     self.ws.SetCell(34, 5,'=D34/SUM(D34:D34)*100',fmt6b)
     self.ws.SetCell(35, 3,'Leave and Sickness',fmt7)
     self.ws.SetCell(35, 4,'=SUM(GS237:HE237)',fmt7b)
-    self.ws.SetCell(35, 5,'=D35/SUM(D35:D35)*100',fmt6b)
+    self.ws.SetCell(35, 5,'=D35/SUM(D35:D35)*100',fmt7b)
 
     self.ws.SetCell(37, 3,'Customer split',fmt2)
     self.ws.SetCell(37, 4,'Hours',fmt2a)
@@ -222,10 +222,10 @@ class MetricSummarySheet:
     self.ws.SetCell(42, 4,'=SUM(GS251:HE251)',fmt3b)
     self.ws.SetCell(42, 5,'=D42/SUM(D38:D44)*100',fmt3b)
     self.ws.SetCell(43, 3,'Technical Training - All Types',fmt3)
-    self.ws.SetCell(43, 4,'=SUM(GS251:HE251)',fmt3b)
+    self.ws.SetCell(43, 4,'=SUM(GS252:HE251)',fmt3b)
     self.ws.SetCell(43, 5,'=D43/SUM(D38:D44)*100',fmt3b)
     self.ws.SetCell(44, 3,'Customer \'Other\'',fmt3)
-    self.ws.SetCell(44, 4,'=SUM(GS251:HE251)',fmt3b)
+    self.ws.SetCell(44, 4,'=SUM(GS253:HE251)',fmt3b)
     self.ws.SetCell(44, 5,'=D44/SUM(D38:D44)*100',fmt3b)
 
     self.ws.SetCell(46, 3,'Labour and Travel',fmt2)
@@ -262,23 +262,23 @@ class MetricSummarySheet:
     self.ws.ws.add_chart(ltsChart,'H46')
 
   #--------------------------------------------------------------------
-  def drawActChart(self):
-
-    chart = BarChart()
-    chart.title = 'Activites'
-
-    row1 = 200
-    row2 = 214
-    col1 = self.ws.GetColumnIndex('GR')
-    col2 = self.ws.GetColumnIndex('HF')
-
-    data = Reference(self.ws.ws,min_row=row1,min_col=col1,max_row=row2,max_col=col2)
-    chart.add_data(data)
-
-    chart.type     = 'col'
-    chart.style    =   12
-    chart.grouping = 'stacked'
-    chart.overlap  = 100
-
-    self.ws.ws.add_chart(chart,'B17')
+#  def drawActChart(self):
+#
+#    chart = BarChart()
+#    chart.title = 'Activites'
+#
+#    row1 = 200
+#    row2 = 214
+#    col1 = self.ws.GetColumnIndex('GR')
+#    col2 = self.ws.GetColumnIndex('HF')
+#
+#    data = Reference(self.ws.ws,min_row=row1,min_col=col1,max_row=row2,max_col=col2)
+#    chart.add_data(data)
+#
+#    chart.type     = 'col'
+#    chart.style    =   12
+#    chart.grouping = 'stacked'
+#    chart.overlap  = 100
+#
+#    self.ws.ws.add_chart(chart,'B17')
 

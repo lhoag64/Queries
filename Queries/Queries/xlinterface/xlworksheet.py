@@ -87,10 +87,15 @@ class XlWorkSheet:
       if (i == 'hAlign'): 
         if (not align): align = Alignment()
         align.horizontal = alignType[fmt[i]]
-
       elif (i == 'vAlign'): 
         if (not align): align = Alignment()
         align.vertical   = alignType[fmt[i]]
+      elif (i == 'tAlign'): 
+        if (not align): align = Alignment()
+        align.text_rotation = fmt[i]
+      elif (i == 'wrap'): 
+        if (not align): align = Alignment()
+        align.wrap_text = fmt[i]
 
       elif (i == 'font'):
         name = 'Calibri'
@@ -104,6 +109,7 @@ class XlWorkSheet:
           size = dict['size']
         if (not font):
             font = Font(name=name,size=size,bold=bold)
+
       elif (i == 'border'):
         dict = fmt[i]
         color = None

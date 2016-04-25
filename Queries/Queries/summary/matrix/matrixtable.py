@@ -41,20 +41,32 @@ class MatrixTable:
 
     wsRow = tRow + 1
     wsCol = rowDescCol
-    for j in range(dRows):
-      ws.SetCell(wsRow,wsCol,table.rowDesc[j],table.descColFmt)
+    for i in range(dRows):
+      if (type(table.descRowFmt) is list):
+        ws.SetCell(wsRow,wsCol,table.rowDesc[i],table.descRowFmt[i])
+      else:
+        ws.SetCell(wsRow,wsCol,table.rowDesc[i],table.descRowFmt)
       wsRow += 1
     for i in range(cRows):
-      ws.SetCell(wsRow,wsCol,table.colCompDesc[i],table.descCompColFmt)
+      if (type(table.descCompRowFmt) is list):
+        ws.SetCell(wsRow,wsCol,table.colCompDesc[i],table.descCompRowFmt[i])
+      else:
+        ws.SetCell(wsRow,wsCol,table.colCompDesc[i],table.descCompRowFmt)
       wsCol += 1
 
     wsRow = tRow
     wsCol = tCol + 1
     for i in range(dCols):
-      ws.SetCell(wsRow,wsCol,table.colDesc[i],table.descRowFmt)
+      if (type(table.descColFmt) is list):
+        ws.SetCell(wsRow,wsCol,table.colDesc[i],table.descColFmt[i])
+      else:
+        ws.SetCell(wsRow,wsCol,table.colDesc[i],table.descColFmt)
       wsCol += 1
     for i in range(cCols):
-      ws.SetCell(wsRow,wsCol,table.colCompDesc[i],table.descCompRowFmt)
+      if (type(table.descCompColFmt) is list):
+        ws.SetCell(wsRow,wsCol,table.colCompDesc[i],table.descCompColFmt[i])
+      else:
+        ws.SetCell(wsRow,wsCol,table.colCompDesc[i],table.descCompColFmt)
       wsCol += 1
 
     wsCol = tCol + 1 

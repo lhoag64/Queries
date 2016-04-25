@@ -61,7 +61,7 @@ class SummaryWorkBook:
     if (period == 'ALL'):
       p = 'YTD'
     else:
-      p = '???'
+      p = period
 
     if (type == 'METRICS'):
       name = 'Summary (' + region + '-' + p + ')'
@@ -99,6 +99,10 @@ class SummaryWorkBook:
 #    charts = ChartsSheet(cs,self.wsDict[text],region,type,period)
 #    self.wsDict[shName] = ('Charts',charts,cs,name)
     
+  #--------------------------------------------------------------------
+  def Order(self):
+    self.wb.RemoveSheetByName('Summary')
+
   #--------------------------------------------------------------------
   def Save(self,filename):
     self.wb.Save(filename)

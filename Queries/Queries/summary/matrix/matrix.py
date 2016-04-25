@@ -14,19 +14,19 @@ class Matrix:
     self.compRows = 0
 
     self.descColWid = 45
-    self.dataColWid = 10
-    self.compColWid = 10
+    self.dataColWid =  8
+    self.compColWid =  8
 
-    self.descRowHgt = 40
+    self.descRowHgt = 45
     self.dataRowHgt = 15
     self.compRowHgt = 15
 
-    self.titleFmt       = {'hAlign':'C','vAlign':'C','border':{'A':'medium'}}
-    self.descColFmt     = {'hAlign':'L','vAlign':'C','border':{'A':'medium'}}
-    self.descCompColFmt = self.descColFmt
-    self.descRowFmt     = {'hAlign':'C','vAlign':'C','border':{'A':'medium'}}
+    self.titleFmt       = {'hAlign':'C','vAlign':'C','border':{'A':'thin'}}
+    self.descRowFmt     = {'hAlign':'L','vAlign':'C','border':{'A':'thin'}}
     self.descCompRowFmt = self.descRowFmt
-    self.dataFmt        = {'hAlign':'C','vAlign':'C','border':{'A':'thin'},'numFmt':'0.00'}
+    self.descColFmt     = {'hAlign':'C','vAlign':'C','tAlign':90,'border':{'A':'thin'}}
+    self.descCompColFmt = self.descColFmt
+    self.dataFmt        = {'hAlign':'R','vAlign':'C','border':{'A':'thin'},'numFmt':'0.0'}
 
   #--------------------------------------------------------------------
   def calcColSum(self,data):
