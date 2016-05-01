@@ -146,6 +146,104 @@ class TsEntryTable(Table):
     return weekList
 
  #--------------------------------------------------------------------
+  def GetActivityAmDmrSum(self,db,region,act,weeks):
+
+    c = db.cursor()
+
+    weekList = []
+    for i in range(len(weeks)):
+
+      wcDate = weeks[i][0]
+      weDate = self.getWeDate(wcDate)
+
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT activity, SUM(hours) AS total
+              FROM ts_entry AS ts
+              INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?) and fae.prd_team = 'DMR'
+              GROUP BY activity
+            ''',(wcDate,weDate))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT activity, SUM(hours) AS total
+              FROM ts_entry AS ts
+              INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)
+              WHERE ts.region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and fae.prd_team = 'DMR'
+              GROUP BY activity
+            ''',(region,wcDate,weDate))
+
+      resultList = c.fetchall()
+      resultDict = {}
+      for result in resultList:
+        if (result[0] and len(result[0]) > 0):
+          resultDict[int(result[0])] = result[1]
+
+      data = []
+      for item in act:
+        if (item[0] in resultDict):
+          data.append(float(resultDict[item[0]]))
+        else:
+          data.append(0.0)
+
+      weekList.append(data)
+
+    return weekList
+
+ #--------------------------------------------------------------------
+  def GetActivityAmMiSum(self,db,region,act,weeks):
+
+    c = db.cursor()
+
+    weekList = []
+    for i in range(len(weeks)):
+
+      wcDate = weeks[i][0]
+      weDate = self.getWeDate(wcDate)
+
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT activity, SUM(hours) AS total
+              FROM ts_entry AS ts
+              INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?) and fae.prd_team = 'MI'
+              GROUP BY activity
+            ''',(wcDate,weDate))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT activity, SUM(hours) AS total
+              FROM ts_entry AS ts
+              INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)
+              WHERE ts.region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and fae.prd_team = 'MI'
+              GROUP BY activity
+            ''',(region,wcDate,weDate))
+
+      resultList = c.fetchall()
+      resultDict = {}
+      for result in resultList:
+        if (result[0] and len(result[0]) > 0):
+          resultDict[int(result[0])] = result[1]
+
+      data = []
+      for item in act:
+        if (item[0] in resultDict):
+          data.append(float(resultDict[item[0]]))
+        else:
+          data.append(0.0)
+
+      weekList.append(data)
+
+    return weekList
+
+ #--------------------------------------------------------------------
   def GetLtsSum(self,db,region,lts,weeks):
 
     c = db.cursor()
@@ -537,7 +635,7 @@ class TsEntryTable(Table):
               FROM ts_entry AS ts
               INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
               WHERE (ts.entry_date >= ? and ts.entry_date <= ?) and 
-                (wbs.gkacct = 1 or wbs.code = 'TTT' or wbs_code = 'COB' or wbs_code = 'OTH')
+                (wbs.gl_tm_key_acct = 1 or wbs.code = 'TTT' or wbs_code = 'COB' or wbs_code = 'OTH')
               GROUP BY wbs.code
             ''',(wcDate,weDate))
       else:
@@ -548,7 +646,7 @@ class TsEntryTable(Table):
               FROM ts_entry AS ts
               INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
               WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and 
-                (wbs.gkacct = 1 or wbs.code = 'TTT' or wbs_code = 'COB' or wbs_code = 'OTH')
+                (wbs.gl_tm_key_acct = 1 or wbs.code = 'TTT' or wbs_code = 'COB' or wbs_code = 'OTH')
               GROUP BY wbs.code
             ''',(region,wcDate,weDate))
 
@@ -570,7 +668,7 @@ class TsEntryTable(Table):
               FROM ts_entry AS ts
               INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
               WHERE (ts.entry_date >= ? and ts.entry_date <= ?) and 
-                (wbs.gkacct = 0 and wbs.code <> 'TTT' and wbs_code <> 'COB' and wbs_code <> 'OTH')
+                (wbs.gl_tm_key_acct = 0 and wbs.code <> 'TTT' and wbs_code <> 'COB' and wbs_code <> 'OTH')
               GROUP BY wbs.code
             ''',(wcDate,weDate))
       else:
@@ -581,7 +679,7 @@ class TsEntryTable(Table):
               FROM ts_entry AS ts
               INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
               WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and 
-                (wbs.gkacct = 0 and wbs.code <> 'TTT' and wbs_code <> 'COB' and wbs_code <> 'OTH')
+                (wbs.gl_tm_key_acct = 0 and wbs.code <> 'TTT' and wbs_code <> 'COB' and wbs_code <> 'OTH')
               GROUP BY wbs.code
             ''',(region,wcDate,weDate))
       
@@ -594,6 +692,245 @@ class TsEntryTable(Table):
           otherSum += hrs
 
       codesDict['OTHERS'] = otherSum
+
+      data = []
+      for item in codes:
+        if (item in codesDict):
+          data.append(float(codesDict[item]))
+        else:
+          data.append(0.0)
+
+      weekList.append(data)
+
+    return weekList
+
+ #--------------------------------------------------------------------
+  def GetAmRkaSum(self,db,region,codes,weeks):
+
+    c = db.cursor()
+    weekList = []
+    for i in range(len(weeks)):
+
+      wcDate = weeks[i][0]
+      weDate = self.getWeDate(wcDate)
+
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT wbs.code,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?) and 
+                (wbs.gl_tm_key_acct = 1 or wbs.am_tm_car_acct = 1 or 
+                 wbs.am_tm_smc_acct = 1 or wbs.am_mi_rka_acct = 1 or
+                 wbs.code = 'TTT' or wbs_code = 'COB' or wbs_code = 'OTH')
+              GROUP BY wbs.code
+            ''',(wcDate,weDate))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT wbs.code,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
+              WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and 
+                (wbs.gl_tm_key_acct = 1 or wbs.am_tm_car_acct = 1 or 
+                 wbs.am_tm_smc_acct = 1 or wbs.am_mi_rka_acct = 1 or
+                 wbs.code = 'TTT' or wbs_code = 'COB' or wbs_code = 'OTH')
+              GROUP BY wbs.code
+            ''',(region,wcDate,weDate))
+
+      codesList = c.fetchall()
+      codesDict = {}
+      for code in codesList:
+        if (code[0] and len(code[0]) > 0):
+          if (code[0] == 'NSN'):
+            if ('NOK' in codesDict):
+              codesDict['NOK'] += code[1]
+          else:
+            codesDict[code[0]] = code[1]
+
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT wbs.code,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?) and 
+                (wbs.gl_tm_key_acct = 0 and wbs.am_tm_car_acct = 0 and 
+                 wbs.am_tm_smc_acct = 0 and wbs.am_mi_key_acct = 0 and
+                 wbs.code <> 'TTT' and wbs_code <> 'COB' and wbs_code <> 'OTH')
+              GROUP BY wbs.code
+            ''',(wcDate,weDate))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT wbs.code,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
+              WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and 
+                (wbs.gl_tm_key_acct = 0 and wbs.am_tm_car_acct = 0 and 
+                 wbs.am_tm_smc_acct = 0 and wbs.am_mi_rka_acct = 0 and
+                 wbs.code <> 'TTT' and wbs_code <> 'COB' and wbs_code <> 'OTH')
+              GROUP BY wbs.code
+            ''',(region,wcDate,weDate))
+      
+      otherList = c.fetchall()
+      otherSum = 0.0
+      for item in otherList:
+        code = item[0]
+        hrs  = item[1]
+        if (len(code) == 3):
+          otherSum += hrs
+
+      codesDict['OTHERS'] = otherSum
+
+      data = []
+      for item in codes:
+        if (item in codesDict):
+          data.append(float(codesDict[item]))
+        else:
+          data.append(0.0)
+
+      weekList.append(data)
+
+    return weekList
+
+ #--------------------------------------------------------------------
+  def GetAmTmCarSum(self,db,region,codes,weeks):
+
+    c = db.cursor()
+    weekList = []
+    for i in range(len(weeks)):
+
+      wcDate = weeks[i][0]
+      weDate = self.getWeDate(wcDate)
+
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT wbs.code,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?) and (wbs.am_tm_car_acct = 1)
+              GROUP BY wbs.code
+            ''',(wcDate,weDate))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT wbs.code,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
+              WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and (wbs.am_tm_car_acct = 1)
+              GROUP BY wbs.code
+            ''',(region,wcDate,weDate))
+
+      codesList = c.fetchall()
+      codesDict = {}
+      for code in codesList:
+        if (code[0] and len(code[0]) > 0):
+            codesDict[code[0]] = code[1]
+
+      data = []
+      for item in codes:
+        if (item in codesDict):
+          data.append(float(codesDict[item]))
+        else:
+          data.append(0.0)
+
+      weekList.append(data)
+
+    return weekList
+
+ #--------------------------------------------------------------------
+  def GetAmTmSmcSum(self,db,region,codes,weeks):
+
+    c = db.cursor()
+    weekList = []
+    for i in range(len(weeks)):
+
+      wcDate = weeks[i][0]
+      weDate = self.getWeDate(wcDate)
+
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT wbs.code,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?) and (wbs.am_tm_smc_acct = 1)
+              GROUP BY wbs.code
+            ''',(wcDate,weDate))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT wbs.code,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
+              WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and (wbs.am_tm_smc_acct = 1)
+              GROUP BY wbs.code
+            ''',(region,wcDate,weDate))
+
+      codesList = c.fetchall()
+      codesDict = {}
+      for code in codesList:
+        if (code[0] and len(code[0]) > 0):
+            codesDict[code[0]] = code[1]
+
+      data = []
+      for item in codes:
+        if (item in codesDict):
+          data.append(float(codesDict[item]))
+        else:
+          data.append(0.0)
+
+      weekList.append(data)
+
+    return weekList
+
+ #--------------------------------------------------------------------
+  def GetAmMiRkaSum(self,db,region,codes,weeks):
+
+    c = db.cursor()
+    weekList = []
+    for i in range(len(weeks)):
+
+      wcDate = weeks[i][0]
+      weDate = self.getWeDate(wcDate)
+
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT wbs.code,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?) and (wbs.am_mi_rka_acct = 1)
+              GROUP BY wbs.code
+            ''',(wcDate,weDate))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT wbs.code,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
+              WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and (wbs.am_mi_rka_acct = 1)
+              GROUP BY wbs.code
+            ''',(region,wcDate,weDate))
+
+      codesList = c.fetchall()
+      codesDict = {}
+      for code in codesList:
+        if (code[0] and len(code[0]) > 0):
+            codesDict[code[0]] = code[1]
 
       data = []
       for item in codes:
@@ -653,6 +990,59 @@ class TsEntryTable(Table):
 
       data = []
       for item in loc:
+        if (item in resultDict):
+          data.append(float(resultDict[item]))
+        else:
+          data.append(0.0)
+
+      weekList.append(data)
+
+    return weekList
+
+ #--------------------------------------------------------------------
+  def GetActByPrdTeam(self,db,region,act,prdList,weeks):
+
+    prdSet = set([])
+    for item in prdList:
+      prdSet.add(item)
+
+    c = db.cursor()
+    weekList = []
+    for i in range(len(weeks)):
+
+      wcDate = weeks[i][0]
+      weDate = self.getWeDate(wcDate)
+
+      if (region == 'ALL'):
+        c.execute \
+          ( \
+            '''
+              SELECT ts.activity,fae.prd_team,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)
+              WHERE (ts.entry_date >= ? and ts.entry_date <= ?) and ts.activity = ?
+              GROUP BY ts.activity,fae.prd_team
+            ''',(wcDate,weDate,act))
+      else:
+        c.execute \
+          ( \
+            '''
+              SELECT ts.activity,fae.prd_team,sum(ts.hours)
+              FROM ts_entry AS ts
+              INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)
+              WHERE fae.region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and ts.activity = ?
+              GROUP BY ts.activity,fae.prd_team
+            ''',(region,wcDate,weDate,act))
+
+      resultList = c.fetchall()
+      resultDict = {}
+      for result in resultList:
+        if (len(result) == 3):
+          if (result[1] in prdSet):
+            resultDict[result[1]] = result[2]
+
+      data = []
+      for item in prdList:
         if (item in resultDict):
           data.append(float(resultDict[item]))
         else:

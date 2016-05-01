@@ -22,11 +22,14 @@ class TsCodeTable(Table):
         '''
            CREATE TABLE ts_code
              (
-               code     TEXT UNIQUE PRIMARY KEY,
-               desc     TEXT,
-               downtime INTEGER,
-               leave    INTEGER,
-               gkacct   INTEGER
+               code           TEXT UNIQUE PRIMARY KEY,
+               desc           TEXT,
+               downtime       INTEGER,
+               leave          INTEGER,
+               gl_tm_key_acct INTEGER,
+               am_tm_car_acct INTEGER,
+               am_tm_smc_acct INTEGER,
+               am_mi_rka_acct INTEGER
              )
         '''
       )
@@ -51,9 +54,12 @@ class TsCodeTable(Table):
         logging.error('Code is already used:\'' + item + '\',skipping')
         continue
 
-      downtime = 0
-      leave    = 0
-      gka      = 0
+      downtime       = 0
+      leave          = 0
+      gka            = 0
+      am_tm_car_acct = 0
+      am_tm_smc_acct = 0
+      am_mi_key_acct = 0
 
 # downtime - 4804,4807,4803,4901,1006
 
@@ -68,11 +74,17 @@ class TsCodeTable(Table):
       elif (len(code) == 3):
         if (code in ['ERC','NOK','NSN','ALU']):
           gka = 1
+        if (code in ['ATT','TMO','SPR']):
+          am_tm_car_acct = 1
+        if (code in ['QUA','INT']):
+          am_tm_smc_acct = 1
+        if (code in ['QOR','TER','SKY']):
+          am_mi_key_acct = 1
 
-      row = (code,desc,downtime,leave,gka)
+      row = (code,desc,downtime,leave,gka,am_tm_car_acct,am_tm_smc_acct,am_mi_key_acct)
       rows.append(row)
 
-    c.executemany('INSERT INTO ts_code VALUES (?,?,?,?,?)',rows)
+    c.executemany('INSERT INTO ts_code VALUES (?,?,?,?,?,?,?,?)',rows)
 
     db.commit()
 

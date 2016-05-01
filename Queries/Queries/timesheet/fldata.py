@@ -32,6 +32,8 @@ class FlFile:
       if (o > 127):
         ltext = filename[:index-0]
         rtext = filename[index+1:]
+        if (o == 8211):
+          filename = ltext + '-' + rtext
         if (o == 8217):
           filename = ltext + '\'' + rtext
       else:

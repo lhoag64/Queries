@@ -71,15 +71,65 @@ class MetricSummarySheet:
 
     startRow += data.table.dataRows + 2
 
-    actList = [10,11,12,13,14,15,16,17,18,19,20,21,22,23]
-    locList = ['UK','Sweden','Finland','France','Germany','Other (EMEA)']
-    for act in actList:
-      data  = MatrixData(region,'ACT-BY-LOC',period,act=act,loc=locList)
+    if (region == 'EMEA'):
+      actList = [10,11,12,13,14,15,16,17,18,19,20,21,22,23]
+      locList = ['UK','Sweden','Finland','France','Germany','Other (EMEA)']
+      for act in actList:
+        data  = MatrixData(region,'ACT-BY-LOC',period,act=act,loc=locList)
+        table = MatrixTable(ws,startRow,startCol,data)
+        self.tables['ACT-' + str(act)] = (data,table)
+
+        startRow += data.table.dataRows + 2
+
+    elif (region == 'AM'):
+      data  = MatrixData(region,'ACTIVITY-AM-DMR',period)
       table = MatrixTable(ws,startRow,startCol,data)
-      self.tables['ACT-' + str(act)] = (data,table)
+      self.tables['ACTIVITY-AM-DMR'] = (data,table)
 
       startRow += data.table.dataRows + 2
+
+      data  = MatrixData(region,'ACTIVITY-AM-MI',period)
+      table = MatrixTable(ws,startRow,startCol,data)
+      self.tables['ACTIVITY-AM-MI'] = (data,table)
+
+      startRow += data.table.dataRows + 2
+
+      data  = MatrixData(region,'AM-RKA',period)
+      table = MatrixTable(ws,startRow,startCol,data)
+      self.tables['AM-GKA'] = (data,table)
+
+      startRow += data.table.dataRows + 2
+
+      data  = MatrixData(region,'AM-TM-CAR',period)
+      table = MatrixTable(ws,startRow,startCol,data)
+      self.tables['AM-TM-CAR'] = (data,table)
+
+      startRow += data.table.dataRows + 2
+
+      data  = MatrixData(region,'AM-TM-SMC',period)
+      table = MatrixTable(ws,startRow,startCol,data)
+      self.tables['AM-TM-SMC'] = (data,table)
+
+      startRow += data.table.dataRows + 2
+
+      data  = MatrixData(region,'AM-MI-RKA',period)
+      table = MatrixTable(ws,startRow,startCol,data)
+      self.tables['AM-MI-RKA'] = (data,table)
+
+      startRow += data.table.dataRows + 2
+
+      actList = [10,11,12,13,14,15,16,17,18,19,20,21,22,23]
+      prdList = ['DMR','MI']
+      for act in actList:
+        data  = MatrixData(region,'ACT-BY-PRD-TEAM',period,act=act,prd=prdList)
+        table = MatrixTable(ws,startRow,startCol,data)
+        self.tables['ACT-' + str(act)] = (data,table)
+
+        startRow += data.table.dataRows + 2
+
     logging.debug('')
+
+
 
     self.drawSummary()
     #self.drawActChart()

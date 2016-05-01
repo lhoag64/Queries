@@ -238,7 +238,13 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="summary\charts\__init__.py" />
+    <Compile Include="summary\matrix\actbyprdteamdata.py" />
+    <Compile Include="summary\matrix\actvitivyammidata.py" />
+    <Compile Include="summary\matrix\actvitivyamdmrdata.py" />
     <Compile Include="summary\matrix\actvitivydata.py" />
+    <Compile Include="summary\matrix\ammirkadata.py" />
+    <Compile Include="summary\matrix\amtmsmcdata.py" />
+    <Compile Include="summary\matrix\amtmcardata.py" />
     <Compile Include="summary\matrix\faeotdata.py" />
     <Compile Include="summary\matrix\faeltdata.py" />
     <Compile Include="summary\matrix\faewhdata.py" />
@@ -247,6 +253,7 @@
     </Compile>
     <Compile Include="summary\matrix\actbylocdata.py" />
     <Compile Include="summary\matrix\faeawhdata.py" />
+    <Compile Include="summary\matrix\amrkadata.py" />
     <Compile Include="summary\matrix\ltsdata.py">
       <SubType>Code</SubType>
     </Compile>

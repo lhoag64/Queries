@@ -13,16 +13,16 @@ def InitializeDatabase():
   Db.Connect(r'X:\Reporting\Timesheets','timesheets.db')
 
   tblList = []
-  #tblList.append('fae_lbrtype')
-  #tblList.append('fae_loc')
-  #tblList.append('fae_prdtm')
-  #tblList.append('fae_region')
-  #tblList.append('fae_team')
-  #tblList.append('ts_code')
-  #tblList.append('ts_loc')
-  #tblList.append('ts_act')
-  #tblList.append('ts_prd')
-  #tblList.append('ts_lts')
+  tblList.append('fae_lbrtype')
+  tblList.append('fae_loc')
+  tblList.append('fae_prdtm')
+  tblList.append('fae_region')
+  tblList.append('fae_team')
+  tblList.append('ts_code')
+  tblList.append('ts_loc')
+  tblList.append('ts_act')
+  tblList.append('ts_prd')
+  tblList.append('ts_lts')
   #tblList.append('ts_file')
   #tblList.append('ts_entry')
   #tblList.append('weeks')
@@ -34,26 +34,26 @@ def InitializeTimesheetData():
 
   Calendar(2016)
 
-  rng = range(1,13+1)
+  rng = range(1,16+1)
   #rng = range(1,1+1)
 
   emea_team = FaeTeam('EMEA')
   am_team   = FaeTeam('AM')
   gc_team   = FaeTeam('GC')
 
-  #fldata = FlData(r'X:\Reporting\Timesheets\EMEA',emea_team)
-  #tsdata = TsData('EMEA',emea_team,rng,fldata)
-  #Db.InsertTimesheets(tsdata)
+#  fldata = FlData(r'X:\Reporting\Timesheets\EMEA',emea_team)
+#  tsdata = TsData('EMEA',emea_team,rng,fldata)
+#  Db.InsertTimesheets(tsdata)
 
-  #fldata = FlData(r'X:\Reporting\Timesheets\AM',am_team)
-  #tsdata = TsData('AM',am_team,rng,fldata)
-  #Db.InsertTimesheets(tsdata)
+#  fldata = FlData(r'X:\Reporting\Timesheets\AM',am_team)
+#  tsdata = TsData('AM',am_team,rng,fldata)
+#  Db.InsertTimesheets(tsdata)
 
-  #fldata = FlData(r'X:\Reporting\Timesheets\GC',gc_team)
-  #tsdata = TsData('GC',gc_team,rng,fldata)
-  #Db.InsertTimesheets(tsdata)
+#  fldata = FlData(r'X:\Reporting\Timesheets\GC',gc_team)
+#  tsdata = TsData('GC',gc_team,rng,fldata)
+#  Db.InsertTimesheets(tsdata)
 
-  #db.close()
+#  Db.tsdb.db.close()
 
 #----------------------------------------------------------------------
 if (__name__ == '__main__'):
@@ -66,11 +66,12 @@ if (__name__ == '__main__'):
 
   summary = SummaryWorkBook()
   #summary.AddMatrix('EMEA','METRICS','JAN')
-  summary.AddSummary('ALL','METRICS','ALL')
-  summary.AddSummary('EMEA','FAE','ALL')
-#  summary.AddSummary('AM','FAE','ALL')
-#  summary.AddSummary('GC','FAE','ALL')
-#  summary.AddMatrix('ALL','METRICS','ALL')
+  summary.AddSummary('AM','METRICS','ALL')
+  summary.AddSummary('AM','FAE','ALL')
+  summary.AddMatrix('AM','METRICS','ALL')
+  summary.AddMatrix('AM','FAE','ALL')
+  summary.AddCharts('AM','METRICS','ALL')
+  summary.AddCharts('AM','FAE','ALL')
 #  summary.AddMatrix('AM','METRICS','FEB')
 #  summary.AddMatrix('GC','METRICS','JAN')
 #  summary.AddMatrix('ALL','FAE','JAN')
