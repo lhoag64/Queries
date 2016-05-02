@@ -1,7 +1,9 @@
 import logging
 import datetime
 import sqlite3
-from   database.tables.table import Table
+from   xlinterface.xlworkbook  import XlWorkBook
+from   xlinterface.xlworksheet import XlWorkSheet
+from   database.tables.table   import Table
 
 #----------------------------------------------------------------------
 class WeeksTable(Table):
@@ -23,28 +25,59 @@ class WeeksTable(Table):
         '''
            CREATE TABLE weeks
              (
-               wc_date TEXT
+               week       TEXT,
+               wc_date    TEXT,
+               we_date    TEXT,
+               am_days    TEXT,
+               emea_days  TEXT,
+               gc_days    TEXT,
+               gc_week    TEXT
              )
         '''
       )
 
-    year  = 2016
-    weeks = []
-    d = datetime.date(year,1,1)
-    while (True):
-      if (d.weekday() == 0):
-        break;
-      else:
-        d = d + datetime.timedelta(days=1)
-    i = 1
-    while(True):
-      weeks.append((d,))
-      d = d + datetime.timedelta(days=7)
-      if (d.year > year):
-        break;
-      i += 1
+    db.commit()
 
-    c.executemany('INSERT INTO weeks VALUES (?)',weeks)
+    wb = XlWorkBook()
+    wb.Read(r'X:\Reporting\Timesheets\Global-Working-Days-2016.xlsx')
+
+    ws = wb.GetSheetByName('Weeks')
+
+    index = 1
+    weekList = []
+    wsRow = 2
+    wsCol = 1
+    while (1):
+      week = ws.GetValue(wsRow,wsCol+ 0)
+      if (not week):
+        break
+      if (index == 1):
+        wc_date = ws.GetValue(wsRow,wsCol+ 1)
+        wc_date = str(wc_date)[:10]
+        we_date = ws.GetValue(wsRow,wsCol+ 2)
+        we_date = str(we_date)[:10]
+      else:
+        stxt    = wc_date.split('-')
+        year    = int(stxt[0])
+        mon     = int(stxt[1])
+        day     = int(stxt[2])
+        date    = datetime.date(year,mon,day)
+        wc_date = date + datetime.timedelta(days= 7)
+        we_date = date + datetime.timedelta(days=13)
+        wc_date = wc_date.strftime('%Y-%m-%d')
+        we_date = we_date.strftime('%Y-%m-%d')
+
+      am_days   = ws.GetValue(wsRow,wsCol+ 3)
+      emea_days = ws.GetValue(wsRow,wsCol+ 4)
+      gc_days   = ws.GetValue(wsRow,wsCol+ 5)
+      gc_week   = ws.GetValue(wsRow,wsCol+ 6)
+
+      week = (index,wc_date,we_date,am_days,emea_days,gc_days,gc_week)
+      weekList.append(week)
+      wsRow += 1
+      index += 1
+
+    c.executemany('INSERT INTO weeks VALUES (?,?,?,?,?,?,?)',weekList)
 
     db.commit()
 

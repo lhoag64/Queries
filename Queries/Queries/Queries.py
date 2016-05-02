@@ -23,9 +23,9 @@ def InitializeDatabase():
   tblList.append('ts_act')
   tblList.append('ts_prd')
   tblList.append('ts_lts')
-  #tblList.append('ts_file')
-  #tblList.append('ts_entry')
-  #tblList.append('weeks')
+  tblList.append('ts_file')
+  tblList.append('ts_entry')
+  tblList.append('weeks')
 
   Db.CreateTables(tblList)
 
@@ -41,17 +41,17 @@ def InitializeTimesheetData():
   am_team   = FaeTeam('AM')
   gc_team   = FaeTeam('GC')
 
-#  fldata = FlData(r'X:\Reporting\Timesheets\EMEA',emea_team)
-#  tsdata = TsData('EMEA',emea_team,rng,fldata)
-#  Db.InsertTimesheets(tsdata)
+  fldata = FlData(r'X:\Reporting\Timesheets\EMEA',emea_team)
+  tsdata = TsData('EMEA',emea_team,rng,fldata)
+  Db.InsertTimesheets(tsdata)
 
-#  fldata = FlData(r'X:\Reporting\Timesheets\AM',am_team)
-#  tsdata = TsData('AM',am_team,rng,fldata)
-#  Db.InsertTimesheets(tsdata)
+  fldata = FlData(r'X:\Reporting\Timesheets\AM',am_team)
+  tsdata = TsData('AM',am_team,rng,fldata)
+  Db.InsertTimesheets(tsdata)
 
-#  fldata = FlData(r'X:\Reporting\Timesheets\GC',gc_team)
-#  tsdata = TsData('GC',gc_team,rng,fldata)
-#  Db.InsertTimesheets(tsdata)
+  fldata = FlData(r'X:\Reporting\Timesheets\GC',gc_team)
+  tsdata = TsData('GC',gc_team,rng,fldata)
+  Db.InsertTimesheets(tsdata)
 
 #  Db.tsdb.db.close()
 

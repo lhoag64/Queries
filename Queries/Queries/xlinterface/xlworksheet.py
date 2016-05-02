@@ -213,6 +213,12 @@ class XlWorkSheet:
     cell.value = value
 
   #-------------------------------------------------------------------
+  def GetValue(self,wsRow,wsCol):
+    ws = self.ws
+    c = ws.cell(row=wsRow,column=wsCol)
+    return c.value
+
+  #-------------------------------------------------------------------
   def GetCell(self,wsRow,wsCol):
     ws = self.ws
     c = ws.cell(row=wsRow,column=wsCol)

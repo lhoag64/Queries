@@ -370,8 +370,8 @@ class FlData:
       for name in self.team.dict:
         if (name not in self.weeks[date]):
           # Date is a Monday, so weDate should be a Friday
-          wsDate = date
-          weDate = date + datetime.timedelta(days=4)
+          wsDate = date.strftime('%Y-%m-%d')
+          weDate = (date + datetime.timedelta(days=4)).strftime('%Y-%m-%d')
           sDate = self.team.dict[name].startDate
           tDate = self.team.dict[name].endDate
           if (wsDate >= sDate and weDate <= tDate):

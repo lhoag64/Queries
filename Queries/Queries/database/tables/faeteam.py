@@ -57,33 +57,17 @@ class FaeTeamTable(Table):
     for fae in team.faes:
       fname      = fae.fname
       lname      = fae.lname
-  
-      fnalias    = ''
-      for i in fae.fnalias:
-        fnalias += i + ','
-      fnalias    = fnalias[0:len(fnalias)-1]
-
-      lnalias    = ''
-      for i in fae.lnalias:
-        lnalias += i + ','
-      lnalias    = lnalias[0:len(lnalias)-1]
-
+      fnalias    = fae.fnalias
+      lnalias    = fae.lnalias
       region     = fae.region
       lbrtype    = fae.lbrType
       prdteam    = fae.prdTeam
       loc        = fae.loc
       norm_hours = fae.normHours
       max_hours  = fae.maxHours
+      start_date = fae.startDate
+      end_date   = fae.endDate
 
-      stxt       = fae.startDate.split('-')
-      start_date = ''
-      for i in stxt:
-        start_date += i
-      stxt       = fae.endDate.split('-')
-      end_date   = ''
-      for i in stxt:
-        end_date   += i
-  
       row = \
         ( \
           fname,fnalias,lname,lnalias,region,lbrtype, \

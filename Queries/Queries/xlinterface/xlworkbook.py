@@ -1,6 +1,7 @@
 import logging
 import openpyxl
-import openpyxl.workbook
+from   openpyxl                import load_workbook
+#import openpyxl.workbook
 from   openpyxl.workbook       import Workbook
 from   xlinterface.xlworksheet import XlWorkSheet
 from   xlinterface.xlchrtsheet import XlChrtSheet
@@ -21,6 +22,24 @@ class XlWorkBook:
     self.wsByXlWs[xlws] = (pyws,name)
 
     self.activeSheet = name
+
+  #--------------------------------------------------------------------
+  def Read(self,filename):
+    self.wsByName = {}
+    self.wsByPyWs = {}
+    self.wsByXlWs = {}
+
+    self.wb = load_workbook(filename)
+
+    for item in self.wb.worksheets:
+      pyws = item
+      name = item.title
+      xlws = XlWorkSheet(self.wb,pyws,name)
+      self.wsByName[name] = (pyws,xlws)
+      self.wsByPyWs[pyws] = (xlws,name)
+      self.wsByXlWs[xlws] = (pyws,name)
+
+    self.activeSheet = self.wb.active.title
 
   #--------------------------------------------------------------------
   def CreateXlWorkSheet(self,name):

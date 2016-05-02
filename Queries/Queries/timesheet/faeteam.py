@@ -1,6 +1,6 @@
 import logging
 import sqlite3
-from   timesheet.calendar import Calendar
+#from   timesheet.calendar import Calendar
 from   database           import Database as Db
 
 #----------------------------------------------------------------------
@@ -8,16 +8,18 @@ class Fae:
   def __init__(self,data):
     self.fname     = data[ 0]
     self.fnalias   = []
-    if (len(data[1]) > 0):
-      stxt = data[1].split(',')
-      for name in stxt:
-        self.fnalias.append(name)
+    if (data[1]):
+      if (len(data[1]) > 0):
+        stxt = data[1].split(',')
+        for name in stxt:
+          self.fnalias.append(name)
     self.lname     = data[ 2]
     self.lnalias   = []
-    if (len(data[3]) > 0):
-      stxt = data[3].split(',')
-      for name in stxt:
-        self.lnalias.append(name)
+    if (data[3]):
+      if (len(data[3]) > 0):
+        stxt = data[3].split(',')
+        for name in stxt:
+          self.lnalias.append(name)
     self.fullname  = self.fname + ' ' + self.lname
     self.region    = data[ 4]
     self.lbrType   = data[ 5]
@@ -25,8 +27,8 @@ class Fae:
     self.location  = data[ 7]
     self.normHours = data[ 8]
     self.maxHours  = data[ 9]
-    self.startDate = Calendar.StrToDate(str(data[10]))
-    self.endDate   = Calendar.StrToDate(str(data[11]))
+    self.startDate = data[10]
+    self.endDate   = data[11]
 
   def __lt__(self,other):
     if (self.prdTeam != other.prdTeam):
