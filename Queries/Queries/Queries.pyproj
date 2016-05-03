@@ -62,7 +62,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="database\tables\__init__.py" />
-    <Compile Include="database\tsdatabase.py" />
     <Compile Include="database\__init__.py" />
     <Compile Include="logconfig.py" />
     <Compile Include="openpyxl\cell\cell.py" />
@@ -222,17 +221,7 @@
     <Compile Include="openpyxl\xml\__init__.py" />
     <Compile Include="openpyxl\__init__.py" />
     <Compile Include="Queries.py" />
-    <Compile Include="summary\charts\chart.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="summary\charts\chartdata.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="summary\charts\chartssheet.py" />
     <Compile Include="summary\charts\faechartsheet.py" />
-    <Compile Include="summary\charts\linechart.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="summary\charts\metricchartsheet.py" />
     <Compile Include="summary\charts\utldata.py">
       <SubType>Code</SubType>
@@ -255,9 +244,6 @@
     <Compile Include="summary\matrix\faeawhdata.py" />
     <Compile Include="summary\matrix\amrkadata.py" />
     <Compile Include="summary\matrix\ltsdata.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="summary\matrix\matrix.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="summary\matrix\matrixsheet.py">
@@ -288,9 +274,6 @@
     </Compile>
     <Compile Include="summary\summary\faesummarysheet.py" />
     <Compile Include="summary\summary\metricsummarysheet.py" />
-    <Compile Include="summary\summary\summarysheet.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="summary\summary\__init__.py" />
     <Compile Include="summary\__init__.py">
       <SubType>Code</SubType>
