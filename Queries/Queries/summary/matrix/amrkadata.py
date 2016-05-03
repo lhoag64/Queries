@@ -1,10 +1,10 @@
 import logging
 from   database.database       import Database as Db
 from   database.tables.tsentry import TsEntryTable
-from   summary.matrix.matrix import Matrix
+from   summary.matrix.matrixdata import MatrixData
 
 #----------------------------------------------------------------------
-class AmRkaData(Matrix):
+class AmRkaData(MatrixData):
 #----------------------------------------------------------------------
   def __init__(self,region,type,period):
 
@@ -12,8 +12,8 @@ class AmRkaData(Matrix):
 
     codes = ['ERC','NOK','ALU','SPR','ATT','TMO','QUA','INT','QOR','TER','SKY','OTHERS','COB','TTT','OTH']
 
-    weekList = Db.tsdb.weeksTbl.GetWeeks(Db.db,period)
-    data = Db.tsdb.tsEntryTbl.GetAmRkaSum(Db.db,region,codes,weekList)
+    weekList = Db.WeeksTbl.GetWeeks(Db.db,period)
+    data = Db.TsEntryTbl.GetAmRkaSum(Db.db,region,codes,weekList)
 
     colSumList = super().calcColSum(data)
     rowSumList = super().calcRowSum(data)

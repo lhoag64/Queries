@@ -1,19 +1,21 @@
 import logging
-from   database.database     import Database as Db
-from   summary.matrix.matrix import Matrix
+from   database.database         import Database as Db
+from   summary.matrix.matrixdata import MatrixData
 
 #----------------------------------------------------------------------
-class ActByLocData(Matrix):
+class ActByLocData(MatrixData):
 #----------------------------------------------------------------------
   def __init__(self,region,type,period,**kwargs):
 
     super().__init__()
 
-    weekList = Db.GetWeeks(period)
+    weekList = Db.WeeksTbl.GetWeeks(Db.db,period)
+    actList  = Db.TsActTbl.GetActivities(Db.db,'ALL')
 
-    actList = Db.GetActivities('ALL')
     act     = kwargs['act']
     locList = kwargs['loc']
+
+    data = Db.GetActByLocSum(Db.db,region,act,locList,weekList)
 
     actDesc = ''
     for item in actList:
@@ -21,8 +23,6 @@ class ActByLocData(Matrix):
         actDesc = item[1]
         break
     title = actDesc + ' - ' + str(act)
-
-    data = Db.GetActByLocSum(region,act,locList,weekList)
 
     colSumList = super().calcColSum(data)
     rowSumList = super().calcRowSum(data)

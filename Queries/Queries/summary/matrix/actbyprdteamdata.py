@@ -1,19 +1,21 @@
 import logging
-from   database.database     import Database as Db
-from   summary.matrix.matrix import Matrix
+from   database.database         import Database as Db
+from   summary.matrix.matrixdata import MatrixData
 
 #----------------------------------------------------------------------
-class ActByPrdTeamData(Matrix):
+class ActByPrdTeamData(MatrixData):
 #----------------------------------------------------------------------
   def __init__(self,region,type,period,**kwargs):
 
     super().__init__()
 
-    weekList = Db.GetWeeks(period)
+    weekList = Db.WeeksTbl.GetWeeks(Db.db,period)
+    actList  = Db.TsActTbl.GetActivities(Db.db,'ALL')
 
-    actList = Db.GetActivities('ALL')
     act     = kwargs['act']
     prdList = kwargs['prd']
+
+    data = Db.TsEntryTbl.GetActByPrdTeam(Db.db,region,act,prdList,weekList)
 
     actDesc = ''
     for item in actList:
@@ -21,8 +23,6 @@ class ActByPrdTeamData(Matrix):
         actDesc = item[1]
         break
     title = actDesc + ' - ' + str(act)
-
-    data = Db.tsdb.tsEntryTbl.GetActByPrdTeam(Db.db,region,act,prdList,weekList)
 
     colSumList = super().calcColSum(data)
     rowSumList = super().calcRowSum(data)

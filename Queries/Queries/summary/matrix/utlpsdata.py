@@ -1,18 +1,16 @@
 import logging
-from   database.database     import Database as Db
-from   summary.matrix.matrix import Matrix
+from   database.database         import Database as Db
+from   summary.matrix.matrixdata import MatrixData
 
 #----------------------------------------------------------------------
-class UtlPsData(Matrix):
+class UtlPsData(MatrixData):
 #----------------------------------------------------------------------
   def __init__(self,region,type,period):
 
     super().__init__()
 
-    weekList = Db.GetWeeks(period)
-#    lts      = Db.GetLts('ALL')
-
-    data = Db.GetUtlPsSum(region,weekList)
+    weekList = Db.WeeksTbl.GetWeeks(Db.db,period)
+    data     = Db.TsEntryTbl.GetUtlPsSum(Db.db,region,weekList)
 
     colSumList = super().calcColSum(data)
     rowSumList = super().calcRowSum(data)
@@ -37,7 +35,5 @@ class UtlPsData(Matrix):
     self.colCompDesc = ['Avg']
 
     self.rowDesc = ['For','Total Time','Utilisation as a %']
-    #for i in range(self.dataRows):
-    #  self.rowDesc.append(lts[i][0])
 
     self.rowCompDesc = []

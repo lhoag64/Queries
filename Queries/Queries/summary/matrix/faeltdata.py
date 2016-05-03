@@ -1,29 +1,16 @@
 import logging
-from   database.database     import Database as Db
-from   summary.matrix.matrix import Matrix
+from   database.database         import Database as Db
+from   summary.matrix.matrixdata import MatrixData
 
 #----------------------------------------------------------------------
-class FaeLtData(Matrix):
+class FaeLtData(MatrixData):
 #----------------------------------------------------------------------
   def __init__(self,region,type,period):
 
     super().__init__()
 
-    weekList = Db.GetWeeks(period)
-
-#    faeList = Db.tsdb.tsEntryTbl.GetFaeList(Db.db,region,period)
-#    faeDict = {}
-#    for fae in faeList:
-#      if ((fae[0],fae[1]) not in faeDict):
-#        faeDict[(fae[0],fae[1])] = [fae[2],fae[3],fae[4]]
-
-    weekList = Db.tsdb.weeksTbl.GetWeeks(Db.db,period)
-    data = Db.tsdb.tsEntryTbl.GetFaeLtSum(Db.db,region,weekList)
-
-#    data = [[None for i in range(len(result[0]))] for j in range(len(result))]
-#    for i in range(len(result)):
-#      for j in range(len(result[0])):
-#        data[i][j] = result[i][j][2]
+    weekList = Db.WeeksTbl.GetWeeks(Db.db,period)
+    data     = Db.TsEntryTbl.GetFaeLtSum(Db.db,region,weekList)
 
     colSumList = super().calcColSum(data)
     rowSumList = super().calcRowSum(data)
@@ -33,10 +20,6 @@ class FaeLtData(Matrix):
 
     rowAvgList = super().calcRowAvg(rowSumList,weeks)
     self.compData = [rowAvgList]
-#    conHrsList = []
-#    for fae in faeList:
-#      conHrsList.append(fae[2])
-#    self.compData = [rowAvgList,conHrsList]
 
     self.data     = super().calcData(data,2,weeks)
 
@@ -52,9 +35,5 @@ class FaeLtData(Matrix):
     self.colCompDesc = ['Avg']
 
     self.rowDesc = ['Internal Hours','Contractor Hours']
-
-    #self.rowDesc = []
-    #for fae in faeList:
-    #  self.rowDesc.append(fae[0] + ' ' + fae[1])
 
     self.rowCompDesc = []

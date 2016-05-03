@@ -1,10 +1,10 @@
 import logging
 from   database.database       import Database as Db
 from   database.tables.tsentry import TsEntryTable
-from   summary.matrix.matrix import Matrix
+from   summary.matrix.matrixdata import MatrixData
 
 #----------------------------------------------------------------------
-class GkaData(Matrix):
+class GkaData(MatrixData):
 #----------------------------------------------------------------------
   def __init__(self,region,type,period):
 
@@ -12,8 +12,8 @@ class GkaData(Matrix):
 
     codes = ['ERC','NOK','ALU','OTHERS','COB','TTT','OTH']
 
-    weekList = Db.tsdb.weeksTbl.GetWeeks(Db.db,period)
-    data = Db.tsdb.tsEntryTbl.GetGkaSum(Db.db,region,codes,weekList)
+    weekList = Db.WeeksTbl.GetWeeks(Db.db,period)
+    data = Db.TsEntryTbl.GetGkaSum(Db.db,region,codes,weekList)
 
     colSumList = super().calcColSum(data)
     rowSumList = super().calcRowSum(data)

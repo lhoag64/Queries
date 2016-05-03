@@ -1,18 +1,18 @@
 import logging
-from   database.database     import Database as Db
-from   summary.matrix.matrix import Matrix
+from   database.database         import Database as Db
+from   summary.matrix.matrixdata import MatrixData
 
 #----------------------------------------------------------------------
-class ActivityAmDmrData(Matrix):
+class ActivityAmDmrData(MatrixData):
 #----------------------------------------------------------------------
   def __init__(self,region,type,period):
 
     super().__init__()
 
-    weekList = Db.GetWeeks(period)
-    act      = Db.GetActivities('ALL')
+    weekList = Db.WeeksTbl.GetWeeks(Db.db,period)
+    actList  = Db.TsActTbl.GetActivities(Db.db,'ALL')
 
-    data = Db.tsdb.tsEntryTbl.GetActivityAmDmrSum(Db.db,region,act,weekList)
+    data = Db.TsEntryTbl.GetActivityAmDmrSum(Db.db,region,actList,weekList)
 
     colSumList = super().calcColSum(data)
     rowSumList = super().calcRowSum(data)
@@ -22,7 +22,7 @@ class ActivityAmDmrData(Matrix):
     rowAvgList = super().calcRowAvg(rowSumList,weeks)
 
     self.compData = [rowAvgList]
-    self.data     = super().calcData(data,len(act),weeks)
+    self.data     = super().calcData(data,len(actList),weeks)
 
     self.dataCols = len(self.data)
     self.dataRows = len(self.data[0])
@@ -40,8 +40,8 @@ class ActivityAmDmrData(Matrix):
     gFmt = {'hAlign':'L','vAlign':'C','border':{'A':'thin'},'fill':'Green 1'}
     oFmt = {'hAlign':'L','vAlign':'C','border':{'A':'thin'},'fill':'Orange 1'}
     for i in range(self.dataRows):
-      self.rowDesc.append(act[i][1] + '-' + str(act[i][0]))
-      if (act[i][0] in gSet):
+      self.rowDesc.append(actList[i][1] + '-' + str(actList[i][0]))
+      if (actList[i][0] in gSet):
         self.descRowFmt.append(gFmt)
       else:
         self.descRowFmt.append(oFmt)

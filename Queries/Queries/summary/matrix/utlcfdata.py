@@ -1,18 +1,16 @@
 import logging
 from   database.database     import Database as Db
-from   summary.matrix.matrix import Matrix
+from   summary.matrix.matrixdata import MatrixData
 
 #----------------------------------------------------------------------
-class UtlCfData(Matrix):
+class UtlCfData(MatrixData):
 #----------------------------------------------------------------------
   def __init__(self,region,type,period):
 
     super().__init__()
 
-    weekList = Db.GetWeeks(period)
-#    lts      = Db.GetLts('ALL')
-
-    data = Db.GetUtlCfSum(region,weekList)
+    weekList = Db.WeeksTbl.GetWeeks(Db.db,period)
+    data     = Db.TsEntryTbl.GetUtlCfSum(Db.db,region,weekList)
 
     colSumList = super().calcColSum(data)
     rowSumList = super().calcRowSum(data)
@@ -37,7 +35,5 @@ class UtlCfData(Matrix):
     self.colCompDesc = ['Avg']
 
     self.rowDesc = ['For','Total Time','Utilisation as a %']
-    #for i in range(self.dataRows):
-    #  self.rowDesc.append(lts[i][0])
 
     self.rowCompDesc = []

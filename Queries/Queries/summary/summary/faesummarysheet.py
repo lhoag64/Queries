@@ -62,8 +62,8 @@ class FaeSummarySheet:
     fmt1  = {'hAlign':'C','vAlign':'C','font':{'emph':'B','size':14}}
     fmt2  = {'hAlign':'C','vAlign':'C','wrap':True,'border':{'A':'thin'},'fill':'Blue 2','font':{'emph':'B'}}
 
-    weeks = Db.tsdb.weeksTbl.GetWeeks(Db.db,period)
-    data  = Db.tsdb.tsEntryTbl.GetFaeHourSummary(Db.db,region,weeks)
+    weeks = Db.WeeksTbl.GetWeeks(Db.db,period)
+    data  = Db.TsEntryTbl.GetFaeHourSummary(Db.db,region,weeks)
 
     rows = len(data)
     erow = 2+rows+6

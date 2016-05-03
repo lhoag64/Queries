@@ -1,18 +1,18 @@
 import logging
-from   database.database     import Database as Db
-from   summary.matrix.matrix import Matrix
+from   database.database         import Database as Db
+from   summary.matrix.matrixdata import MatrixData
 
 #----------------------------------------------------------------------
-class LtsData(Matrix):
+class LtsData(MatrixData):
 #----------------------------------------------------------------------
   def __init__(self,region,type,period):
 
     super().__init__()
 
-    weekList = Db.GetWeeks(period)
-    lts      = Db.GetLts('ALL')
+    weekList = Db.WeeksTbl.GetWeeks(Db.db,period)
+    lts      = Db.TsLtsTbl.GetLts(Db.db,'ALL')
 
-    data = Db.GetLtsSum(region,lts,weekList)
+    data = Db.TsEntryTbl.GetLtsSum(Db.db,region,lts,weekList)
 
     colSumList = super().calcColSum(data)
     rowSumList = super().calcRowSum(data)

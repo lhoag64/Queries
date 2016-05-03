@@ -1,24 +1,24 @@
 import logging
 from   database.database     import Database as Db
-from   summary.matrix.matrix import Matrix
+from   summary.matrix.matrixdata import MatrixData
 
 #----------------------------------------------------------------------
-class FaeOtData(Matrix):
+class FaeOtData(MatrixData):
 #----------------------------------------------------------------------
   def __init__(self,region,type,period):
 
     super().__init__()
 
-    weekList = Db.GetWeeks(period)
+    weekList = Db.WeeksTbl.GetWeeks(Db.db,period)
+    faeList  = Db.TsEntryTbl.GetFaeList(Db.db,region,period)
 
-    faeList = Db.tsdb.tsEntryTbl.GetFaeList(Db.db,region,period)
+    weekList = Db.WeeksTbl.GetWeeks(Db.db,period)
+    result   = Db.TsEntryTbl.GetFaeOtSum(Db.db,region,weekList)
+
     faeDict = {}
     for fae in faeList:
       if ((fae[0],fae[1]) not in faeDict):
         faeDict[(fae[0],fae[1])] = [fae[2],fae[3],fae[4]]
-
-    weekList = Db.tsdb.weeksTbl.GetWeeks(Db.db,period)
-    result = Db.tsdb.tsEntryTbl.GetFaeOtSum(Db.db,region,weekList)
 
     data = [[None for i in range(len(result[0]))] for j in range(len(result))]
     for i in range(len(result)):
@@ -42,11 +42,7 @@ class FaeOtData(Matrix):
       weeks = len(weekList)
 
     rowAvgList = super().calcRowAvg(rowSumList,weeks)
-    #conHrsList = []
-    #maxHrsList = []
-    #for fae in faeList:
-    #  conHrsList.append(fae[2])
-    #  maxHrsList.append(fae[3])
+
     self.compData = [rowAvgList]
 
     self.data     = super().calcData(data,len(faeList),weeks)

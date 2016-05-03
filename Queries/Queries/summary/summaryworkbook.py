@@ -1,9 +1,12 @@
 import logging
 from   xlinterface.xlworkbook       import XlWorkBook
 from   xlinterface.xlworksheet      import XlWorkSheet
-from   summary.matrix.matrixsheet   import MatrixSheet
-from   summary.charts.chartssheet   import ChartsSheet
-from   summary.summary.summarysheet import SummarySheet
+from   summary.matrix.metricworksheet     import MetricWorkSheet
+from   summary.matrix.faeworksheet        import FaeWorkSheet
+from   summary.summary.metricsummarysheet import MetricSummarySheet
+from   summary.summary.faesummarysheet    import FaeSummarySheet
+from   summary.charts.metricchartsheet    import MetricChartSheet
+from   summary.charts.faechartsheet       import FaeChartSheet
 
 #----------------------------------------------------------------------
 class SummaryWorkBook:
@@ -31,7 +34,10 @@ class SummaryWorkBook:
       name = '???'
 
     ws = self.wb.CreateXlWorkSheet(name)
-    matrix = MatrixSheet(ws,region,type,period)
+    if (type == 'METRICS'):
+      matrix = MetricWorkSheet(ws,region,type,period)
+    elif (type == 'FAE'):
+      matrix = FaeWorkSheet(ws,region,type,period)
     self.wsDict[shName] = ('Matrix',matrix,ws,name)
 
   #--------------------------------------------------------------------
@@ -51,8 +57,11 @@ class SummaryWorkBook:
       name = '???'
 
     ws = self.wb.CreateXlWorkSheet(name)
-    matrix = ChartsSheet(ws,region,type,period)
-    self.wsDict[shName] = ('Charts',matrix,ws,name)
+    if (type == 'METRICS'):
+      charts = MetricChartSheet(ws,region,type,period)
+    elif (type == 'FAE'):
+      charts = FaeChartSheet(ws,region,type,period)
+    self.wsDict[shName] = ('Charts',charts,ws,name)
 
   #--------------------------------------------------------------------
   def AddSummary(self,region,type,period):
@@ -71,8 +80,11 @@ class SummaryWorkBook:
       name = '???'
 
     ws = self.wb.CreateXlWorkSheet(name)
-    matrix = SummarySheet(ws,region,type,period)
-    self.wsDict[shName] = ('Summary',matrix,ws,name)
+    if (type == 'METRICS'):
+      summary = MetricSummarySheet(ws,region,type,period)
+    elif (type == 'FAE'):
+      summary = FaeSummarySheet(ws,region,type,period)
+    self.wsDict[shName] = ('Summary',summary,ws,name)
 
   #--------------------------------------------------------------------
 #  def AddCharts(self,region,type,period):
