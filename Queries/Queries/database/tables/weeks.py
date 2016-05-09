@@ -29,7 +29,11 @@ class WeeksTable(Table):
                wc_date    TEXT,
                we_date    TEXT,
                am_days    TEXT,
-               emea_days  TEXT,
+               uk_days    TEXT,
+               fr_days    TEXT,
+               de_days    TEXT,
+               fi_days    TEXT,
+               se_days    TEXT,
                gc_days    TEXT,
                gc_week    TEXT
              )
@@ -68,16 +72,20 @@ class WeeksTable(Table):
         we_date = we_date.strftime('%Y-%m-%d')
 
       am_days   = ws.GetValue(wsRow,wsCol+ 3)
-      emea_days = ws.GetValue(wsRow,wsCol+ 4)
-      gc_days   = ws.GetValue(wsRow,wsCol+ 5)
-      gc_week   = ws.GetValue(wsRow,wsCol+ 6)
+      uk_days   = ws.GetValue(wsRow,wsCol+ 4)
+      fr_days   = ws.GetValue(wsRow,wsCol+ 5)
+      de_days   = ws.GetValue(wsRow,wsCol+ 6)
+      fi_days   = ws.GetValue(wsRow,wsCol+ 7)
+      se_days   = ws.GetValue(wsRow,wsCol+ 8)
+      gc_days   = ws.GetValue(wsRow,wsCol+ 9)
+      gc_week   = ws.GetValue(wsRow,wsCol+10)
 
-      week = (index,wc_date,we_date,am_days,emea_days,gc_days,gc_week)
+      week = (index,wc_date,we_date,am_days,uk_days,fr_days,de_days,fi_days,se_days,gc_days,gc_week)
       weekList.append(week)
       wsRow += 1
       index += 1
 
-    c.executemany('INSERT INTO weeks VALUES (?,?,?,?,?,?,?)',weekList)
+    c.executemany('INSERT INTO weeks VALUES (?,?,?,?,?,?,?,?,?,?,?)',weekList)
 
     db.commit()
 

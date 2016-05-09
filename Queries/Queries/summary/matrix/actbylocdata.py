@@ -15,7 +15,7 @@ class ActByLocData(MatrixData):
     act     = kwargs['act']
     locList = kwargs['loc']
 
-    data = Db.GetActByLocSum(Db.db,region,act,locList,weekList)
+    data = Db.TsEntryTbl.GetActByLocSum(Db.db,region,act,locList,weekList)
 
     actDesc = ''
     for item in actList:

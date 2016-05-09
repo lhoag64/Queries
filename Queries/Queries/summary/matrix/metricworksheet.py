@@ -3,7 +3,6 @@ from   xlinterface.xlworkbook            import XlWorkBook
 from   xlinterface.xlworksheet           import XlWorkSheet
 from   summary.matrix.matrixdata         import MatrixData 
 from   summary.matrix.matrixtable        import MatrixTable
-#from   summary.charts.chartdata          import ChartData
 from   openpyxl.chart                    import LineChart
 from   openpyxl.chart                    import BarChart
 from   openpyxl.chart.reference          import Reference

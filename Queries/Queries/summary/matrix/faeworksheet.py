@@ -19,21 +19,17 @@ class FaeWorkSheet:
     startRow = 2
     startCol = 2
 
-    data  = FaeAwhData(region,'FAE-AWH',period)
-    table = MatrixTable(ws,startRow,startCol,data)
-    startRow += data.dataRows + 2
+    table = MatrixTable(ws,startRow,startCol,FaeAwhData(region,'FAE-AWH',period))
+    startRow += table.bottomRow
 
-    data  = FaeWhData(region,'FAE-WH',period)
-    table = MatrixTable(ws,startRow,startCol,data)
-    startRow += data.dataRows + 2
+    table = MatrixTable(ws,startRow,startCol,FaeWhData(region,'FAE-WH',period))
+    startRow += table.bottomRow
 
-    data  = FaeLtData(region,'FAE-LT',period)
-    table = MatrixTable(ws,startRow,startCol,data)
-    startRow += data.dataRows + 2
-
-    data  = FaeOtData(region,'FAE-OT',period)
-    table = MatrixTable(ws,startRow,startCol,data)
-    startRow += data.dataRows + 2
+#    table = MatrixTable(ws,startRow,startCol,FaeLtData(region,'FAE-LT',period))
+#    startRow += table.bottomRow
+#
+#    table = MatrixTable(ws,startRow,startCol,FaeOtData(region,'FAE-OT',period))
+#    startRow += table.bottomRow
 
 
 

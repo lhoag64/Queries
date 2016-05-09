@@ -1,6 +1,6 @@
 import logging
-from   xlinterface.xlworkbook       import XlWorkBook
-from   xlinterface.xlworksheet      import XlWorkSheet
+from   xlinterface.xlworkbook             import XlWorkBook
+from   xlinterface.xlworksheet            import XlWorkSheet
 from   summary.matrix.metricworksheet     import MetricWorkSheet
 from   summary.matrix.faeworksheet        import FaeWorkSheet
 from   summary.summary.metricsummarysheet import MetricSummarySheet

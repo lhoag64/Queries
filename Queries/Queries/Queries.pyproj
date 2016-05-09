@@ -25,6 +25,31 @@
     <Compile Include="database\database.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="database\queries\getactbylocsum.py" />
+    <Compile Include="database\queries\getactbyprdteam.py" />
+    <Compile Include="database\queries\getactivityamdmrsum.py" />
+    <Compile Include="database\queries\getactivityammisum.py" />
+    <Compile Include="database\queries\getactivitysum.py" />
+    <Compile Include="database\queries\getatmcarsum.py" />
+    <Compile Include="database\queries\getammirkasum.py" />
+    <Compile Include="database\queries\getamrkasum.py" />
+    <Compile Include="database\queries\getamtmsmcsum.py" />
+    <Compile Include="database\queries\getfaeawhsum.py" />
+    <Compile Include="database\queries\getfaehoursummary.py" />
+    <Compile Include="database\queries\getfaelist.py" />
+    <Compile Include="database\queries\getfaeltsum.py" />
+    <Compile Include="database\queries\getfaeotsum.py" />
+    <Compile Include="database\queries\getfaewhsum.py" />
+    <Compile Include="database\queries\getgkasum.py" />
+    <Compile Include="database\queries\getltssum.py" />
+    <Compile Include="database\queries\getovertimesum.py" />
+    <Compile Include="database\queries\getutldtsum.py" />
+    <Compile Include="database\queries\getultlssum.py" />
+    <Compile Include="database\queries\getutlcfsum.py" />
+    <Compile Include="database\queries\getutlpssum.py" />
+    <Compile Include="database\queries\getwedate.py" />
+    <Compile Include="database\queries\getweeks.py" />
+    <Compile Include="database\queries\__init__.py" />
     <Compile Include="database\tables\faedata.py" />
     <Compile Include="database\tables\faeloc.py">
       <SubType>Code</SubType>
@@ -223,9 +248,6 @@
     <Compile Include="Queries.py" />
     <Compile Include="summary\charts\faechartsheet.py" />
     <Compile Include="summary\charts\metricchartsheet.py" />
-    <Compile Include="summary\charts\utldata.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="summary\charts\__init__.py" />
     <Compile Include="summary\matrix\actbyprdteamdata.py" />
     <Compile Include="summary\matrix\actvitivyammidata.py" />
@@ -244,9 +266,6 @@
     <Compile Include="summary\matrix\faeawhdata.py" />
     <Compile Include="summary\matrix\amrkadata.py" />
     <Compile Include="summary\matrix\ltsdata.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="summary\matrix\matrixsheet.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="summary\matrix\matrixdata.py">
@@ -292,6 +311,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="database\" />
+    <Folder Include="database\queries\" />
     <Folder Include="database\tables\" />
     <Folder Include="summary\" />
     <Folder Include="openpyxl\" />

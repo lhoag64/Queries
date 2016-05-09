@@ -1,32 +1,74 @@
 import logging
 #from   database.database import Database as Db
 
+class MatrixDataTitle:
+  def __init__(self,hgt,wid,fmt):
+    self.rows     = 1
+    self.cols     = 1
+    self.hgt      = hgt
+    self.wid      = wid
+    self.data     = None
+    self.fmt      = fmt
+
+class MatrixDataColHdr:
+  def __init__(self,hgt,wid,fmt):
+    self.rows     = 1
+    self.cols     = 0
+    self.hgt      = hgt
+    self.wid      = wid
+    self.data     = None
+    self.fmt      = fmt
+
+class MatrixDataRowHdr:
+  def __init__(self,hgt,wid,fmt):
+    self.rows     = 0
+    self.cols     = 1
+    self.hgt      = hgt
+    self.wid      = wid
+    self.data     = None
+    self.fmt      = fmt
+
+class MatrixDataData:
+  def __init__(self,hgt,wid,fmt):
+    self.rows     = 1
+    self.cols     = 0
+    self.hgt      = hgt
+    self.wid      = wid
+    self.data     = None
+    self.fmt      = fmt
+
+  #--------------------------------------------------------------------
 #----------------------------------------------------------------------
 class MatrixData:
-  #--------------------------------------------------------------------
+  #title       = None
+  #rowHdr      = None
+  #colHdr      = None
+  #data        = None
+  #rowCompHdr  = None
+  #rowCompData = None
+  #colCompHdr  = None
+  #colCompData = None
+
   def __init__(self):
-    self.descCols = 1
-    self.dataCols = 0
-    self.compCols = 1
 
-    self.descRows = 1
-    self.dataRows = 0
-    self.compRows = 0
+    titleFmt   = {'hAlign':'C','vAlign':'C','border':{'A':'thin'}}
+    rowHdrFmt  = {'hAlign':'L','vAlign':'C','border':{'A':'thin'}}
+    colHdrFmt  = {'hAlign':'C','vAlign':'C','tAlign':90,'border':{'A':'thin'}}
+    dataFmt    = {'hAlign':'R','vAlign':'C','border':{'A':'thin'},'numFmt':'0.0'}
 
-    self.descColWid = 45
-    self.dataColWid =  8
-    self.compColWid =  8
+    topHgt  = 20
+    leftWid = 45
+    dataHgt = 10
+    dataWid = 20
 
-    self.descRowHgt = 45
-    self.dataRowHgt = 15
-    self.compRowHgt = 15
-
-    self.titleFmt       = {'hAlign':'C','vAlign':'C','border':{'A':'thin'}}
-    self.descRowFmt     = {'hAlign':'L','vAlign':'C','border':{'A':'thin'}}
-    self.descCompRowFmt = self.descRowFmt
-    self.descColFmt     = {'hAlign':'C','vAlign':'C','tAlign':90,'border':{'A':'thin'}}
-    self.descCompColFmt = self.descColFmt
-    self.dataFmt        = {'hAlign':'R','vAlign':'C','border':{'A':'thin'},'numFmt':'0.0'}
+    self.title       = MatrixDataTitle(topHgt,leftWid,titleFmt)
+    self.rowHdr      = MatrixDataRowHdr(dataHgt,leftWid,rowHdrFmt)
+    self.colHdr      = MatrixDataColHdr(topHgt,dataWid,colHdrFmt)
+    self.data        = MatrixDataData(dataHgt,dataWid,dataFmt)
+    self.rowCompHdr  = MatrixDataRowHdr(dataHgt,leftWid,rowHdrFmt)
+    self.rowCompData = MatrixDataData(dataHgt,dataWid,dataFmt)
+    self.colCompHdr  = MatrixDataColHdr(topHgt,dataWid,colHdrFmt)
+    self.colCompData = MatrixDataData(dataHgt,dataWid,dataFmt)
 
   #--------------------------------------------------------------------
   def calcColSum(self,data):
