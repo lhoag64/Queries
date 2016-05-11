@@ -114,7 +114,7 @@ class Timesheet:
     #nameFromFile = nameFromFile.ljust(18)
     #dateFromFile = dateFromFile.ljust(15)
 
-    logging.debug(tsname + '|' + tsdate + '|Reading ' + path)
+    logging.debug(tsname.ljust(20) + '|' + tsdate.ljust(10) + '|Reading ' + path)
 
     wsRow     = 7
     wsCol     = startCol

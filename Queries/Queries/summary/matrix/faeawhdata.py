@@ -2,76 +2,114 @@ import logging
 from   database.database             import Database as Db
 from   database.queries.getfaelist   import GetFaeList
 from   database.queries.getfaeawhsum import GetFaeAwhSum
-#import summary.matrix.matrixdata
 from   summary.matrix.matrixdata     import MatrixData
 
 #----------------------------------------------------------------------
 class FaeAwhData(MatrixData):
 #----------------------------------------------------------------------
-  def __init__(self,region,type,period):
+  def __init__(self,region,mType,period):
 
     super().__init__()
 
+    if (type(region) is list):
+      if ('ALL' in region):
+        regionList = ['EMEA','AM','GC']
+      else:
+        regionList = region
+    else:
+      if (region == 'ALL'):
+        regionList = ['EMEA','AM','GC']
+      else:
+        regionList = [region]
+
     weekList = Db.WeeksTbl.GetWeeks(Db.db,period)
-    faeList  = GetFaeList(Db.db,region,period)
-    result   = GetFaeAwhSum(Db.db,region,weekList)
+    result   = GetFaeAwhSum(Db.db,regionList,weekList)
 
-    faeDict = {}
-    for fae in faeList:
-      if ((fae[0],fae[1]) not in faeDict):
-        faeDict[(fae[0],fae[1])] = [fae[2],fae[3],fae[4]]
+    faeList  = result.faeList
+    weekList = result.weekList
 
-    data = [[None for i in range(len(result[0]))] for j in range(len(result))]
-    for i in range(len(result)):
-      for j in range(len(result[i])):
-        data[i][j] = result[i][j][2]
+    faeCnt = len(faeList)
+    weekCnt = len(weekList)
 
-    colSumList = super().calcColSum(data)
-    rowSumList = super().calcRowSum(data)
-    weeks      = super().calcCols(colSumList)
-    if (weeks != len(weekList)):
-      weeks = len(weekList)
+    headCntList = []
+    workDaysList = []
+    data = [[None for i in range(faeCnt)] for j in range(weekCnt)]
+    for i in range(weekCnt):
+      headCntList.append(weekList[i].headCount)
+      workDaysList.append(weekList[i].workingDays)
+      for j in range(faeCnt):
+        fname = faeList[j].fname
+        lname = faeList[j].lname
+        tup   = weekList[i].hours[j]
+        if (fname != tup[0] and lname != tup[1]):
+          logging.error('Database corrupt matching FAE names')
+          return None
+        data[i][j] = tup[2]
+      logging.debug('')
 
-    rowAvgList = super().calcRowAvg(rowSumList,weeks)
+    self.data.data = super().calcData(data,faeCnt,weekCnt)
+    self.data.cols = weekCnt
+    self.data.rows = faeCnt
 
-    self.data.data = super().calcData(data,len(faeList),weeks)
-    self.data.cols = len(self.data.data)
-    self.data.rows = len(self.data.data[0])
-
+    rowAvgList = super().calcRowAvg(super().calcRowSum(data))
+    colAvgList = super().calcColAvg(super().calcColSum(data))
     conHrsList = []
     maxHrsList = []
+    faeRgnList = []
     for fae in faeList:
-      conHrsList.append(fae[2])
-      maxHrsList.append(fae[3])
-    self.colCompData.data = [rowAvgList,conHrsList,maxHrsList]
+      conHrsList.append(fae.nrmHrs)
+      maxHrsList.append(fae.maxHrs)
+      if (len(regionList) > 1):
+        faeRgnList.append(fae.region)
+
+    if (len(regionList) > 1):
+      self.colCompData.data = [rowAvgList,conHrsList,maxHrsList,faeRgnList]
+    else:
+      self.colCompData.data = [rowAvgList,conHrsList,maxHrsList]
     self.colCompData.cols = len(self.colCompData.data)
-    self.colCompHdr.data  = ['Avg','ConHour','EUWTD']
+    self.colCompData.rows = faeCnt
 
-    self.rowCompData.data = [[None for i in range(8)] for j in range(len(result))]
-    self.rowCompData.rows = len(self.rowCompData.data)
-    self.rowCompData.cols = len(self.rowCompData.data)
-    for i in range(len(result)):
-      self.rowCompData.data[i][0] = result[i][1]
-      self.rowCompData.data[i][1] = result[i][2]
-      self.rowCompData.data[i][2] = result[i][3]
-      self.rowCompData.data[i][3] = result[i][4]
-      self.rowCompData.data[i][4] = result[i][5]
-      self.rowCompData.data[i][5] = result[i][6]
-      self.rowCompData.data[i][6] = result[i][7]
-      self.rowCompData.data[i][7] = result[i][8]
+    super().calcFaeColCompHdr(regionList,['Avg','Contracted\rHours',{'EMEA':'EUWTD','OTHER':'Max Hours'}])
 
-    self.rowCompHdr.data = ['Week','HC','AM Hours','UK Hours','FR Hours','DE Hours','FI Hours','SE Hours','GC Hours']
+    compDataFmt = {'hAlign':'R','vAlign':'C','border':{'A':'thin'},'numFmt':'0'}
+    self.rowCompData.fmt = compDataFmt
+    self.rowCompData.data = [[] for i in range(weekCnt)]
+    for i in range(weekCnt):
+      self.rowCompData.data[i].append(colAvgList[i])
+      self.rowCompData.data[i].append(headCntList[i])
+      if ('AM' in regionList):
+        self.rowCompData.data[i].append(workDaysList[i].am_days)
+      if ('EMEA' in regionList):
+        self.rowCompData.data[i].append(workDaysList[i].uk_days)
+        self.rowCompData.data[i].append(workDaysList[i].fr_days)
+        self.rowCompData.data[i].append(workDaysList[i].de_days)
+        self.rowCompData.data[i].append(workDaysList[i].fi_days)
+        self.rowCompData.data[i].append(workDaysList[i].se_days)
+      if ('GC' in regionList):
+        self.rowCompData.data[i].append(workDaysList[i].gc_days)
 
-    self.title.data = 'Actual Working Hours'
-    self.colHdr.data = []
-    for i in range(self.data.cols):
-      self.colHdr.data.append('Week ' + str(i+1))
+    self.rowCompData.rows = len(self.rowCompData.data[0])
+    self.rowCompData.cols = weekCnt
 
-    self.rowHdr.data = []
-    for i in range(self.data.rows):
-      tup = result[0][i]
-      name = tup[0] + ' ' + tup[1]
-      self.rowHdr.data.append(name)
+    self.rowCompHdr.data = []
+    self.rowCompHdr.data.append('Week Average')
+    self.rowCompHdr.data.append('HeadCount')
+    if ('AM' in regionList):
+      self.rowCompHdr.data.append('AM Working Days')
+    if ('EMEA' in regionList):
+      self.rowCompHdr.data.append('UK Working Days')
+      self.rowCompHdr.data.append('FR Working Days')
+      self.rowCompHdr.data.append('DE Working Days')
+      self.rowCompHdr.data.append('FI Working Days')
+      self.rowCompHdr.data.append('SE Working Days')
+    if ('GC' in regionList):
+      self.rowCompHdr.data.append('GC Working Days')
 
-    logging.debug('')
+    self.rowCompHdr.rows = len(self.rowCompHdr.data)
+
+    super().calcFaeTitle('Actual Working Hours (exc Leave/Holiday)',regionList,period)
+    super().calcFaeColHdr()
+    super().calcFaeRowHdr(faeList)
+
+
 

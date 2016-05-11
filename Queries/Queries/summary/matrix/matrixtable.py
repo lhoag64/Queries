@@ -2,12 +2,19 @@ import logging
 from   xlinterface.xlworkbook     import XlWorkBook
 from   xlinterface.xlworksheet    import XlWorkSheet
 from   summary.matrix.matrixdata  import MatrixData
+# Conditional formatting
+from openpyxl                     import Workbook
+from openpyxl.styles              import Color,PatternFill,Font,Border
+from openpyxl.styles.differential import DifferentialStyle
+from openpyxl.formatting.rule     import ColorScaleRule,CellIsRule,FormulaRule,IconSet,FormatObject,Rule
 
 #----------------------------------------------------------------------
 class MatrixTableArea:
   def __init__(self,startRow,startCol,data):
     self.sRow = startRow
     self.sCol = startCol
+    self.eRow = startRow + data.rows - 1
+    self.eCol = startCol + data.cols - 1
     self.rows = data.rows
     self.cols = data.cols
     self.hgt  = data.hgt
@@ -42,13 +49,19 @@ class MatrixTable:
     for i in range(self.data.cols):
       ws.SetColWid(wsCol,self.data.wid)
       wsCol += 1
+    for i in range(self.colCompData.cols):
+      ws.SetColWid(wsCol,self.colCompData.wid)
+      wsCol += 1
 
-    # Set column sizes
+    # Set row sizes
     wsRow = startRow
     ws.SetRowHgt(wsRow,self.colHdr.hgt)
     wsRow += 1
     for j in range(self.data.rows):
       ws.SetRowHgt(wsRow,self.data.hgt)
+      wsRow += 1
+    for j in range(self.rowCompData.rows):
+      ws.SetRowHgt(wsRow,self.rowCompData.hgt)
       wsRow += 1
 
     # Draw title
@@ -77,7 +90,7 @@ class MatrixTable:
         ws.SetCell(wsRow,wsCol,rowCompHdr.data[i],rowCompHdr.fmt)
       wsRow += 1
 
-'''
+
     # Draw col descriptions
     colHdr = self.colHdr
     wsRow = colHdr.sRow
@@ -87,7 +100,7 @@ class MatrixTable:
         ws.SetCell(wsRow,wsCol,colHdr.data[i],colHdr.fmt[i])
       else:
         ws.SetCell(wsRow,wsCol,colHdr.data[i],colHdr.fmt)
-      wsRow += 1
+      wsCol += 1
 
     # Draw col computed descriptions
     colCompHdr = self.colCompHdr
@@ -98,41 +111,52 @@ class MatrixTable:
         ws.SetCell(wsRow,wsCol,colCompHdr.data[i],colCompHdr.fmt[i])
       else:
         ws.SetCell(wsRow,wsCol,colCompHdr.data[i],colCompHdr.fmt)
-      wsRow += 1
-
+      wsCol += 1
 
     # Draw data
     data = self.data
     wsRow = data.sRow
     wsCol = data.sCol
     for i in range(data.cols):
-      wsRow = data.sRow + 1
+      wsRow = data.sRow
       for j in range(data.rows):
         ws.SetCell(wsRow,wsCol,data.data[i][j],data.fmt)
         wsRow += 1
       wsCol += 1
 
     # Draw row computed data
-    rowCompData = self.rowCompData
-    wsRow = rowCompData.sRow
-    wsCol = rowCompData.sCol
-    for i in range(rowCompData.cols):
-      wsRow = rowCompData.sRow + 1
-      for j in range(len(data.rowpData[i])):
-        ws.SetCell(wsRow,wsCol,rowCompData.data[i][j],rowCompData.fmt)
+    data = self.rowCompData
+    wsRow = data.sRow
+    wsCol = data.sCol
+    for i in range(data.cols):
+      wsRow = data.sRow
+      for j in range(data.rows):
+        ws.SetCell(wsRow,wsCol,data.data[i][j],data.fmt)
         wsRow += 1
       wsCol += 1
 
     # Draw col computed data
-    colCompData = self.colCompData
-    wsRow = colCompData.sRow
-    wsCol = colCompData.sCol
-    for i in range(colCompData.cols):
-      wsRow = colCompData.sRow + 1
-      for j in range(len(data.compData[i])):
-        ws.SetCell(wsRow,wsCol,colCompData.data[i][j],colCompData.fmt)
+    data = self.colCompData
+    wsRow = data.sRow
+    wsCol = data.sCol
+    for i in range(data.cols):
+      wsRow = data.sRow
+      for j in range(data.rows):
+        ws.SetCell(wsRow,wsCol,data.data[i][j],data.fmt)
         wsRow += 1
       wsCol += 1
+
+    ws.DrawBorder(self.title.sRow,      self.title.sCol,      self.title.eRow,      self.title.eCol,      'medium')
+    ws.DrawBorder(self.rowHdr.sRow,     self.rowHdr.sCol,     self.rowHdr.eRow,     self.rowHdr.eCol,     'medium')
+    ws.DrawBorder(self.colHdr.sRow,     self.colHdr.sCol,     self.colHdr.eRow,     self.colHdr.eCol,     'medium')
+    ws.DrawBorder(self.data.sRow,       self.data.sCol,       self.data.eRow,       self.data.eCol,       'medium')
+    ws.DrawBorder(self.rowCompHdr.sRow, self.rowCompHdr.sCol, self.rowCompHdr.eRow, self.rowCompHdr.eCol, 'medium')
+    ws.DrawBorder(self.rowCompData.sRow,self.rowCompData.sCol,self.rowCompData.eRow,self.rowCompData.eCol,'medium')
+    ws.DrawBorder(self.colCompHdr.sRow, self.colCompHdr.sCol, self.colCompHdr.eRow, self.colCompHdr.eCol, 'medium')
+    ws.DrawBorder(self.colCompData.sRow,self.colCompData.sCol,self.colCompData.eRow,self.colCompData.eCol,'medium')
+
+
+'''
 
     tRow       = startRow
     tCol       = startCol

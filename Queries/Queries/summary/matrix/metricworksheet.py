@@ -29,18 +29,34 @@ from   summary.matrix.faeotdata          import FaeOtData
 
 #----------------------------------------------------------------------
 class MetricWorkSheet:
+  FuncDict = \
+    {
+      'FAE-AWH': FaeAwhData, \
+      'FAE-WH' : FaeWhData,  \
+    }
   #--------------------------------------------------------------------
-  def __init__(self,ws,region,type,period):
+  def __init__(self,ws,matrixList):
     self.ws     = ws
-    self.region = region
-    self.type   = type
-    self.period = period
+    self.list   = matrixList
 
     startRow = 2
     startCol = 2
 
     self.tables = {}
 
+    for item in matrixList:
+      region = item[0]
+      mType  = item[1]
+      period = item[2]
+      if (mType in self.FuncDict):
+        data  = self.FuncDict[mType](region,mType,period)
+        table = MatrixTable(ws,startRow,startCol,data)
+        startRow = table.bottomRow + 2
+      else:
+        logging.debug('Function table does have: ' + mType)
+
+
+'''
     data  = ActivityData(region,'ACTIVITY',period)
     table = MatrixTable(ws,startRow,startCol,data)
     self.tables['ACTIVITY'] = (data,table)
@@ -146,5 +162,5 @@ class MetricWorkSheet:
         startRow += data.dataRows + 2
 
     logging.debug('')
-
+'''
 

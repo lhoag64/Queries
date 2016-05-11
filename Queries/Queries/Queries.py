@@ -1,4 +1,5 @@
 import logging
+import os
 from   logconfig               import LogConfig
 from   database                import Database as Db
 from   timesheet.calendar      import Calendar
@@ -8,65 +9,78 @@ from   timesheet.tsdata        import TsData
 from   summary.summaryworkbook import SummaryWorkBook
 
 #----------------------------------------------------------------------
-def InitializeDatabase():
-  Db()
-  Db.Connect(r'X:\Reporting\Timesheets','timesheets.db')
+def InitializeDatabaseTables():
 
   tblList = []
-  #tblList.append('fae_lbrtype')
-  #tblList.append('fae_loc')
-  #tblList.append('fae_prdtm')
-  #tblList.append('fae_region')
-  #tblList.append('fae_team')
-  #tblList.append('ts_code')
-  #tblList.append('ts_loc')
-  #tblList.append('ts_act')
-  #tblList.append('ts_prd')
-  #tblList.append('ts_lts')
-  #tblList.append('ts_file')
-  #tblList.append('ts_entry')
+  tblList.append('fae_lbrtype')
+  tblList.append('fae_loc')
+  tblList.append('fae_prdtm')
+  tblList.append('fae_region')
+  tblList.append('fae_team')
+  tblList.append('ts_code')
+  tblList.append('ts_loc')
+  tblList.append('ts_act')
+  tblList.append('ts_prd')
+  tblList.append('ts_lts')
+  tblList.append('ts_file')
+  tblList.append('ts_entry')
   tblList.append('weeks')
 
   Db.CreateTables(tblList)
 
 #----------------------------------------------------------------------
-def InitializeTimesheetData():
+def InitializeTimesheetTables():
 
   Calendar(2016)
 
   rng = range(1,16+1)
   #rng = range(1,1+1)
 
-  #emea_team = FaeTeam('EMEA')
-  #am_team   = FaeTeam('AM')
-  #gc_team   = FaeTeam('GC')
+  emea_team = FaeTeam('EMEA')
+  am_team   = FaeTeam('AM')
+  gc_team   = FaeTeam('GC')
 
-  #fldata = FlData(r'X:\Reporting\Timesheets\EMEA',emea_team)
-  #tsdata = TsData('EMEA',emea_team,rng,fldata)
-  #Db.InsertTimesheets(tsdata)
+  fldata = FlData(r'X:\Reporting\Timesheets\EMEA',emea_team)
+  tsdata = TsData('EMEA',emea_team,rng,fldata)
+  Db.InsertTimesheets(tsdata)
 
-  #fldata = FlData(r'X:\Reporting\Timesheets\AM',am_team)
-  #tsdata = TsData('AM',am_team,rng,fldata)
-  #Db.InsertTimesheets(tsdata)
+  fldata = FlData(r'X:\Reporting\Timesheets\AM',am_team)
+  tsdata = TsData('AM',am_team,rng,fldata)
+  Db.InsertTimesheets(tsdata)
 
-  #fldata = FlData(r'X:\Reporting\Timesheets\GC',gc_team)
-  #tsdata = TsData('GC',gc_team,rng,fldata)
-  #Db.InsertTimesheets(tsdata)
+  fldata = FlData(r'X:\Reporting\Timesheets\GC',gc_team)
+  tsdata = TsData('GC',gc_team,rng,fldata)
+  Db.InsertTimesheets(tsdata)
 
 #  Db.tsdb.db.close()
 
 #----------------------------------------------------------------------
 if (__name__ == '__main__'):
 
+  os.chdir('X:\Reporting\Timesheets')
+
   LogConfig('queries.log')
   logging.debug('Start of Program')
 
-  InitializeDatabase()
-  InitializeTimesheetData()
+  Db()
+  Db.Connect(r'X:\Reporting\Timesheets','timesheets.db')
+
+  if (False):
+    InitializeDatabaseTables()
+    InitializeTimesheetTables()
+
+  matrixList = []
+  matrixList.append(('AM',  'FAE-AWH','ALL'))
+  #matrixList.append(('AM',  'FAE-WH', 'ALL'))
+  matrixList.append(('EMEA','FAE-AWH','ALL'))
+  #matrixList.append(('EMEA','FAE-WH', 'ALL'))
+  matrixList.append(('GC',  'FAE-AWH','ALL'))
+  #matrixList.append(('GC',  'FAE-WH', 'ALL'))
+  matrixList.append((['AM','GC'], 'FAE-AWH','JAN'))
 
   summary = SummaryWorkBook()
-  summary.AddMatrix('ALL' ,'FAE','ALL')
-  summary.AddMatrix('EMEA','FAE','ALL')
+  summary.AddMatrixSheet('All-FAE-AWH-YTD',matrixList)
+  #summary.AddMatrix('EMEA','FAE','ALL')
   #summary.AddSummary('AM','METRICS','ALL')
   #summary.AddSummary('AM','FAE','ALL')
   #summary.AddMatrix('AM','METRICS','ALL')

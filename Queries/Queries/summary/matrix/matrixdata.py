@@ -19,6 +19,16 @@ class MatrixDataColHdr:
     self.data     = None
     self.fmt      = fmt
 
+  def AddData(self,data,cols=None,rows=None,fmt=None):
+    self.data = data
+    if (type(data) in [list,dict]):
+      self.cols = len(data)
+    else:
+      self.cols = 1
+    if (cols) : self.cols = cols
+    if (rows) : self.rows = rows
+    if (fmt)  : self.fmt  = fmt
+
 class MatrixDataRowHdr:
   def __init__(self,hgt,wid,fmt):
     self.rows     = 0
@@ -27,6 +37,16 @@ class MatrixDataRowHdr:
     self.wid      = wid
     self.data     = None
     self.fmt      = fmt
+
+  def AddData(self,data,cols=None,rows=None,fmt=None):
+    self.data = data
+    if (type(data) in [list,dict]):
+      self.rows = len(data)
+    else:
+      self.rows = 1
+    if (cols) : self.cols = cols
+    if (rows) : self.rows = rows
+    if (fmt)  : self.fmt  = fmt
 
 class MatrixDataData:
   def __init__(self,hgt,wid,fmt):
@@ -40,26 +60,18 @@ class MatrixDataData:
   #--------------------------------------------------------------------
 #----------------------------------------------------------------------
 class MatrixData:
-  #title       = None
-  #rowHdr      = None
-  #colHdr      = None
-  #data        = None
-  #rowCompHdr  = None
-  #rowCompData = None
-  #colCompHdr  = None
-  #colCompData = None
 
   def __init__(self):
 
-    titleFmt   = {'hAlign':'C','vAlign':'C','border':{'A':'thin'}}
+    titleFmt   = {'hAlign':'C','vAlign':'C','border':{'A':'thin'},'wrap':True,'font':{'emph':'B'}}
     rowHdrFmt  = {'hAlign':'L','vAlign':'C','border':{'A':'thin'}}
-    colHdrFmt  = {'hAlign':'C','vAlign':'C','tAlign':90,'border':{'A':'thin'}}
+    colHdrFmt  = {'hAlign':'C','vAlign':'C','tAlign':90,'border':{'A':'thin'},'wrap':True}
     dataFmt    = {'hAlign':'R','vAlign':'C','border':{'A':'thin'},'numFmt':'0.0'}
 
-    topHgt  = 20
+    topHgt  = 55
     leftWid = 45
-    dataHgt = 10
-    dataWid = 20
+    dataHgt = 15
+    dataWid =  7
 
     self.title       = MatrixDataTitle(topHgt,leftWid,titleFmt)
     self.rowHdr      = MatrixDataRowHdr(dataHgt,leftWid,rowHdrFmt)
@@ -74,20 +86,26 @@ class MatrixData:
   def calcColSum(self,data):
     colSumList = []
     for i in range(len(data)):
+      colCnt = 0
       sum = 0.0
       for j in range(len(data[0])):
-        sum += data[i][j]
-      colSumList.append(sum)
+        if (type(data[i][j]) is float):
+          sum += data[i][j]
+          colCnt += 1
+      colSumList.append((sum,colCnt))
     return colSumList
 
   #--------------------------------------------------------------------
   def calcRowSum(self,data):
     rowSumList = []
     for j in range(len(data[0])):
+      rowCnt = 0
       sum = 0.0
       for i in range(len(data)):
-        sum += data[i][j]
-      rowSumList.append(sum)
+        if (type(data[i][j]) is float):
+          sum += data[i][j]
+          rowCnt += 1
+      rowSumList.append((sum,rowCnt))
     return rowSumList
 
   #--------------------------------------------------------------------
@@ -99,10 +117,27 @@ class MatrixData:
     return count
 
   #--------------------------------------------------------------------
-  def calcRowAvg(self,rowSumList,count):
+  def calcColAvg(self,colSumList):
+    colAvgList = []
+    for i in range(len(colSumList)):
+      sum = colSumList[i][0]
+      cnt = colSumList[i][1]
+      if (cnt != 0):
+        colAvgList.append(sum / float(cnt))
+      else:
+        colAvgList.append(0.0)
+    return colAvgList
+
+  #--------------------------------------------------------------------
+  def calcRowAvg(self,rowSumList):
     rowAvgList = []
     for i in range(len(rowSumList)):
-      rowAvgList.append(rowSumList[i] / float(count))
+      sum = rowSumList[i][0]
+      cnt = rowSumList[i][1]
+      if (cnt != 0):
+        rowAvgList.append(sum / float(cnt))
+      else:
+        rowAvgList.append(0.0)
     return rowAvgList
 
   #--------------------------------------------------------------------
@@ -112,3 +147,65 @@ class MatrixData:
       for j in range(rows):
         table[i][j] = data[i][j]
     return table
+
+  #--------------------------------------------------------------------
+  def calcFaeColHdr(self):
+    self.colHdr.data = []
+    for i in range(self.data.cols):
+      self.colHdr.data.append('Week ' + str(i+1))
+    self.colHdr.cols = len(self.colHdr.data)
+
+  #--------------------------------------------------------------------
+  def calcFaeRowHdr(self,faeList):
+    pfmt  = {'hAlign':'L','vAlign':'C','border':{'A':'thin'},'fill':'Green 1'}
+    cfmt  = {'hAlign':'L','vAlign':'C','border':{'A':'thin'},'fill':'Yellow 1'}
+    hdrData = []
+    hdrFmt  = []
+    for fae in faeList:
+      name = fae.fname + ' ' + fae.lname
+      hdrData.append(name)
+      if (fae.lbrType == 'P'):
+        hdrFmt.append(pfmt)
+      else:
+        hdrFmt.append(cfmt)
+    self.rowHdr.AddData(hdrData,fmt=hdrFmt)
+
+  #--------------------------------------------------------------------
+  def calcFaeTitle(self,text,regionList,period):
+
+    if (period == 'ALL'): period = 'YTD'
+
+    self.title.data  = text
+    self.title.data += '\r'
+    if (len(regionList) == 1):
+       self.title.data += 'Region: '
+    else:
+       self.title.data += 'Regions: '
+    self.title.data += ','.join(regionList)
+    self.title.data += '\r'
+    self.title.data += 'Period: ' + period
+
+  #--------------------------------------------------------------------
+  def calcFaeColCompHdr(self,regionList,textList=None):
+
+    hdrText = []
+    if (not textList):
+      hdrText.append('Avg')
+    else:
+      for item in textList:
+        if (type(item) is dict):
+          rgnData = None
+          for rgn in item:
+            if (rgn in regionList):
+              rgnData = item[rgn]
+              break
+          if (not rgnData):
+            rgnData = item['OTHER']
+          hdrText.append(rgnData)
+        else:
+          hdrText.append(item)
+    if (len(regionList) > 1):
+      hdrText.append('Region')
+
+    self.colCompHdr.AddData(hdrText)
+

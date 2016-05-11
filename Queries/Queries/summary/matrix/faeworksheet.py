@@ -22,8 +22,8 @@ class FaeWorkSheet:
     table = MatrixTable(ws,startRow,startCol,FaeAwhData(region,'FAE-AWH',period))
     startRow += table.bottomRow
 
-    table = MatrixTable(ws,startRow,startCol,FaeWhData(region,'FAE-WH',period))
-    startRow += table.bottomRow
+#    table = MatrixTable(ws,startRow,startCol,FaeWhData(region,'FAE-WH',period))
+#    startRow += table.bottomRow
 
 #    table = MatrixTable(ws,startRow,startCol,FaeLtData(region,'FAE-LT',period))
 #    startRow += table.bottomRow

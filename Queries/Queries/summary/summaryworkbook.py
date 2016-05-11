@@ -18,27 +18,11 @@ class SummaryWorkBook:
     self.wsDict['Summary'] = ws
 
   #--------------------------------------------------------------------
-  def AddMatrix(self,region,type,period):
-    shName = region + '-' + type + '-' + period + '-MATRIX'
+  def AddMatrixSheet(self,wsName,matrixList):
 
-    if (period == 'ALL'):
-      p = 'YTD'
-    else:
-      p = period
-
-    if (type == 'METRICS'):
-      name = 'Matrix (' + region + '-' + p + ')'
-    elif (type == 'FAE'):
-      name = 'Matrix (FAE-' + region + '-' + p + ')'
-    else:
-      name = '???'
-
-    ws = self.wb.CreateXlWorkSheet(name)
-    if (type == 'METRICS'):
-      matrix = MetricWorkSheet(ws,region,type,period)
-    elif (type == 'FAE'):
-      matrix = FaeWorkSheet(ws,region,type,period)
-    self.wsDict[shName] = ('Matrix',matrix,ws,name)
+    ws = self.wb.CreateXlWorkSheet(wsName)
+    matrix = MetricWorkSheet(ws,matrixList)
+    self.wsDict[wsName] = ('Matrix',matrix,ws,wsName)
 
   #--------------------------------------------------------------------
   def AddCharts(self,region,type,period):
