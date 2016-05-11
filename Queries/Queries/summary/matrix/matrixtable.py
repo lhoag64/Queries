@@ -37,6 +37,10 @@ class MatrixTable:
     self.colCompHdr  = MatrixTableArea(startRow+0,startCol+1+self.data.cols,data.colCompHdr)
     self.colCompData = MatrixTableArea(startRow+1,startCol+1+self.data.cols,data.colCompData)
 
+    title = self.title.data.split('\r')
+    title = ' '.join(title)
+    logging.debug('Creating ' + title)
+
     self.topRow    = startRow
     self.bottomRow = startRow + self.colHdr.rows + self.data.rows + self.rowCompData.rows
     self.leftCol   = startCol

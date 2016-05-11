@@ -45,7 +45,7 @@ def getRegionWhereClause(regionList,regionName='region'):
   for region in regionList:
     where += '(' + regionName + ' = \'' + region + '\') or '
   where = where[0:-4]
-  return where
+  return '(' + where + ')'
 
 #----------------------------------------------------------------------
 def GetFaeAwhSum(db,regionList,weeks):

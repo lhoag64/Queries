@@ -149,6 +149,21 @@ class MatrixData:
     return table
 
   #--------------------------------------------------------------------
+  def calcFaeTitle(self,text,regionList,period):
+
+    if (period == 'ALL'): period = 'YTD'
+
+    self.title.data  = text
+    self.title.data += '\r'
+    if (len(regionList) == 1):
+       self.title.data += 'Region: '
+    else:
+       self.title.data += 'Regions: '
+    self.title.data += ','.join(regionList)
+    self.title.data += '\r'
+    self.title.data += 'Period: ' + period
+
+  #--------------------------------------------------------------------
   def calcFaeColHdr(self):
     self.colHdr.data = []
     for i in range(self.data.cols):
@@ -169,21 +184,6 @@ class MatrixData:
       else:
         hdrFmt.append(cfmt)
     self.rowHdr.AddData(hdrData,fmt=hdrFmt)
-
-  #--------------------------------------------------------------------
-  def calcFaeTitle(self,text,regionList,period):
-
-    if (period == 'ALL'): period = 'YTD'
-
-    self.title.data  = text
-    self.title.data += '\r'
-    if (len(regionList) == 1):
-       self.title.data += 'Region: '
-    else:
-       self.title.data += 'Regions: '
-    self.title.data += ','.join(regionList)
-    self.title.data += '\r'
-    self.title.data += 'Period: ' + period
 
   #--------------------------------------------------------------------
   def calcFaeColCompHdr(self,regionList,textList=None):
@@ -208,4 +208,94 @@ class MatrixData:
       hdrText.append('Region')
 
     self.colCompHdr.AddData(hdrText)
+
+  #--------------------------------------------------------------------
+  def calcFaeRowCompHdr(self,regionList,textList=None):
+
+    self.rowCompHdr.data = []
+    self.rowCompHdr.data.append('Week Average')
+    self.rowCompHdr.data.append('HeadCount')
+    if ('AM' in regionList):
+      self.rowCompHdr.data.append('AM Working Days')
+    if ('EMEA' in regionList):
+      self.rowCompHdr.data.append('UK Working Days')
+      self.rowCompHdr.data.append('FR Working Days')
+      self.rowCompHdr.data.append('DE Working Days')
+      self.rowCompHdr.data.append('FI Working Days')
+      self.rowCompHdr.data.append('SE Working Days')
+    if ('GC' in regionList):
+      self.rowCompHdr.data.append('GC Working Days')
+
+    self.rowCompHdr.rows = len(self.rowCompHdr.data)
+
+  #--------------------------------------------------------------------
+  def calcFaeData(self,faeList,faeCnt,weekList,weekCnt):
+    data = [[None for i in range(faeCnt)] for j in range(weekCnt)]
+    for i in range(weekCnt):
+      for j in range(faeCnt):
+        fname = faeList[j].fname
+        lname = faeList[j].lname
+        tup   = weekList[i].hours[j]
+        if (fname != tup[0] and lname != tup[1]):
+          logging.error('Database corrupt matching FAE names')
+          return None
+        data[i][j] = tup[2]
+
+    #self.data.data = super().calcData(data,faeCnt,weekCnt)
+    self.data.data = self.calcData(data,faeCnt,weekCnt)
+    self.data.cols = weekCnt
+    self.data.rows = faeCnt
+
+    #return data
+
+  #--------------------------------------------------------------------
+  def calcFaeColCompData(self,data,faeList,faeCnt,regionList):
+    #rowAvgList = super().calcRowAvg(super().calcRowSum(data))
+    rowAvgList = self.calcRowAvg(self.calcRowSum(data))
+    conHrsList = []
+    maxHrsList = []
+    faeRgnList = []
+    for fae in faeList:
+      conHrsList.append(fae.nrmHrs)
+      maxHrsList.append(fae.maxHrs)
+      if (len(regionList) > 1):
+        faeRgnList.append(fae.region)
+
+    if (len(regionList) > 1):
+      self.colCompData.data = [rowAvgList,conHrsList,maxHrsList,faeRgnList]
+    else:
+      self.colCompData.data = [rowAvgList,conHrsList,maxHrsList]
+    self.colCompData.cols = len(self.colCompData.data)
+    self.colCompData.rows = faeCnt
+
+  #--------------------------------------------------------------------
+  def calcFaeRowCompData(self,data,faeList,faeCnt,weekList,weekCnt,regionList):
+    #headCntList  = []
+    #workDaysList = []
+    #for i in range(weekCnt):
+    #  headCntList.append(weekList[i].headCount)
+    #  workDaysList.append(weekList[i].workingDays)
+
+    #colAvgList = super().calcColAvg(super().calcColSum(data))
+    colAvgList = self.calcColAvg(self.calcColSum(data))
+
+    compDataFmt = {'hAlign':'R','vAlign':'C','border':{'A':'thin'},'numFmt':'0'}
+    self.rowCompData.fmt = compDataFmt
+    self.rowCompData.data = [[] for i in range(weekCnt)]
+    for i in range(weekCnt):
+      self.rowCompData.data[i].append(colAvgList[i])
+      self.rowCompData.data[i].append(weekList[i].headCount)
+      if ('AM' in regionList):
+        self.rowCompData.data[i].append(weekList[i].workingDays.am_days)
+      if ('EMEA' in regionList):
+        self.rowCompData.data[i].append(weekList[i].workingDays.uk_days)
+        self.rowCompData.data[i].append(weekList[i].workingDays.fr_days)
+        self.rowCompData.data[i].append(weekList[i].workingDays.de_days)
+        self.rowCompData.data[i].append(weekList[i].workingDays.fi_days)
+        self.rowCompData.data[i].append(weekList[i].workingDays.se_days)
+      if ('GC' in regionList):
+        self.rowCompData.data[i].append(weekList[i].workingDays.gc_days)
+
+    self.rowCompData.rows = len(self.rowCompData.data[0])
+    self.rowCompData.cols = weekCnt
 

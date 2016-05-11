@@ -79,7 +79,28 @@ if (__name__ == '__main__'):
   matrixList.append((['AM','GC'], 'FAE-AWH','JAN'))
 
   summary = SummaryWorkBook()
-  summary.AddMatrixSheet('All-FAE-AWH-YTD',matrixList)
+  summary.AddMatrixSheet('FAE Examples',matrixList)
+
+  matrixList = []
+  matrixList.append(('AM',  'FAE-AWH','JAN'))
+  matrixList.append(('EMEA','FAE-AWH','JAN'))
+  matrixList.append(('GC',  'FAE-AWH','JAN'))
+  summary.AddMatrixSheet('JAN FAE Tables by Region',matrixList)
+  matrixList = []
+  matrixList.append(('AM',  'FAE-AWH','FEB'))
+  matrixList.append(('EMEA','FAE-AWH','FEB'))
+  matrixList.append(('GC',  'FAE-AWH','FEB'))
+  summary.AddMatrixSheet('FEB FAE Tables by Region',matrixList)
+  matrixList = []
+  matrixList.append(('AM',  'FAE-AWH','MAR'))
+  matrixList.append(('EMEA','FAE-AWH','MAR'))
+  matrixList.append(('GC',  'FAE-AWH','MAR'))
+  summary.AddMatrixSheet('MAR FAE Tables by Region',matrixList)
+  matrixList = []
+  matrixList.append(('AM',  'FAE-AWH','APR'))
+  matrixList.append(('EMEA','FAE-AWH','APR'))
+  matrixList.append(('GC',  'FAE-AWH','APR'))
+  summary.AddMatrixSheet('APR FAE Tables by Region',matrixList)
   #summary.AddMatrix('EMEA','FAE','ALL')
   #summary.AddSummary('AM','METRICS','ALL')
   #summary.AddSummary('AM','FAE','ALL')

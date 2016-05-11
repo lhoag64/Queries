@@ -146,8 +146,6 @@ class MetricChartSheet:
 
         startRow += data.dataRows + 2
 
-    logging.debug('')
-
     self.drawUtlChart()
     self.drawActChart()
 
