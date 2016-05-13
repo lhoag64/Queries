@@ -34,6 +34,7 @@ class MetricWorkSheet:
       'FAE-AWH': FaeAwhData, \
       'FAE-WH' : FaeWhData,  \
       'FAE-LT' : FaeLtData,  \
+      'FAE-OT' : FaeOtData,  \
     }
   #--------------------------------------------------------------------
   def __init__(self,ws,matrixList):

@@ -70,7 +70,8 @@ if (__name__ == '__main__'):
     InitializeTimesheetTables()
 
   matrixList = []
-  matrixList.append(('START',    'ALL',       'FAE-LT', 'ALL'))
+  matrixList.append(('START',    'ALL',       'FAE-OT', 'ALL'))
+  matrixList.append(('DOWN',     'ALL',       'FAE-LT', 'ALL'))
   matrixList.append(('DOWN',     'AM',        'FAE-AWH','ALL'))
   matrixList.append(('RIGHT',    'AM',        'FAE-WH', 'ALL'))
   matrixList.append(('DOWN-LEFT','EMEA',      'FAE-AWH','ALL'))

@@ -1,50 +1,11 @@
 import logging
 import sqlite3
-from   database.queries.getwedate import GetWeDate
-
-#----------------------------------------------------------------------
-class WorkingDays:
-  def __init__(self):
-    self.weekNum = None
-    self.am_days = None
-    self.uk_days = None
-    self.fr_days = None
-    self.de_days = None
-    self.se_days = None
-    self.gc_days = None
-
-#----------------------------------------------------------------------
-class FaeData:
-  def __init__(self,fname,lname,nrmHrs,maxHrs,lbrType,startDate,endDate,region):
-    self.fname     = fname
-    self.lname     = lname
-    self.nrmHrs    = nrmHrs
-    self.maxHrs    = maxHrs
-    self.lbrType   = lbrType
-    self.startDate = startDate
-    self.endDate   = endDate
-    self.region    = region
-
-#----------------------------------------------------------------------
-class HoursData:
-  def __init__(self,workingDays,hc,hours):
-    self.workingDays = workingDays
-    self.headCount   = hc
-    self.hours       = hours
-
-#----------------------------------------------------------------------
-class FaeSumData:
-  def __init__(self,faeList,hoursList):
-    self.faeList   = faeList
-    self.hoursList = hoursList
-
-#----------------------------------------------------------------------
-def getRegionWhereClause(regionList,regionName='region'):
-  where = ''
-  for region in regionList:
-    where += '(' + regionName + ' = \'' + region + '\') or '
-  where = where[0:-4]
-  return '(' + where + ')'
+from   database.queries.getwedate   import GetWeDate
+from   database.queries.faedata     import FaeData
+from   database.queries.faedata     import FaeHoursData
+from   database.queries.faedata     import FaeSumData
+from   database.queries.faedata     import FaeWorkingDays
+from   database.queries.regiondata  import GetRegionWhereClause
 
 #----------------------------------------------------------------------
 def GetFaeAwhSum(db,regionList,weekDict):
@@ -59,7 +20,7 @@ def GetFaeAwhSum(db,regionList,weekDict):
   sqlopt = []
   sqltxt  = 'SELECT fae.fname,fae.lname,fae.norm_hours,fae.max_hours,lbr_type,start_date,end_date,region'
   sqltxt += '  FROM fae_team AS fae'
-  sqltxt += '  WHERE ' + getRegionWhereClause(regionList)
+  sqltxt += '  WHERE ' + GetRegionWhereClause(regionList)
   sqltxt += '  ORDER BY fae.region,fae.prd_team,fae.lname,fae.fname'
 
   c.execute(sqltxt,tuple(sqlopt))
@@ -89,7 +50,7 @@ def GetFaeAwhSum(db,regionList,weekDict):
     c.execute(sqltxt,tuple(sqlopt))
     weekData = c.fetchall()
 
-    workingDays = WorkingDays()
+    workingDays = FaeWorkingDays()
     workingDays.weekNum = int(weekData[0][0])
     workingDays.am_days = int(weekData[0][1])
     workingDays.uk_days = int(weekData[0][2])
@@ -104,7 +65,7 @@ def GetFaeAwhSum(db,regionList,weekDict):
     sqlopt  = [wcDate,weDate]
     sqltxt  = 'SELECT fae.fname,fae.lname,fae.start_date,fae.end_date'
     sqltxt += '  FROM fae_team AS fae'
-    sqltxt += '  WHERE ' + getRegionWhereClause(regionList,'fae.region')
+    sqltxt += '  WHERE ' + GetRegionWhereClause(regionList,'fae.region')
     sqltxt += '    and (fae.start_date <= ? and fae.end_date >= ?)'
     sqltxt += '  ORDER BY fae.region,fae.prd_team,fae.lname,fae.fname'
 
@@ -116,12 +77,13 @@ def GetFaeAwhSum(db,regionList,weekDict):
     hc = len(hc)
 
     #----------------------------------------------------------------
+
     sqlopt  = [wcDate,weDate]
     sqltxt  = 'SELECT ts.fname,ts.lname,sum(ts.hours)'
     sqltxt += '  FROM ts_entry AS ts'
     sqltxt += '  INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)'
     sqltxt += '  INNER JOIN ts_code  AS wbs ON (ts.wbs_code = wbs.code)'
-    sqltxt += '  WHERE ' + getRegionWhereClause(regionList,'ts.region')
+    sqltxt += '  WHERE ' + GetRegionWhereClause(regionList,'ts.region')
     sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?) and wbs.leave = 0'
     sqltxt += '  GROUP BY ts.fname,ts.lname'
 
@@ -152,13 +114,10 @@ def GetFaeAwhSum(db,regionList,weekDict):
       else:
         hours.append((fname,lname,None))
 
-    hoursList.append(HoursData(workingDays,hc,hours))
+    hoursList.append(FaeHoursData(workingDays,hc,hours))
 
   if (dltWeekCnt != 0):
     for i in range(dltWeekCnt):
-      hoursList.append(HoursData(None,None,None))
-
-  logging.debug('columns: ' + str(len(hoursList)))
-
+      hoursList.append(FaeHoursData(None,None,None))
 
   return FaeSumData(faeList,hoursList)

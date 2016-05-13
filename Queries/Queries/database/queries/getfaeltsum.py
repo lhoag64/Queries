@@ -1,14 +1,7 @@
 import logging
 import sqlite3
 from   database.queries.getwedate import GetWeDate
-
-#----------------------------------------------------------------------
-def getRegionWhereClause(regionList,regionName='region'):
-  where = ''
-  for region in regionList:
-    where += '(' + regionName + ' = \'' + region + '\') or '
-  where = where[0:-4]
-  return '(' + where + ')'
+from   database.queries.regiondata  import GetRegionWhereClause
 
 #----------------------------------------------------------------------
 def GetFaeLtSum(db,regionList,weekDict):
@@ -31,7 +24,7 @@ def GetFaeLtSum(db,regionList,weekDict):
     sqltxt += '  FROM ts_entry AS ts'
     sqltxt += '  INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)'
     sqltxt += '  INNER JOIN ts_code  AS wbs ON (ts.wbs_code = wbs.code)'
-    sqltxt += '  WHERE ' + getRegionWhereClause(regionList,'ts.region')
+    sqltxt += '  WHERE ' + GetRegionWhereClause(regionList,'ts.region')
     sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?)'
     sqltxt += '    and (fae.start_date <= ? and fae.end_date >= ?)'
     sqltxt += '  GROUP BY fae.lbr_type'

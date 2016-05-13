@@ -25,6 +25,9 @@
     <Compile Include="database\database.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="database\queries\faedata.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="database\queries\getactbylocsum.py" />
     <Compile Include="database\queries\getactbyprdteam.py" />
     <Compile Include="database\queries\getactivityamdmrsum.py" />
@@ -49,6 +52,9 @@
     <Compile Include="database\queries\getutlpssum.py" />
     <Compile Include="database\queries\getwedate.py" />
     <Compile Include="database\queries\getweeks.py" />
+    <Compile Include="database\queries\regiondata.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="database\queries\__init__.py" />
     <Compile Include="database\tables\faedata.py" />
     <Compile Include="database\tables\faeloc.py">

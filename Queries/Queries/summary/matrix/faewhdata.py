@@ -1,31 +1,30 @@
 import logging
-from   database.database            import Database as Db
-#from   database.queries.getfaelist  import GetFaeList
-from   database.queries.getfaewhsum import GetFaeWhSum
-#import summary.matrix.matrixdata
-from   summary.matrix.matrixdata    import MatrixData
+from   database.database             import Database as Db
+from   database.queries.getfaewhsum  import GetFaeWhSum
+from   database.queries.getweeks     import GetWeeks
+from   summary.matrix.matrixdata     import MatrixData
 
 #----------------------------------------------------------------------
 class FaeWhData(MatrixData):
 #----------------------------------------------------------------------
-  def __init__(self,region,type,period):
+  def __init__(self,region,mType,period):
 
     super().__init__()
 
     regionList = super().calcRegionList(region)
 
-    weekList = Db.WeeksTbl.GetWeeks(Db.db,period)
-    result   = GetFaeWhSum(Db.db,regionList,weekList)
+    weekDict = GetWeeks(Db.db,regionList,period)
+    dbResult = GetFaeWhSum(Db.db,regionList,weekDict)
 
-    faeList  = result.faeList
-    weekList = result.weekList
+    faeList  = dbResult.faeList
+    dataList = dbResult.hoursList
 
-    faeCnt = len(faeList)
-    weekCnt = len(weekList)
+    faeCnt  = len(faeList)
+    weekCnt = len(dataList)
 
-    super().calcFaeData(faeList,faeCnt,weekList,weekCnt)
+    super().calcFaeData(faeList,faeCnt,dataList,weekCnt)
     super().calcFaeColCompData(self.data.data,faeList,faeCnt,regionList)
-    super().calcFaeRowCompData(self.data.data,faeList,faeCnt,weekList,weekCnt,regionList)
+    super().calcFaeRowCompData(self.data.data,faeList,faeCnt,dataList,weekCnt,regionList)
 
     super().calcFaeColCompHdr(regionList,['Avg','Contracted\rHours',{'EMEA':'EUWTD','OTHER':'Max Hours'}])
     super().calcFaeRowCompHdr(regionList)

@@ -1,7 +1,6 @@
 import logging
 from   database.database            import Database as Db
 from   database.queries.getweeks    import GetWeeks
-from   database.queries.getweeks    import GetWeekNumbers
 from   database.queries.getfaeltsum import GetFaeLtSum
 from   summary.matrix.matrixdata    import MatrixData
 
