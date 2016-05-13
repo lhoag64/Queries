@@ -1,6 +1,9 @@
 import logging
-from   database.database         import Database as Db
-from   summary.matrix.matrixdata import MatrixData
+from   database.database            import Database as Db
+from   database.queries.getweeks    import GetWeeks
+from   database.queries.getweeks    import GetWeekNumbers
+from   database.queries.getfaeltsum import GetFaeLtSum
+from   summary.matrix.matrixdata    import MatrixData
 
 #----------------------------------------------------------------------
 class FaeLtData(MatrixData):
@@ -9,31 +12,28 @@ class FaeLtData(MatrixData):
 
     super().__init__()
 
-    weekList = Db.WeeksTbl.GetWeeks(Db.db,period)
-    data     = Db.TsEntryTbl.GetFaeLtSum(Db.db,region,weekList)
+    regionList = super().calcRegionList(region)
 
-    colSumList = super().calcColSum(data)
-    rowSumList = super().calcRowSum(data)
-    weeks      = super().calcCols(colSumList)
-    if (weeks != len(weekList)):
-      weeks = len(weekList)
+    weekDict    = GetWeeks(Db.db,regionList,period)
+    dataList    = GetFaeLtSum(Db.db,regionList,weekDict)
 
-    rowAvgList = super().calcRowAvg(rowSumList,weeks)
-    self.compData = [rowAvgList]
+    weekCnt = len(dataList)
+    itemCnt = len(dataList[0])
 
-    self.data     = super().calcData(data,2,weeks)
+    self.data.AddData(dataList)
 
-    self.dataCols = len(self.data)
-    self.dataRows = len(self.data[0])
+    rowAvgList = super().calcRowAvg(super().calcRowSum(dataList))
+    self.colCompData.AddData(rowAvgList,cols=1,rows=itemCnt)
 
-    self.title = 'Internal vs Contract Hours'
-    self.colDesc = []
-    for i in range(self.dataCols):
-      self.colDesc.append('Week ' + str(i+1))
+    self.colCompHdr.AddData(['Avg'])
+    self.title.AddData(super().calcTitleText('Internal vs Contract Hours',regionList,period))
+    self.colHdr.AddData(super().calcWeekNumTextList(weekDict['MAX']))
 
-    self.compCols = len(self.compData)
-    self.colCompDesc = ['Avg']
+    fmt =                                                                    \
+      [                                                                      \
+        {'hAlign':'L','vAlign':'C','border':{'A':'thin'},'fill':'Green 1'},  \
+        {'hAlign':'L','vAlign':'C','border':{'A':'thin'},'fill':'Yellow 1'}  \
+      ]
 
-    self.rowDesc = ['Internal Hours','Contractor Hours']
+    self.rowHdr.AddData(['Internal Hours','Contract Hours'],cols=1,rows=itemCnt,fmt=fmt)
 
-    self.rowCompDesc = []

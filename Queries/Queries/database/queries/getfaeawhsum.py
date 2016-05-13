@@ -1,5 +1,4 @@
 import logging
-import datetime
 import sqlite3
 from   database.queries.getwedate import GetWeDate
 
@@ -27,17 +26,17 @@ class FaeData:
     self.region    = region
 
 #----------------------------------------------------------------------
-class WeekData:
+class HoursData:
   def __init__(self,workingDays,hc,hours):
     self.workingDays = workingDays
     self.headCount   = hc
     self.hours       = hours
 
 #----------------------------------------------------------------------
-class FaeAwhData:
-  def __init__(self,faeList,weekList):
-    self.faeList  = faeList
-    self.weekList = weekList
+class FaeSumData:
+  def __init__(self,faeList,hoursList):
+    self.faeList   = faeList
+    self.hoursList = hoursList
 
 #----------------------------------------------------------------------
 def getRegionWhereClause(regionList,regionName='region'):
@@ -48,9 +47,13 @@ def getRegionWhereClause(regionList,regionName='region'):
   return '(' + where + ')'
 
 #----------------------------------------------------------------------
-def GetFaeAwhSum(db,regionList,weeks):
+def GetFaeAwhSum(db,regionList,weekDict):
 
   c = db.cursor()
+
+  minWeekCnt = len(weekDict['MIN'])
+  maxWeekCnt = len(weekDict['MAX'])
+  dltWeekCnt = maxWeekCnt - minWeekCnt
 
  #------------------------------------------------------------------
   sqlopt = []
@@ -70,13 +73,14 @@ def GetFaeAwhSum(db,regionList,weeks):
     faeList.append(faeData)
     faeDict[(fae[0],fae[1])] = faeData
 
-  weekList = []
-  for i in range(len(weeks)):
+  hoursList = []
+  for i in range(minWeekCnt):
 
-    wcDate = weeks[i][0]
+    wcDate = weekDict['MIN'][i][0]
     weDate = GetWeDate(wcDate)
 
     #----------------------------------------------------------------
+
     sqlopt  = [wcDate]
     sqltxt  = 'SELECT week,am_days,uk_days,fr_days,de_days,fi_days,se_days,gc_days'
     sqltxt += '  FROM weeks'
@@ -106,6 +110,7 @@ def GetFaeAwhSum(db,regionList,weeks):
 
     c.execute(sqltxt,tuple(sqlopt))
     hc = c.fetchall()
+
     #----------------------------------------------------------------
 
     hc = len(hc)
@@ -121,11 +126,12 @@ def GetFaeAwhSum(db,regionList,weeks):
     sqltxt += '  GROUP BY ts.fname,ts.lname'
 
     c.execute(sqltxt,tuple(sqlopt))
-    hoursList = c.fetchall()
+    dbResult = c.fetchall()
+
     #----------------------------------------------------------------
 
     hoursDict = {}
-    for fae in hoursList:
+    for fae in dbResult:
       if ((fae[0],fae[1]) not in hoursDict):
         hoursDict[(fae[0],fae[1])] = float(fae[2])
       else:
@@ -146,10 +152,13 @@ def GetFaeAwhSum(db,regionList,weeks):
       else:
         hours.append((fname,lname,None))
 
-    weekData = WeekData(workingDays,hc,hours)
+    hoursList.append(HoursData(workingDays,hc,hours))
 
-    weekList.append(weekData)
+  if (dltWeekCnt != 0):
+    for i in range(dltWeekCnt):
+      hoursList.append(HoursData(None,None,None))
 
-  result = FaeAwhData(faeList,weekList)
+  logging.debug('columns: ' + str(len(hoursList)))
 
-  return result
+
+  return FaeSumData(faeList,hoursList)

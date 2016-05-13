@@ -39,12 +39,12 @@ class MatrixTable:
 
     title = self.title.data.split('\r')
     title = ' '.join(title)
-    logging.debug('Creating ' + title)
+    logging.debug('Creating ' + title.ljust(80) + ' ' + str(startRow).rjust(3) + ' ' + str(startCol).rjust(3))
 
     self.topRow    = startRow
     self.bottomRow = startRow + self.colHdr.rows + self.data.rows + self.rowCompData.rows
     self.leftCol   = startCol
-    self.rightCol  = startCol + self.rowHdr.cols + self.data.cols + self.colCompData.rows
+    self.rightCol  = startCol + self.rowHdr.cols + self.data.cols + self.colCompData.cols
 
     # Set column sizes
     wsCol = startCol
@@ -132,23 +132,34 @@ class MatrixTable:
     data = self.rowCompData
     wsRow = data.sRow
     wsCol = data.sCol
-    for i in range(data.cols):
-      wsRow = data.sRow
-      for j in range(data.rows):
-        ws.SetCell(wsRow,wsCol,data.data[i][j],data.fmt)
-        wsRow += 1
-      wsCol += 1
+    if (type(data.data) is list):
+      for i in range(data.cols):
+        wsRow = data.sRow
+        if (type(data.data[i]) is list):
+          for j in range(data.rows):
+            ws.SetCell(wsRow,wsCol,data.data[i][j],data.fmt)
+            wsRow += 1
+        else:
+          ws.SetCell(wsRow,wsCol,data.data[i],data.fmt)
+        wsCol += 1
+
 
     # Draw col computed data
     data = self.colCompData
     wsRow = data.sRow
     wsCol = data.sCol
-    for i in range(data.cols):
+    if (data.cols == 1):
       wsRow = data.sRow
-      for j in range(data.rows):
-        ws.SetCell(wsRow,wsCol,data.data[i][j],data.fmt)
+      for i in range(data.rows):
+        ws.SetCell(wsRow,wsCol,data.data[i],data.fmt)
         wsRow += 1
-      wsCol += 1
+    else:
+      for i in range(data.cols):
+        wsRow = data.sRow
+        for j in range(data.rows):
+          ws.SetCell(wsRow,wsCol,data.data[i][j],data.fmt)
+          wsRow += 1
+        wsCol += 1
 
     ws.DrawBorder(self.title.sRow,      self.title.sCol,      self.title.eRow,      self.title.eCol,      'medium')
     ws.DrawBorder(self.rowHdr.sRow,     self.rowHdr.sCol,     self.rowHdr.eRow,     self.rowHdr.eCol,     'medium')

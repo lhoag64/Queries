@@ -33,7 +33,7 @@ def InitializeTimesheetTables():
 
   Calendar(2016)
 
-  rng = range(1,16+1)
+  rng = range(1,51+1)
   #rng = range(1,1+1)
 
   emea_team = FaeTeam('EMEA')
@@ -70,37 +70,66 @@ if (__name__ == '__main__'):
     InitializeTimesheetTables()
 
   matrixList = []
-  matrixList.append(('AM',  'FAE-AWH','ALL'))
-  #matrixList.append(('AM',  'FAE-WH', 'ALL'))
-  matrixList.append(('EMEA','FAE-AWH','ALL'))
-  #matrixList.append(('EMEA','FAE-WH', 'ALL'))
-  matrixList.append(('GC',  'FAE-AWH','ALL'))
-  #matrixList.append(('GC',  'FAE-WH', 'ALL'))
-  matrixList.append((['AM','GC'], 'FAE-AWH','JAN'))
+  matrixList.append(('START',    'ALL',       'FAE-LT', 'ALL'))
+  matrixList.append(('DOWN',     'AM',        'FAE-AWH','ALL'))
+  matrixList.append(('RIGHT',    'AM',        'FAE-WH', 'ALL'))
+  matrixList.append(('DOWN-LEFT','EMEA',      'FAE-AWH','ALL'))
+  matrixList.append(('RIGHT',    'EMEA',      'FAE-WH', 'ALL'))
+  matrixList.append(('DOWN-LEFT','GC',        'FAE-AWH','ALL'))
+  matrixList.append(('RIGHT',    'GC',        'FAE-WH', 'ALL'))
+  matrixList.append(('DOWN',     ['AM','GC'], 'FAE-AWH','JAN'))
 
   summary = SummaryWorkBook()
   summary.AddMatrixSheet('FAE Examples',matrixList)
 
-  matrixList = []
-  matrixList.append(('AM',  'FAE-AWH','JAN'))
-  matrixList.append(('EMEA','FAE-AWH','JAN'))
-  matrixList.append(('GC',  'FAE-AWH','JAN'))
-  summary.AddMatrixSheet('JAN FAE Tables by Region',matrixList)
-  matrixList = []
-  matrixList.append(('AM',  'FAE-AWH','FEB'))
-  matrixList.append(('EMEA','FAE-AWH','FEB'))
-  matrixList.append(('GC',  'FAE-AWH','FEB'))
-  summary.AddMatrixSheet('FEB FAE Tables by Region',matrixList)
-  matrixList = []
-  matrixList.append(('AM',  'FAE-AWH','MAR'))
-  matrixList.append(('EMEA','FAE-AWH','MAR'))
-  matrixList.append(('GC',  'FAE-AWH','MAR'))
-  summary.AddMatrixSheet('MAR FAE Tables by Region',matrixList)
-  matrixList = []
-  matrixList.append(('AM',  'FAE-AWH','APR'))
-  matrixList.append(('EMEA','FAE-AWH','APR'))
-  matrixList.append(('GC',  'FAE-AWH','APR'))
-  summary.AddMatrixSheet('APR FAE Tables by Region',matrixList)
+#  matrixList = []
+#  matrixList.append(('START',    'AM',  'FAE-AWH','JAN'))
+#  matrixList.append(('RIGHT',    'AM',  'FAE-WH', 'JAN'))
+#  matrixList.append(('DOWN-LEFT','EMEA','FAE-AWH','JAN'))
+#  matrixList.append(('RIGHT',    'EMEA','FAE-WH', 'JAN'))
+#  matrixList.append(('DOWN-LEFT','GC',  'FAE-AWH','JAN'))
+#  matrixList.append(('RIGHT',    'GC',  'FAE-WH', 'JAN'))
+#  summary.AddMatrixSheet('JAN FAE Tables by Region',matrixList)
+#  matrixList = []
+#  matrixList.append(('START',    'AM',  'FAE-AWH','FEB'))
+#  matrixList.append(('RIGHT',    'AM',  'FAE-WH', 'FEB'))
+#  matrixList.append(('DOWN-LEFT','EMEA','FAE-AWH','FEB'))
+#  matrixList.append(('RIGHT',    'EMEA','FAE-WH', 'FEB'))
+#  matrixList.append(('DOWN-LEFT','GC',  'FAE-AWH','FEB'))
+#  matrixList.append(('RIGHT',    'GC',  'FAE-WH', 'FEB'))
+#  summary.AddMatrixSheet('FEB FAE Tables by Region',matrixList)
+#  matrixList = []
+#  matrixList.append(('START',    'AM',  'FAE-AWH','MAR'))
+#  matrixList.append(('RIGHT',    'AM',  'FAE-WH', 'MAR'))
+#  matrixList.append(('DOWN-LEFT','EMEA','FAE-AWH','MAR'))
+#  matrixList.append(('RIGHT',    'EMEA','FAE-WH', 'MAR'))
+#  matrixList.append(('DOWN-LEFT','GC',  'FAE-AWH','MAR'))
+#  matrixList.append(('RIGHT',    'GC',  'FAE-WH', 'MAR'))
+#  summary.AddMatrixSheet('MAR FAE Tables by Region',matrixList)
+#  matrixList = []
+#  matrixList.append(('START',    'AM',  'FAE-AWH','APR'))
+#  matrixList.append(('RIGHT',    'AM',  'FAE-WH', 'APR'))
+#  matrixList.append(('DOWN-LEFT','EMEA','FAE-AWH','APR'))
+#  matrixList.append(('RIGHT',    'EMEA','FAE-WH', 'APR'))
+#  matrixList.append(('DOWN-LEFT','GC',  'FAE-AWH','APR'))
+#  matrixList.append(('RIGHT',    'GC',  'FAE-WH', 'APR'))
+#  summary.AddMatrixSheet('APR FAE Tables by Region',matrixList)
+
+#  matrixList = [JAN]
+#  matrixList.append(('AM',  'FAE-AWH','FEB'))
+#  matrixList.append(('EMEA','FAE-AWH','FEB'))
+#  matrixList.append(('GC',  'FAE-AWH','FEB'))
+#  summary.AddMatrixSheet('FEB FAE Tables by Region',matrixList)
+#  matrixList = []
+#  matrixList.append(('AM',  'FAE-AWH','MAR'))
+#  matrixList.append(('EMEA','FAE-AWH','MAR'))
+#  matrixList.append(('GC',  'FAE-AWH','MAR'))
+#  summary.AddMatrixSheet('MAR FAE Tables by Region',matrixList)
+#  matrixList = []
+#  matrixList.append(('AM',  'FAE-AWH','APR'))
+#  matrixList.append(('EMEA','FAE-AWH','APR'))
+#  matrixList.append(('GC',  'FAE-AWH','APR'))
+#  summary.AddMatrixSheet('APR FAE Tables by Region',matrixList)
   #summary.AddMatrix('EMEA','FAE','ALL')
   #summary.AddSummary('AM','METRICS','ALL')
   #summary.AddSummary('AM','FAE','ALL')

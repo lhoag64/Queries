@@ -33,6 +33,7 @@ class MetricWorkSheet:
     {
       'FAE-AWH': FaeAwhData, \
       'FAE-WH' : FaeWhData,  \
+      'FAE-LT' : FaeLtData,  \
     }
   #--------------------------------------------------------------------
   def __init__(self,ws,matrixList):
@@ -45,13 +46,31 @@ class MetricWorkSheet:
     self.tables = {}
 
     for item in matrixList:
-      region = item[0]
-      mType  = item[1]
-      period = item[2]
+      loc    = item[0]
+      region = item[1]
+      mType  = item[2]
+      period = item[3]
       if (mType in self.FuncDict):
+
+        #--------------------------------------------------------------
+        # Find where to put it
+        #--------------------------------------------------------------
+        if (loc == 'START'):
+          startRow  = 2
+          startCol  = 2
+        elif (loc == 'RIGHT'):
+          startRow += 0
+          startCol  = table.rightCol + 2
+        elif (loc == 'DOWN-LEFT'):
+          startRow  = table.bottomRow + 2
+          startCol  = 2
+        elif (loc == 'DOWN'):
+          startRow  = table.bottomRow + 2
+          startCol += 0
+
         data  = self.FuncDict[mType](region,mType,period)
         table = MatrixTable(ws,startRow,startCol,data)
-        startRow = table.bottomRow + 2
+
       else:
         logging.debug('Function table does have: ' + mType)
 

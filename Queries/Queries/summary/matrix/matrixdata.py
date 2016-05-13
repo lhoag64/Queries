@@ -10,9 +10,24 @@ class MatrixDataTitle:
     self.data     = None
     self.fmt      = fmt
 
+  def AddData(self,data,cols=None,rows=None,fmt=None):
+    self.data = data
+    if (type(data) in [list,dict]):
+      self.cols = len(data)
+      if (type(data[0]) in [list,dict]):
+        self.rows = len(data[0])
+      else:
+        self.rows = 1
+    else:
+      self.cols = 1
+      self.rows = 1
+    if (cols) : self.cols = cols
+    if (rows) : self.rows = rows
+    if (fmt)  : self.fmt  = fmt
+
 class MatrixDataColHdr:
   def __init__(self,hgt,wid,fmt):
-    self.rows     = 1
+    self.rows     = 0
     self.cols     = 0
     self.hgt      = hgt
     self.wid      = wid
@@ -23,8 +38,13 @@ class MatrixDataColHdr:
     self.data = data
     if (type(data) in [list,dict]):
       self.cols = len(data)
+      if (type(data[0]) in [list,dict]):
+        self.rows = len(data[0])
+      else:
+        self.rows = 1
     else:
       self.cols = 1
+      self.rows = 1
     if (cols) : self.cols = cols
     if (rows) : self.rows = rows
     if (fmt)  : self.fmt  = fmt
@@ -32,7 +52,7 @@ class MatrixDataColHdr:
 class MatrixDataRowHdr:
   def __init__(self,hgt,wid,fmt):
     self.rows     = 0
-    self.cols     = 1
+    self.cols     = 0
     self.hgt      = hgt
     self.wid      = wid
     self.data     = None
@@ -50,12 +70,26 @@ class MatrixDataRowHdr:
 
 class MatrixDataData:
   def __init__(self,hgt,wid,fmt):
-    self.rows     = 1
+    self.rows     = 0
     self.cols     = 0
     self.hgt      = hgt
     self.wid      = wid
     self.data     = None
     self.fmt      = fmt
+  
+  def AddData(self,data,cols=None,rows=None,fmt=None):
+    self.data = data
+    if (type(data) is list):
+      self.cols = len(data)
+      if (type(data[0]) is list):
+        self.rows = len(data[0])
+      else:
+        self.rows = 1
+    else:
+      throw
+    if (cols) : self.cols = cols
+    if (rows) : self.rows = rows
+    if (fmt)  : self.fmt  = fmt
 
   #--------------------------------------------------------------------
 #----------------------------------------------------------------------
@@ -81,6 +115,22 @@ class MatrixData:
     self.rowCompData = MatrixDataData(dataHgt,dataWid,dataFmt)
     self.colCompHdr  = MatrixDataColHdr(topHgt,dataWid,colHdrFmt)
     self.colCompData = MatrixDataData(dataHgt,dataWid,dataFmt)
+
+  #--------------------------------------------------------------------
+  def calcRegionList(self,region):
+
+    if (type(region) is list):
+      if ('ALL' in region):
+        regionList = ['EMEA','AM','GC']
+      else:
+        regionList = region
+    else:
+      if (region == 'ALL'):
+        regionList = ['EMEA','AM','GC']
+      else:
+        regionList = [region]
+
+    return regionList
 
   #--------------------------------------------------------------------
   def calcColSum(self,data):
@@ -149,19 +199,30 @@ class MatrixData:
     return table
 
   #--------------------------------------------------------------------
-  def calcFaeTitle(self,text,regionList,period):
-
+  def calcWeekNumTextList(self,weekNumList):
+    weekList = []
+    for week in weekNumList:
+      weekList.append('Week ' + week[0])
+    return weekList
+  
+  #--------------------------------------------------------------------
+  def calcTitleText(self,text,regionList,period):
     if (period == 'ALL'): period = 'YTD'
-
-    self.title.data  = text
-    self.title.data += '\r'
+    title = text
+    title += '\r'
     if (len(regionList) == 1):
-       self.title.data += 'Region: '
+       title += 'Region: '
     else:
-       self.title.data += 'Regions: '
-    self.title.data += ','.join(regionList)
-    self.title.data += '\r'
-    self.title.data += 'Period: ' + period
+       title += 'Regions: '
+    title += ','.join(regionList)
+    title += '\r'
+    title += 'Period: ' + period
+
+    return title
+
+  #--------------------------------------------------------------------
+  def calcFaeTitle(self,text,regionList,period):
+    self.title.AddData(self.calcTitleText(text,regionList,period))
 
   #--------------------------------------------------------------------
   def calcFaeColHdr(self):
@@ -229,28 +290,27 @@ class MatrixData:
     self.rowCompHdr.rows = len(self.rowCompHdr.data)
 
   #--------------------------------------------------------------------
-  def calcFaeData(self,faeList,faeCnt,weekList,weekCnt):
+  def calcFaeData(self,faeList,faeCnt,dataList,weekCnt):
     data = [[None for i in range(faeCnt)] for j in range(weekCnt)]
     for i in range(weekCnt):
       for j in range(faeCnt):
         fname = faeList[j].fname
         lname = faeList[j].lname
-        tup   = weekList[i].hours[j]
-        if (fname != tup[0] and lname != tup[1]):
-          logging.error('Database corrupt matching FAE names')
-          return None
-        data[i][j] = tup[2]
+        if (dataList[i].hours != None):
+          tup   = dataList[i].hours[j]
+          if (fname != tup[0] and lname != tup[1]):
+            logging.error('Database corrupt matching FAE names')
+            return None
+          data[i][j] = tup[2]
+        else:
+          data[i][j] = None
 
-    #self.data.data = super().calcData(data,faeCnt,weekCnt)
     self.data.data = self.calcData(data,faeCnt,weekCnt)
     self.data.cols = weekCnt
     self.data.rows = faeCnt
 
-    #return data
-
   #--------------------------------------------------------------------
   def calcFaeColCompData(self,data,faeList,faeCnt,regionList):
-    #rowAvgList = super().calcRowAvg(super().calcRowSum(data))
     rowAvgList = self.calcRowAvg(self.calcRowSum(data))
     conHrsList = []
     maxHrsList = []
@@ -269,32 +329,39 @@ class MatrixData:
     self.colCompData.rows = faeCnt
 
   #--------------------------------------------------------------------
-  def calcFaeRowCompData(self,data,faeList,faeCnt,weekList,weekCnt,regionList):
-    #headCntList  = []
-    #workDaysList = []
-    #for i in range(weekCnt):
-    #  headCntList.append(weekList[i].headCount)
-    #  workDaysList.append(weekList[i].workingDays)
-
-    #colAvgList = super().calcColAvg(super().calcColSum(data))
+  def calcFaeRowCompData(self,data,faeList,faeCnt,dataList,weekCnt,regionList):
     colAvgList = self.calcColAvg(self.calcColSum(data))
 
     compDataFmt = {'hAlign':'R','vAlign':'C','border':{'A':'thin'},'numFmt':'0'}
     self.rowCompData.fmt = compDataFmt
     self.rowCompData.data = [[] for i in range(weekCnt)]
     for i in range(weekCnt):
-      self.rowCompData.data[i].append(colAvgList[i])
-      self.rowCompData.data[i].append(weekList[i].headCount)
-      if ('AM' in regionList):
-        self.rowCompData.data[i].append(weekList[i].workingDays.am_days)
-      if ('EMEA' in regionList):
-        self.rowCompData.data[i].append(weekList[i].workingDays.uk_days)
-        self.rowCompData.data[i].append(weekList[i].workingDays.fr_days)
-        self.rowCompData.data[i].append(weekList[i].workingDays.de_days)
-        self.rowCompData.data[i].append(weekList[i].workingDays.fi_days)
-        self.rowCompData.data[i].append(weekList[i].workingDays.se_days)
-      if ('GC' in regionList):
-        self.rowCompData.data[i].append(weekList[i].workingDays.gc_days)
+      if (dataList[i].headCount != None and dataList[i].workingDays != None):
+        self.rowCompData.data[i].append(colAvgList[i])
+        self.rowCompData.data[i].append(dataList[i].headCount)
+        if ('AM' in regionList):
+          self.rowCompData.data[i].append(dataList[i].workingDays.am_days)
+        if ('EMEA' in regionList):
+          self.rowCompData.data[i].append(dataList[i].workingDays.uk_days)
+          self.rowCompData.data[i].append(dataList[i].workingDays.fr_days)
+          self.rowCompData.data[i].append(dataList[i].workingDays.de_days)
+          self.rowCompData.data[i].append(dataList[i].workingDays.fi_days)
+          self.rowCompData.data[i].append(dataList[i].workingDays.se_days)
+        if ('GC' in regionList):
+          self.rowCompData.data[i].append(dataList[i].workingDays.gc_days)
+      else:
+        self.rowCompData.data[i].append(None)
+        self.rowCompData.data[i].append(None)
+        if ('AM' in regionList):
+          self.rowCompData.data[i].append(None)
+        if ('EMEA' in regionList):
+          self.rowCompData.data[i].append(None)
+          self.rowCompData.data[i].append(None)
+          self.rowCompData.data[i].append(None)
+          self.rowCompData.data[i].append(None)
+          self.rowCompData.data[i].append(None)
+        if ('GC' in regionList):
+          self.rowCompData.data[i].append(None)
 
     self.rowCompData.rows = len(self.rowCompData.data[0])
     self.rowCompData.cols = weekCnt
