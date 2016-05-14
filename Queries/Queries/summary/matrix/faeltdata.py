@@ -27,6 +27,8 @@ class FaeLtData(MatrixData):
     self.colCompHdr.AddData(['Avg'])
     self.title.AddData(super().calcTitleText('Internal vs Contract Hours',regionList,period))
     self.colHdr.AddData(super().calcWeekNumTextList(weekDict['MAX']))
+    #super().calcTitle('Internal vs Contract Hours',regionList,period)
+    #super().calcColHdr()
 
     fmt =                                                                    \
       [                                                                      \

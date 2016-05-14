@@ -4,7 +4,7 @@ from   database.queries.getwedate  import GetWeDate
 from   database.queries.regiondata import GetRegionWhereClause
 
 #----------------------------------------------------------------------
-def GetUtlDtSum(db,regionList,weekDict):
+def GetUtlLsSum(db,regionList,weekDict):
 
   c = db.cursor()
 
@@ -19,11 +19,11 @@ def GetUtlDtSum(db,regionList,weekDict):
     weDate = GetWeDate(wcDate)
 
     #sqlopt  = [wcDate,weDate]
-    #sqltxt  = 'SELECT wbs.code,wbs.downtime,wbs.leave,ts.hours'
+    #sqltxt  = 'SELECT wbs.code,wbs.downtime,wbs.leave'
     #sqltxt += '  FROM ts_entry AS ts'
     #sqltxt += '  INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code'
     #sqltxt += '  WHERE ' + GetRegionWhereClause(regionList,'ts.region')
-    #sqltxt += '    and wbs.downtime = 1'
+    #sqltxt += '    and wbs.leave = 1'
     #sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?)'
 
     #c.execute(sqltxt,tuple(sqlopt))
@@ -34,7 +34,7 @@ def GetUtlDtSum(db,regionList,weekDict):
     sqltxt += '  FROM ts_entry AS ts'
     sqltxt += '  INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code'
     sqltxt += '  WHERE ' + GetRegionWhereClause(regionList,'ts.region')
-    sqltxt += '    and wbs.downtime = 1'
+    sqltxt += '    and wbs.leave = 1'
     sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?)'
 
     c.execute(sqltxt,tuple(sqlopt))
@@ -50,10 +50,10 @@ def GetUtlDtSum(db,regionList,weekDict):
     totResult = c.fetchall()
 
     if (len(utlResult) > 0):
-      dt = utlResult[0][0]
-      if (dt != None):
-        tot = totResult[0][0]
-        tup = [dt,tot,dt/tot * 100.0]
+      leave = utlResult[0][0]
+      if (leave != None):
+        tot   = totResult[0][0]
+        tup   = [leave,tot,leave/tot * 100.0]
       else:
         tup = [0.0,0.0,0.0]
     else:
@@ -68,13 +68,20 @@ def GetUtlDtSum(db,regionList,weekDict):
   return hoursList
 
 
+
+#
+#    if (region == 'ALL'):
+#      c.execute \
+#        ( \
+#          '''
 #            SELECT wbs.code,wbs.downtime,wbs.leave,sum(ts.hours)
 #            FROM ts_entry AS ts
 #            INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code
-#            WHERE region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and (wbs.downtime = 1)
-#            GROUP BY wbs.code
+#            WHERE (ts.entry_date >= ? and ts.entry_date <= ?) and (wbs.leave = 1)
+#              GROUP BY wbs.code
+#          ''',(wcDate,weDate))
 #
-#    totList = c.fetchall()
+#    utlList = c.fetchall()
 #
 #    if (len(utlList) > 0):
 #      sum = 0.0

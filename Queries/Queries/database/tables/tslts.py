@@ -32,15 +32,15 @@ class TsLtsTable(Table):
     db.commit()
 
   #--------------------------------------------------------------------
-  def GetLts(self,db,type):
-
-    c = db.cursor()
-
-    if (type == 'ALL'):
-      pass
-
-    c.execute(' SELECT key FROM ts_lts')
-
-    ltslist = c.fetchall()
-
-    return ltslist
+#  def GetLts(self,db,type):
+#
+#    c = db.cursor()
+#
+#    if (type == 'ALL'):
+#      pass
+#
+#    c.execute(' SELECT key FROM ts_lts')
+#
+#    ltslist = c.fetchall()
+#
+#    return ltslist

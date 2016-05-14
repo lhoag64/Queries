@@ -65,9 +65,11 @@ class FaeOtData(MatrixData):
     super().calcFaeColCompHdr(regionList,['Avg','Contracted\rHours',{'EMEA':'EUWTD','OTHER':'Max Hours'}])
     super().calcFaeRowCompHdr(regionList)
 
-    super().calcFaeTitle('Additional Hours',regionList,period)
-    super().calcFaeColHdr()
+    self.title.AddData(super().calcTitleText('Additional Hours',regionList,period))
+    self.colHdr.AddData(super().calcWeekNumTextList(weekDict['MAX']))
     super().calcFaeRowHdr(faeList)
+    #super().calcTitle('Additional Hours',regionList,period)
+    #super().calcColHdr()
 
 #    super().__init__()
 #

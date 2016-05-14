@@ -139,9 +139,10 @@ class MatrixData:
       colCnt = 0
       sum = 0.0
       for j in range(len(data[0])):
-        if (type(data[i][j]) is float):
-          sum += data[i][j]
-          colCnt += 1
+        if (data[i] != None):
+          if (type(data[i][j]) is float):
+            sum += data[i][j]
+            colCnt += 1
       colSumList.append((sum,colCnt))
     return colSumList
 
@@ -152,9 +153,10 @@ class MatrixData:
       rowCnt = 0
       sum = 0.0
       for i in range(len(data)):
-        if (type(data[i][j]) is float):
-          sum += data[i][j]
-          rowCnt += 1
+        if (data[i] != None):
+          if (type(data[i][j]) is float):
+            sum += data[i][j]
+            rowCnt += 1
       rowSumList.append((sum,rowCnt))
     return rowSumList
 
@@ -202,7 +204,7 @@ class MatrixData:
   def calcWeekNumTextList(self,weekNumList):
     weekList = []
     for week in weekNumList:
-      weekList.append('Week ' + week[0])
+      weekList.append('Week ' + week[1])
     return weekList
   
   #--------------------------------------------------------------------
@@ -221,11 +223,11 @@ class MatrixData:
     return title
 
   #--------------------------------------------------------------------
-  def calcFaeTitle(self,text,regionList,period):
+  def calcTitle(self,text,regionList,period):
     self.title.AddData(self.calcTitleText(text,regionList,period))
 
   #--------------------------------------------------------------------
-  def calcFaeColHdr(self):
+  def calcColHdr(self):
     self.colHdr.data = []
     for i in range(self.data.cols):
       self.colHdr.data.append('Week ' + str(i+1))

@@ -29,8 +29,10 @@ class FaeWhData(MatrixData):
     super().calcFaeColCompHdr(regionList,['Avg','Contracted\rHours',{'EMEA':'EUWTD','OTHER':'Max Hours'}])
     super().calcFaeRowCompHdr(regionList)
 
-    super().calcFaeTitle('Working Hours (inc Leave/Holiday)',regionList,period)
-    super().calcFaeColHdr()
+    #super().calcTitle('Working Hours (inc Leave/Holiday)',regionList,period)
+    #super().calcColHdr()
+    self.title.AddData(super().calcTitleText('Working Hours (inc Leave/Holiday)',regionList,period))
+    self.colHdr.AddData(super().calcWeekNumTextList(weekDict['MAX']))
     super().calcFaeRowHdr(faeList)
 
 

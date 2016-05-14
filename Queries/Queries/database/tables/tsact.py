@@ -68,17 +68,4 @@ class TsActTable(Table):
 
     db.commit()
  
-  #--------------------------------------------------------------------
-  def GetActivities(self,db,type):
-
-    c = db.cursor()
-
-    if (type == 'ALL'):
-      pass
-
-    c.execute(' SELECT act,desc FROM ts_act')
-
-    actlist = c.fetchall()
-
-    return actlist
 

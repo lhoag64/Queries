@@ -44,10 +44,14 @@
     <Compile Include="database\queries\getfaeotsum.py" />
     <Compile Include="database\queries\getfaewhsum.py" />
     <Compile Include="database\queries\getgkasum.py" />
+    <Compile Include="database\queries\getlts.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="database\queries\getltssum.py" />
     <Compile Include="database\queries\getovertimesum.py" />
+    <Compile Include="database\queries\getactivities.py" />
     <Compile Include="database\queries\getutldtsum.py" />
-    <Compile Include="database\queries\getultlssum.py" />
+    <Compile Include="database\queries\getutllssum.py" />
     <Compile Include="database\queries\getutlcfsum.py" />
     <Compile Include="database\queries\getutlpssum.py" />
     <Compile Include="database\queries\getwedate.py" />

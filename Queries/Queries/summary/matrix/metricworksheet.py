@@ -29,12 +29,21 @@ from   summary.matrix.faeotdata          import FaeOtData
 
 #----------------------------------------------------------------------
 class MetricWorkSheet:
-  FuncDict = \
-    {
-      'FAE-AWH': FaeAwhData, \
-      'FAE-WH' : FaeWhData,  \
-      'FAE-LT' : FaeLtData,  \
-      'FAE-OT' : FaeOtData,  \
+  FuncDict =                        \
+    {                               \
+      'FAE-AWH'   : FaeAwhData,     \
+      'FAE-WH'    : FaeWhData,      \
+      'FAE-LT'    : FaeLtData,      \
+      'FAE-OT'    : FaeOtData,      \
+      'ACTIVITY'  : ActivityData,   \
+      'GKA'       : GkaData,        \
+      'LTS'       : LtsData,        \
+      'UTL-CF'    : UtlCfData,      \
+      'UTL-DT'    : UtlDtData,      \
+      'UTL-PS'    : UtlPsData,      \
+      'UTL-LS'    : UtlLsData,      \
+      'OVERTIME'  : OverTimeData,   \
+      'ACT-BY-LOC': ActByLocData    \
     }
   #--------------------------------------------------------------------
   def __init__(self,ws,matrixList):
@@ -47,10 +56,11 @@ class MetricWorkSheet:
     self.tables = {}
 
     for item in matrixList:
-      loc    = item[0]
-      region = item[1]
-      mType  = item[2]
-      period = item[3]
+      loc     = item[0]
+      region  = item[1]
+      mType   = item[2]
+      period  = item[3]
+      options = item[4]
       if (mType in self.FuncDict):
 
         #--------------------------------------------------------------
@@ -69,7 +79,10 @@ class MetricWorkSheet:
           startRow  = table.bottomRow + 2
           startCol += 0
 
-        data  = self.FuncDict[mType](region,mType,period)
+        if (options != None):
+          data  = self.FuncDict[mType](region,mType,period,opt=options)
+        else:
+          data  = self.FuncDict[mType](region,mType,period)
         table = MatrixTable(ws,startRow,startCol,data)
 
       else:
@@ -77,51 +90,8 @@ class MetricWorkSheet:
 
 
 '''
-    data  = ActivityData(region,'ACTIVITY',period)
-    table = MatrixTable(ws,startRow,startCol,data)
-    self.tables['ACTIVITY'] = (data,table)
 
     startRow += data.dataRows + 2
-
-    data  = LtsData(region,'LTS',period)
-    table = MatrixTable(ws,startRow,startCol,data)
-    self.tables['LTS'] = (data,table)
-
-    startRow += data.dataRows + 2
-
-    data  = UtlCfData(region,'UTL-CF',period)
-    table = MatrixTable(ws,startRow,startCol,data)
-    self.tables['ULT-CF'] = (data,table)
-
-    startRow += data.dataRows + 2
-
-    data  = UtlPsData(region,'UTL-PS',period)
-    table = MatrixTable(ws,startRow,startCol,data)
-    self.tables['ULT-PF'] = (data,table)
-
-    startRow += data.dataRows + 2
-
-    data  = UtlDtData(region,'UTL-DT',period)
-    table = MatrixTable(ws,startRow,startCol,data)
-    self.tables['ULT-DT'] = (data,table)
-
-    startRow += data.dataRows + 2
-
-    data  = UtlLsData(region,'UTL-LS',period)
-    table = MatrixTable(ws,startRow,startCol,data)
-    self.tables['ULT-LS'] = (data,table)
-
-    startRow += data.dataRows + 2
-
-    data  = OverTimeData(region,'OVERTIME',period)
-    table = MatrixTable(ws,startRow,startCol,data)
-    self.tables['OVERTIME'] = (data,table)
-
-    startRow += data.dataRows + 2
-
-    data  = GkaData(region,'GKA',period)
-    table = MatrixTable(ws,startRow,startCol,data)
-    self.tables['GKA'] = (data,table)
 
     startRow += data.dataRows + 2
 
