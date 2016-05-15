@@ -5,9 +5,9 @@ from   summary.matrix.matrixdata import MatrixData
 #----------------------------------------------------------------------
 class ActivityAmMiData(MatrixData):
 #----------------------------------------------------------------------
-  def __init__(self,region,type,period):
+  def __init__(self,region,mType,period):
 
-    super().__init__()
+    super().__init__(region,mType,period)
 
     weekList = Db.WeeksTbl.GetWeeks(Db.db,period)
     actList  = Db.TsActTbl.GetActivities(Db.db,'ALL')

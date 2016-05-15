@@ -5,9 +5,11 @@ from   summary.matrix.matrixdata import MatrixData
 #----------------------------------------------------------------------
 class ActByPrdTeamData(MatrixData):
 #----------------------------------------------------------------------
-  def __init__(self,region,type,period,**kwargs):
+  def __init__(self,region,mType,period,**kwargs):
 
-    super().__init__()
+    super().__init__(region,mType,period)
+
+    raise
 
     weekList = Db.WeeksTbl.GetWeeks(Db.db,period)
     actList  = Db.TsActTbl.GetActivities(Db.db,'ALL')

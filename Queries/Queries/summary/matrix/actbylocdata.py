@@ -7,7 +7,7 @@ from   database.queries.getactbylocsum import GetActByLocSum
 #----------------------------------------------------------------------
 class ActByLocData(MatrixData):
 #----------------------------------------------------------------------
-  def __init__(self,region,type,period,**kwargs):
+  def __init__(self,region,mType,period,**kwargs):
 
     act = None
     opt = kwargs['opt']
@@ -18,7 +18,9 @@ class ActByLocData(MatrixData):
       logging.error('Activity by Location requres activity argument, skipping')
       return
 
-    super().__init__()
+    super().__init__(region,mType,period)
+
+    self.name += '_' + str(act).zfill(2)
 
     regionList = super().calcRegionList(region)
 

@@ -8,9 +8,9 @@ from   summary.matrix.matrixdata    import MatrixData
 #----------------------------------------------------------------------
 class FaeOtData(MatrixData):
 #----------------------------------------------------------------------
-  def __init__(self,region,type,period):
+  def __init__(self,region,mType,period):
 
-    super().__init__()
+    super().__init__(region,mType,period)
 
     regionList = super().calcRegionList(region)
 
@@ -71,7 +71,7 @@ class FaeOtData(MatrixData):
     #super().calcTitle('Additional Hours',regionList,period)
     #super().calcColHdr()
 
-#    super().__init__()
+#    1Gsuper().__init__()
 #
 #    weekList = Db.WeeksTbl.GetWeeks(Db.db,period)
 #    faeList  = Db.TsEntryTbl.GetFaeList(Db.db,region,period)

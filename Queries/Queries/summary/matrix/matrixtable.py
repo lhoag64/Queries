@@ -28,6 +28,7 @@ class MatrixTable:
   def __init__(self,ws,startRow,startCol,data):
     self.ws = ws
 
+    self.name        = data.name
     self.title       = MatrixTableArea(startRow+0,startCol+0,data.title)
     self.rowHdr      = MatrixTableArea(startRow+1,startCol+0,data.rowHdr)
     self.colHdr      = MatrixTableArea(startRow+0,startCol+1,data.colHdr)
@@ -169,4 +170,34 @@ class MatrixTable:
     ws.DrawBorder(self.rowCompData.sRow,self.rowCompData.sCol,self.rowCompData.eRow,self.rowCompData.eCol,'medium')
     ws.DrawBorder(self.colCompHdr.sRow, self.colCompHdr.sCol, self.colCompHdr.eRow, self.colCompHdr.eCol, 'medium')
     ws.DrawBorder(self.colCompData.sRow,self.colCompData.sCol,self.colCompData.eRow,self.colCompData.eCol,'medium')
+
+    # Create named ranges
+    pyws = ws.ws
+    pywb = ws.wb
+    name = self.name
+
+    self.rowCompRanges = []
+    sRow = self.rowCompData.sRow
+    sCol = self.rowCompData.sCol
+    eRow = self.rowCompData.eRow
+    eCol = self.rowCompData.eCol
+    for row in range(self.rowCompHdr.rows):
+      name = self.name + '_' + self.colCompHdr.data[row].upper()
+      self.rowCompRanges.append(ws.AddNamedRange(name,sRow,sCol,eRow,eCol))
+      sRow += 1
+      eRow += 1
+
+    self.colCompRanges = []
+    sRow = self.colCompData.sRow
+    sCol = self.colCompData.sCol
+    eRow = self.colCompData.eRow
+    eCol = self.colCompData.eCol
+    for col in range(self.colCompHdr.cols):
+      name = self.name + '_' + self.colCompHdr.data[col].upper()
+      self.colCompRanges.append(ws.AddNamedRange(name,sRow,sCol,eRow,eCol))
+      sRow += 1
+      eRow += 1
+
+
+
 

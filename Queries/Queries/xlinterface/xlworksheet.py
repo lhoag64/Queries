@@ -1,9 +1,10 @@
 import logging
 import openpyxl
-from   openpyxl.styles          import Font,Border,Alignment,Color,Style,PatternFill
-from   openpyxl.styles.borders  import Side
-from   openpyxl.styles.fills    import FILL_SOLID
-from   xlinterface.xlcolortable import XlColorTable as ColorTable
+from   openpyxl.styles                     import Font,Border,Alignment,Color,Style,PatternFill
+from   openpyxl.styles.borders             import Side
+from   openpyxl.styles.fills               import FILL_SOLID
+from   xlinterface.xlcolortable            import XlColorTable as ColorTable
+from   openpyxl.workbook.names.named_range import NamedRange
 
 alignType = {'C':'center','L':'left','R':'right'}
 colorType = {'Black':0,'Red':2,'Green':3,'Orange':19}
@@ -266,3 +267,37 @@ class XlWorkSheet:
     #dcell.has_style     = scell.has_style
     #dcell.style_id      = scell.style_id
 
+  #-------------------------------------------------------------------
+  def cleanRangeName(self,name):
+    text = ''
+    for i in name:
+      if (i in [' ','-','\n','\r','\t']):
+        ch = '_'
+      else:
+        ch = i
+      text += ch
+
+    return text
+
+  #-------------------------------------------------------------------
+  def AddNamedRange(self,name,sRow,sCol,eRow,eCol):
+
+    logging.debug(name)
+
+    name = self.cleanRangeName(name)
+
+    pyWs = self.ws
+    pyWb = self.wb
+
+    sCol = self.GetColumnLetter(sCol)
+    eCol = self.GetColumnLetter(eCol)
+
+    range = '$' + sCol + '$' + str(sRow) + ':' + '$' + eCol + '$' + str(eRow)
+
+    destination = [(pyWs,range)]
+    scope       = None
+    nr          = NamedRange(name,destination,scope)
+
+    pyWb.add_named_range(nr)
+
+    return nr

@@ -95,7 +95,17 @@ class MatrixDataData:
 #----------------------------------------------------------------------
 class MatrixData:
 
-  def __init__(self):
+  def __init__(self,region,mType,period):
+
+    name = ''
+    if (type(region) is list):
+      for rgn in region:
+        name += region + '_'
+    else:
+      name += region + '_'
+    name += mType + '_'
+    name += period
+
 
     titleFmt   = {'hAlign':'C','vAlign':'C','border':{'A':'thin'},'wrap':True,'font':{'emph':'B'}}
     rowHdrFmt  = {'hAlign':'L','vAlign':'C','border':{'A':'thin'}}
@@ -107,6 +117,7 @@ class MatrixData:
     dataHgt = 15
     dataWid =  7
 
+    self.name        = name
     self.title       = MatrixDataTitle(topHgt,leftWid,titleFmt)
     self.rowHdr      = MatrixDataRowHdr(dataHgt,leftWid,rowHdrFmt)
     self.colHdr      = MatrixDataColHdr(topHgt,dataWid,colHdrFmt)

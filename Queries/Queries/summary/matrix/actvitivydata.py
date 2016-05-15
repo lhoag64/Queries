@@ -8,9 +8,9 @@ from   database.queries.getactivitysum import GetActivitySum
 #----------------------------------------------------------------------
 class ActivityData(MatrixData):
 #----------------------------------------------------------------------
-  def __init__(self,region,type,period):
+  def __init__(self,region,mType,period):
 
-    super().__init__()
+    super().__init__(region,mType,period)
 
     regionList = super().calcRegionList(region)
 
