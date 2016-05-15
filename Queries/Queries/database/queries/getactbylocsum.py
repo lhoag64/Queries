@@ -8,7 +8,7 @@ KeyLocDict = { 'EMEA':'emea_key','AM':'am_key','GC':'gc_key'}
 NameLookup =                         \
   {                                  \
     'US-EAST':'US-East',             \
-    'US-WEST':'US-East',             \
+    'US-WEST':'US-West',             \
     'CA'     :'CA-East',             \
     'UK'     :'UK',                  \
     'SE'     :'Sweden',              \
