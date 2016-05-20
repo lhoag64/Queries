@@ -50,7 +50,7 @@ class ActivityData(MatrixData):
   def _getTitleDict(self,tblItem):
     result = super()._initTblItem(tblItem)
     
-    result['DATA'] = [[super().calcTitleText('Activities',self.regionList,self.period)]]
+    result['DATA'] = [[super()._calcTitleText('Activities',self.regionList,self.period)]]
     result['ROWS'] = 1
     result['COLS'] = 1
 

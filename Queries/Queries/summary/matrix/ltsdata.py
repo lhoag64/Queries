@@ -50,7 +50,7 @@ class LtsData(MatrixData):
   def _getTitleDict(self,tblItem):
     result = super()._initTblItem(tblItem)
     
-    result['DATA'] = [[super().calcTitleText('Labour vs Travel',self.regionList,self.period)]]
+    result['DATA'] = [[super()._calcTitleText('Labour vs Travel',self.regionList,self.period)]]
     result['ROWS'] = 1
     result['COLS'] = 1
 

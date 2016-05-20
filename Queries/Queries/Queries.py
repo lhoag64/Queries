@@ -81,14 +81,14 @@ if (__name__ == '__main__'):
     [                                                                            \
       ((' 0',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACTIVITY'  ,None,None)      ,  \
       (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','LTS'       ,None,None)      ,  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL'  ,'ALL','UTL-CF'    ,None,None)      ,  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL'  ,'ALL','UTL-PS'    ,None,None)      ,  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL'  ,'ALL','UTL-DT'    ,None,None)      ,  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL'  ,'ALL','UTL-LS'    ,None,None)      ,  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA' ,'ALL','UTL-CF'    ,None,None)      ,  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA' ,'ALL','UTL-PS'    ,None,None)      ,  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA' ,'ALL','UTL-DT'    ,None,None)      ,  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA' ,'ALL','UTL-LS'    ,None,None)      ,  \
+      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','UTL-CF'    ,None,None)      ,  \
+      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','UTL-PS'    ,None,None)      ,  \
+      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','UTL-DT'    ,None,None)      ,  \
+      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','UTL-LS'    ,None,None)      ,  \
+      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','UTL-CF'    ,None,None)      ,  \
+      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','UTL-PS'    ,None,None)      ,  \
+      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','UTL-DT'    ,None,None)      ,  \
+      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','UTL-LS'    ,None,None)      ,  \
     ]                                                                            \
 #      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','OVERTIME'  ,None,None)      ,  \
 #      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','GKA'       ,None,None)      ,  \

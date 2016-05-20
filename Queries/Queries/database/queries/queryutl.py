@@ -6,16 +6,15 @@ class QueryUtl(Query):
 
   #--------------------------------------------------------------------
   def __init__(self,db):
-
-    self._funcDict =             \
-      {                          \
-        'UTL-CF': self._queryCf, \
-        'UTL-PS': self._queryPs, \
-        'UTL-DT': self._queryDt, \
-        'UTL-LS': self._queryLs, \
-      }
-
     super().__init__(db)
+ 
+    self._funcDict =              \
+      {                           \
+        'UTL-CF': self._queryCf,  \
+        'UTL-PS': self._queryPs,  \
+        'UTL-DT': self._queryDt,  \
+        'UTL-LS': self._queryLs,  \
+      }
 
   #--------------------------------------------------------------------
   def GetData(self,regionList,weekDict,**kwargs):
@@ -23,12 +22,11 @@ class QueryUtl(Query):
     minWeeks = self.minWeekCnt
     maxWeeks = self.maxWeekCnt
 
-    queryType = kwargs['qtype']
-
-    data = self._getData(regionList,weekDict,queryType,maxWeeks,minWeeks)
+    data = self._getData(regionList,weekDict,maxWeeks,minWeeks,kwargs)
 
     colComp = super()._calcRowMetrics(data['DATA'])
     rowComp = super()._calcColMetrics(data['DATA'])
+    tblComp = super()._calcTblMetrics(data)
 
     cols = data['COLS']
     utl  = [None for col in range(maxWeeks)]
@@ -42,10 +40,12 @@ class QueryUtl(Query):
     rowComp['DATA'].insert(0,utl)
     rowComp['ROWS'] += 1
 
-    return {'DATA':data,'ROW-COMP':rowComp,'COL-COMP':colComp}
+    return {'TBL-DATA':data,'ROW-COMP':rowComp,'COL-COMP':colComp,'TBL-COMP':tblComp}
 
   #--------------------------------------------------------------------
-  def _getData(self,regionList,weekDict,queryType,maxWeeks,minWeeks):
+  def _getData(self,regionList,weekDict,maxWeeks,minWeeks,kwargs):
+
+    queryType = kwargs['qtype']
 
     data = [[None for col in range(maxWeeks)] for row in range(2)]
     for colIdx in range(minWeeks):

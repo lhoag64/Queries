@@ -7,14 +7,7 @@ from   summary.matrix.matrixdata    import MatrixData
 #----------------------------------------------------------------------
 class UtlData(MatrixData):
 
-
-#  rowCompHdrDict['PERCENT'] = 'Utilisation as a %'
-
-  rowHdrDict = OrderedDict()
-  rowHdrDict['DATA' ] = 'For'
-  rowHdrDict['TOTAL'] = 'Total Time'
-
-  titleDict =                                                                \
+  _titleDict =                                                               \
     {                                                                        \
       'UTL-CF':('Utilisation (On Customer Funded Works'        ,'Green 1') , \
       'UTL-PS':('Utilisation (On Pre-Sales Works'              ,'Orange 1'), \
@@ -27,88 +20,27 @@ class UtlData(MatrixData):
 
     super().__init__(item)
 
-    regionList = super().calcRegionList(self.region)
+    funcTbl = OrderedDict()
+    funcTbl['TITLE'       ] = self._getTitleDict
+    funcTbl['ROW-DATA-HDR'] = self._getRowDataHdrDict
+    funcTbl['COL-DATA-HDR'] = self._getColDataHdrDict
+    funcTbl['TBL-DATA'    ] = self._getDataTblDict
+    funcTbl['ROW-COMP-HDR'] = self._getRowCompHdrDict
+    funcTbl['ROW-COMP-TBL'] = self._getRowCompTblDict
+    funcTbl['COL-COMP-HDR'] = self._getColCompHdrDict
+    funcTbl['COL-COMP-TBL'] = self._getColCompTblDict
+
+    self.regionList = super().calcRegionList(self.region)
 
     #------------------------------------------------------------------
     # Fetch data from database
     #------------------------------------------------------------------
-    weekDict = Db.QueryWeeks.GetData(regionList,period)
-    dataDict = Db.QueryUtl.GetData(regionList,weekDict,qtype=self.rptName)
+    self.weekDict = Db.QueryWeeks.GetData(self.regionList,self.period)
+    self.dataDict = Db.QueryUtl.GetData(self.regionList,self.weekDict,qtype=self.rptName)
 
-    #------------------------------------------------------------------
-    # Create Title
-    #------------------------------------------------------------------
-    titleData = self._getTitleData(regionList,period)
-    self.title.AddData(titleData,rows=1,cols=1)
-    self.title.fmt['fill'] = self.titleDict[self.rptName][1]
-
-    #------------------------------------------------------------------
-    # Create and add Row Header (list of descriptions of each row)
-    #------------------------------------------------------------------
-    rowDataHdrDict = self._getRowDataHdrDict()
-
-    rows = rowDataHdrDict['ROWS']
-    cols = rowDataHdrDict['COLS']
-    data = super()._calcData(rowDataHdrDict['DATA'],rows,cols)
-    self.rowDataHdr.AddData(data,rows=rows,cols=cols)
-
-    #------------------------------------------------------------------
-    # Create and add Col Header (list of descriptions of each row)
-    #------------------------------------------------------------------
-    colDataHdrDict = self._getColDataHdrDict()
-
-    rows = colHdrDict['ROWS']
-    cols = colHdrDict['COLS']
-    data = super()._calcData(colDataHdrDict['DATA'],rows,cols)
-    self.colDataHdr.AddData(data,rows=rows,cols=cols)
-
-    #------------------------------------------------------------------
-    # Add report data (actual data from database)
-    #------------------------------------------------------------------
-    rows = dataDict['DATA']['ROWS']
-    cols = dataDict['DATA']['COLS']
-    data = dataDict['DATA']['DATA']
-    self.dataTbl.AddData(data,rows=rows,cols=cols)
-
-    #------------------------------------------------------------------
-    # Create and add computed row headers (bottow rows of table)
-    #------------------------------------------------------------------
-    rowCompHdrDict = self._getRowCompHdrDict()
-
-    rows = []
-    cols = dataDict['ROW-COMP']['COLS']
-    data = super()._calcData(dataDict['ROW-COMP']['DATA'],rows,cols)
-    self.rowCompHdr.AddData(data,rows=rowCnt,cols=colCnt)
-
-    #------------------------------------------------------------------
-    # Create and add computed row table (bottow rows of table)
-    #------------------------------------------------------------------
-    rowCompTblDict = self._getRowCompTblDict()
-
-    rows = []
-    cols = rowCompTblDict['ROW-COMP']['COLS']
-    data = super()._calcData(dataDict['ROW-COMP']['DATA'],rows,cols)
-    self.rowCompTbl.AddData(data,rows=rowCnt,cols=colCnt)
-
-    #------------------------------------------------------------------
-    # Create and add computed col headers (right cols of table)
-    #------------------------------------------------------------------
-    colCompHdrDict = self._getColCompHdrDict()
-
-    rows = colCompHdrDict['COL-COMP']['ROWS']
-    cols = [0,1]
-    data = super()._calcData(dataDict['COL-COMP']['DATA'],rows,cols)
-    self.colCompHdr.AddData(data,rows=rows,cols=cols)
-
-    #------------------------------------------------------------------
-    # Create and add computed col table (right cols of table)
-    #------------------------------------------------------------------
-    colCompTblDict = self._getColCompTblDict()
-
-    rows = colCompTblDict['DATA']['ROWS']
-    cols = colCompTblDict['DATA']['COLS']
-    data = colCompTblDict['DATA']['DATA']
-    self.colCompTbl.AddData(data,rows=rows,cols=cols)
+    for tblItem in self.tbl:
+      if (tblItem in funcTbl):
+        self.tbl[tblItem] = funcTbl[tblItem](tblItem)
 
     #------------------------------------------------------------------
     # Calculate overall size
@@ -121,33 +53,96 @@ class UtlData(MatrixData):
     self.rangeList = []
 
   #--------------------------------------------------------------------
-  def _getTitleData(self,regionList,period):
-    text    = self.titleDict[self.rptName][0]
-    return super().calcTitleText(text,regionList,period)
+  def _getTitleDict(self,tblItem):
+    result = super()._initTblItem(tblItem)
+  
+    title = self._titleDict[self.rptName][0]
+    fmt   = self._titleDict[self.rptName][1]
+      
+    result['DATA'] = [[super()._calcTitleText(title,self.regionList,self.period)]]
+    result['ROWS'] = 1
+    result['COLS'] = 1
+    result['FMT' ]['fill'] = fmt
+
+    return result
 
   #--------------------------------------------------------------------
-  def _getRowDataHdrDict(self):
-    rowDataHdrDict = self.rowHdrDict.values()
-    result = OrderedDict()
+  def _getRowDataHdrDict(self,tblItem):
+    result = super()._initTblItem(tblItem)
+
+    #utlDict = OrderedDict()
+    #utlDict['DATA' ] = 'For'
+    #utlDict['TOTAL'] = 'Total Time'
+
+    utlList = ['For','Total Time']
+
+    result['DATA'] = []
+    for item in utlList:
+      text = item
+      result['DATA'].append([text])
+    result['ROWS'] = len(result['DATA'])
+    result['COLS'] = 1
+
+    return result
 
   #--------------------------------------------------------------------
-  def _getColDataHdrDict(self):
-    colHdrDict = super().calcWeekNumTextList(weekDict['MAX'])
+  def _getColDataHdrDict(self,tblItem):
+    result = super()._initTblItem(tblItem)
+
+    result['DATA'] = [super().calcWeekNumTextList(self.weekDict['MAX'])]
+    result['ROWS'] = 1
+    result['COLS'] = len(result['DATA'][0])
+
+    return result
 
   #--------------------------------------------------------------------
-  def _getRowCompHdrDict(self):
-    rowCompHdrData = self.rowCompHdrDict.values()
+  def _getDataTblDict(self,tblItem):
+    result = super()._initTblItem(tblItem)
+    result['DATA'] = self.dataDict['TBL-DATA']['DATA']
+    result['ROWS'] = self.dataDict['TBL-DATA']['ROWS']
+    result['COLS'] = self.dataDict['TBL-DATA']['COLS']
+
+    return result
 
   #--------------------------------------------------------------------
-  def _getRowCompTblDict(self):
-    pass
+  def _getRowCompHdrDict(self,tblItem):
+    rowCompHdrDict = super()._calcRowCompHdrDict()
+    result = super()._initTblItem(tblItem)
+
+    result['DATA'] = rowCompHdrDict['DATA']
+    result['ROWS'] = rowCompHdrDict['ROWS']
+    result['COLS'] = rowCompHdrDict['COLS']
+
+    result['UTL' ] = 'Utilisation as a %'
+    result['DATA'].insert(0,[result['UTL']])
+    result['ROWS'] += 1
+
+    return result
 
   #--------------------------------------------------------------------
-  def _getColCompHdrDict(self):
-    colCompHdrData = self.colCompHdrDict.values()
+  def _getRowCompTblDict(self,tblItem):
+    result = super()._initTblItem(tblItem)
+    result['DATA'] = self.dataDict['ROW-COMP']['DATA']
+    result['ROWS'] = self.dataDict['ROW-COMP']['ROWS']
+    result['COLS'] = self.dataDict['ROW-COMP']['COLS']
+
+    return result
 
   #--------------------------------------------------------------------
-  def _getColCompTblDict(self):
-    pass
+  def _getColCompHdrDict(self,tblItem):
+    colCompHdrDict = super()._calcColCompHdrDict()
+    result = super()._initTblItem(tblItem)
+    result['DATA'] = colCompHdrDict['DATA']
+    result['ROWS'] = colCompHdrDict['ROWS']
+    result['COLS'] = colCompHdrDict['COLS']
 
+    return result
 
+  #--------------------------------------------------------------------
+  def _getColCompTblDict(self,tblItem):
+    result = super()._initTblItem(tblItem)
+    result['DATA'] = self.dataDict['COL-COMP']['DATA']
+    result['ROWS'] = self.dataDict['COL-COMP']['ROWS']
+    result['COLS'] = self.dataDict['COL-COMP']['COLS']
+
+    return result
