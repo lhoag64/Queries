@@ -3,7 +3,7 @@ from   collections            import OrderedDict
 from   database.queries.query import Query
 
 #----------------------------------------------------------------------
-class QueryAct(Query):
+class QueryLts(Query):
 
   #--------------------------------------------------------------------
   def __init__(self,db):
@@ -26,10 +26,10 @@ class QueryAct(Query):
   #--------------------------------------------------------------------
   def _getData(self,regionList,weekDict,maxWeeks,minWeeks):
 
-    actDict = self._getActDict()
-    actCnt  = len(actDict) + 1
+    ltsDict = self._getLtsDict()
+    ltsCnt  = len(ltsDict) + 1
 
-    data = [[None for col in range(maxWeeks)] for row in range(actCnt)]
+    data = [[None for col in range(maxWeeks)] for row in range(ltsCnt)]
     for colIdx in range(minWeeks):
 
       wcDate = weekDict['MIN'][colIdx][0]
@@ -39,31 +39,25 @@ class QueryAct(Query):
 
       other = 0.0
       for item in dbResult:
-        if (item[0] not in actDict):
+        if (item[0] not in ltsDict):
           other += float(item[1])
         else:
           try:
-            idx = actDict[item[0]]
+            idx = ltsDict[item[0]]
           except KeyError:
             raise
           hrs = float(item[1])
           data[idx][colIdx] = hrs
 
-      data[actCnt-1][colIdx] = other
+      data[ltsCnt-1][colIdx] = other
 
-      for rowIdx in range(actCnt):
+      for rowIdx in range(ltsCnt):
         if (data[rowIdx][colIdx] == None):
           data[rowIdx][colIdx] = 0.0
 
-      #for rowIdx in range(actCnt):
-      #  text  = ''
-      #  for colIdx in range(maxWeeks):
-      #    text += ''
-      #  logging.debug(text)
-
     result = {}
     result['DATA'] = data
-    result['ROWS'] = actCnt
+    result['ROWS'] = ltsCnt
     result['COLS'] = maxWeeks
 
     return result
@@ -71,37 +65,34 @@ class QueryAct(Query):
   #--------------------------------------------------------------------
   def _query(self,wcDate,weDate,regionList):
 
-    # Detailed query
-    #sqltxt  = 'SELECT fname,lname,region,activity,wbs_code,entry_date'
-
     sqlopt  = [wcDate,weDate]
-    sqltxt  = 'SELECT activity,SUM(hours)'
+    sqltxt  = 'SELECT work_type,SUM(hours)'
     sqltxt += '  FROM ts_entry AS ts'
     sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionList,'ts.region')
     sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?)'
-    sqltxt += '  GROUP BY activity'
+    sqltxt += '  GROUP BY work_type'
 
     return super()._runQuery(sqlopt,sqltxt)
 
   #--------------------------------------------------------------------
-  def _getActDict(self):
+  def _getLtsDict(self):
 
     sqlopt  = []
-    sqltxt  = 'SELECT act'
-    sqltxt += '  FROM ts_act'
+    sqltxt  = 'SELECT key'
+    sqltxt += '  FROM ts_lts'
 
     dbResult = super()._runQuery(sqlopt,sqltxt)
 
     idx    = 0
     result = {}
     for item in dbResult:
-      result[str(item[0])] = idx
+      result[item[0]] = idx
       idx += 1
 
     return result
 
 #----------------------------------------------------------------------
-class QueryActList(Query):
+class QueryLtsList(Query):
 
   #--------------------------------------------------------------------
   def __init__(self,db):
@@ -111,14 +102,14 @@ class QueryActList(Query):
   def GetData(self,**kwargs):
 
     sqlopt  = []
-    sqltxt  = 'SELECT act,desc'
-    sqltxt += '  FROM ts_act'
+    sqltxt  = 'SELECT key'
+    sqltxt += '  FROM ts_lts'
 
     dbResult = super()._runQuery(sqlopt,sqltxt)
 
     result = OrderedDict()
     for item in dbResult:
-      result[item[0]] = item[1]
+      result[item[0]] = item[0]
 
     return result
 

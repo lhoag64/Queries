@@ -1,8 +1,8 @@
 import logging
 from   summary.summaryitem          import SummaryItem
 from   database.database            import Database as Db
-from   database.queries.getweeks    import GetWeeks
-from   database.queries.getfaeotsum import GetFaeOtSum
+#from   database.queries.getweeks    import GetWeeks
+#from   database.queries.getfaeotsum import GetFaeOtSum
 from   database.queries.faedata     import FaeHoursData
 from   summary.matrix.matrixdata    import MatrixData
 

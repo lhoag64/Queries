@@ -2,8 +2,8 @@ import logging
 from   summary.summaryitem             import SummaryItem
 from   database.database               import Database as Db
 from   summary.matrix.matrixdata       import MatrixData
-from   database.queries.getweeks       import GetWeeks
-from   database.queries.getactbylocsum import GetActByLocSum
+#from   database.queries.getweeks       import GetWeeks
+#from   database.queries.getactbylocsum import GetActByLocSum
 
 #----------------------------------------------------------------------
 class ActByLocData(MatrixData):

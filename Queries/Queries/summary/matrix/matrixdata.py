@@ -147,16 +147,16 @@ class MatrixData:
     
   #--------------------------------------------------------------------
   def calcSize(self):
-    colDataHdrRows = self.tbl['COL-DATA-HDR']['ROWS']
-    tblDataRows    = self.tbl['TBL-DATA'    ]['ROWS']
-    colCompHdrRows = self.tbl['COL-COMP-HDR']['ROWS']
+    titleRows      = self.tbl['TITLE'       ]['ROWS']
+    rowDataHdrRows = self.tbl['ROW-DATA-HDR']['ROWS']
+    rowCompHdrRows = self.tbl['ROW-COMP-HDR']['ROWS']
 
-    rowDataHdrCols = self.tbl['ROW-DATA-HDR']['COLS']
-    tblDataCols    = self.tbl['TBL-DATA'    ]['COLS']
-    rowCompHdrCols = self.tbl['ROW-COMP-HDR']['COLS']
+    titleCols      = self.tbl['TITLE'       ]['COLS']
+    colDataHdrCols = self.tbl['COL-DATA-HDR']['COLS']
+    colCompHdrCols = self.tbl['COL-COMP-HDR']['COLS']
 
-    self.tbl['ROWS'] = colDataHdrRows + tblDataRows + colCompHdrRows
-    self.tbl['COLS'] = rowDataHdrCols + tblDataCols + rowCompHdrCols
+    self.tbl['ROWS'] = titleRows + rowDataHdrRows + rowCompHdrRows
+    self.tbl['COLS'] = titleCols + colDataHdrCols + colCompHdrCols
 
   #--------------------------------------------------------------------
   def calcRegionList(self,region):

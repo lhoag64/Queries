@@ -1,7 +1,7 @@
 import logging
 import sqlite3
-from   database.queries.getwedate import GetWeDate
-from   database.queries.regiondata  import GetRegionWhereClause
+#from   database.queries.getwedate import GetWeDate
+#from   database.queries.regiondata  import GetRegionWhereClause
 
 #----------------------------------------------------------------------
 def GetFaeLtSum(db,regionList,weekDict):

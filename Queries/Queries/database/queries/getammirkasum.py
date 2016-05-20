@@ -1,6 +1,6 @@
 import logging
 import sqlite3
-from   database.queries.getwedate import GetWeDate
+#from   database.queries.getwedate import GetWeDate
 
 #----------------------------------------------------------------------
 def GetAmMiRkaSum(db,region,codes,weeks):

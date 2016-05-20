@@ -21,6 +21,8 @@ from   database.queries.queryweeks import QueryWeekNumbers
 from   database.queries.queryutl   import QueryUtl
 from   database.queries.queryact   import QueryAct
 from   database.queries.queryact   import QueryActList
+from   database.queries.querylts   import QueryLts
+from   database.queries.querylts   import QueryLtsList
 
 
 
@@ -55,6 +57,8 @@ class Database:
     Database.QueryUtl         = QueryUtl(Database.db)
     Database.QueryAct         = QueryAct(Database.db)
     Database.QueryActList     = QueryActList(Database.db)
+    Database.QueryLts         = QueryLts(Database.db)
+    Database.QueryLtsList     = QueryLtsList(Database.db)
 
   #--------------------------------------------------------------------
   def GetDb():

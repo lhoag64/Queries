@@ -2,7 +2,7 @@ import logging
 from  summary.summaryitem            import SummaryItem
 from   database.database             import Database as Db
 from   database.queries.getfaewhsum  import GetFaeWhSum
-from   database.queries.getweeks     import GetWeeks
+#from   database.queries.getweeks     import GetWeeks
 from   summary.matrix.matrixdata     import MatrixData
 
 #----------------------------------------------------------------------

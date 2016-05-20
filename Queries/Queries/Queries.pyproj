@@ -50,6 +50,7 @@
     <Compile Include="database\queries\getltssum.py" />
     <Compile Include="database\queries\getovertimesum.py" />
     <Compile Include="database\queries\getactivities.py" />
+    <Compile Include="database\queries\querylts.py" />
     <Compile Include="database\queries\queryact.py" />
     <Compile Include="database\queries\queryweeks.py" />
     <Compile Include="database\queries\query.py">

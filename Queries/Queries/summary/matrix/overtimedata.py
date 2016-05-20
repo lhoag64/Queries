@@ -2,7 +2,7 @@ import logging
 from   summary.summaryitem             import SummaryItem
 from   database.database               import Database as Db
 from   summary.matrix.matrixdata       import MatrixData
-from   database.queries.getweeks       import GetWeeks
+#from   database.queries.getweeks       import GetWeeks
 from   database.queries.getovertimesum import GetOverTimeSum
 #----------------------------------------------------------------------
 class OverTimeData(MatrixData):
