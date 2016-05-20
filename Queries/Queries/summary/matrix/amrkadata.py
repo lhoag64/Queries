@@ -1,4 +1,5 @@
 import logging
+from   summary.summaryitem      import SummaryItem
 from   database.database       import Database as Db
 from   database.tables.tsentry import TsEntryTable
 from   summary.matrix.matrixdata import MatrixData
@@ -6,9 +7,11 @@ from   summary.matrix.matrixdata import MatrixData
 #----------------------------------------------------------------------
 class AmRkaData(MatrixData):
 #----------------------------------------------------------------------
-  def __init__(self,region,mType,period):
+  def __init__(self,item):
 
-    super().__init__(region,mType,period)
+    super().__init__(item)
+
+    raise
 
     codes = ['ERC','NOK','ALU','SPR','ATT','TMO','QUA','INT','QOR','TER','SKY','OTHERS','COB','TTT','OTH']
 
@@ -42,3 +45,8 @@ class AmRkaData(MatrixData):
                     'Cobham', 'Technical Training - All Types','Customer \'Other\'']
 
     self.rowCompDesc = []
+
+    super().calcSize()
+
+    self.rangeList = []
+

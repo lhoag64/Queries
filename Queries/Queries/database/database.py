@@ -16,15 +16,24 @@ from   database.tables.tslts       import TsLtsTable
 from   database.tables.tsfile      import TsFileTable
 from   database.tables.tsentry     import TsEntryTable
 from   database.tables.weeks       import WeeksTable
+from   database.queries.queryweeks import QueryWeeks
+from   database.queries.queryweeks import QueryWeekNumbers
+from   database.queries.queryutl   import QueryUtl
+from   database.queries.queryact   import QueryAct
+from   database.queries.queryact   import QueryActList
 
 
 
 #----------------------------------------------------------------------
 class Database:
-  def __init__(self):
-    Database.db          = None
-    Database.root        = None
-    Database.filename    = None
+  def __init__(self,root,filename):
+
+    Database.root     = root
+    Database.filename = filename
+
+    pathname = os.path.join(root,filename)
+    Database.db = sqlite3.connect(pathname)
+
     Database.masterts    = None
 
     Database.FaeLbrTbl   = FaeLaborTypeTable()
@@ -41,17 +50,15 @@ class Database:
     Database.TsEntryTbl  = TsEntryTable()
     Database.WeeksTbl    = WeeksTable()
 
+    Database.QueryWeeks       = QueryWeeks(Database.db)
+    Database.QueryWeekNumbers = QueryWeekNumbers(Database.db)
+    Database.QueryUtl         = QueryUtl(Database.db)
+    Database.QueryAct         = QueryAct(Database.db)
+    Database.QueryActList     = QueryActList(Database.db)
+
   #--------------------------------------------------------------------
   def GetDb():
     return Database.db
-
-  #--------------------------------------------------------------------
-  def Connect(root,filename):
-    Database.root     = root
-    Database.filename = filename
-
-    pathname = os.path.join(root,filename)
-    Database.db = sqlite3.connect(pathname)
 
   #--------------------------------------------------------------------
   def CreateTables(list):

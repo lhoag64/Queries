@@ -14,9 +14,8 @@ LocDict =                                                                       
     109: [109, 7, 6,'EMEA','Poland'                  ,'PL'      ,'Poland'        ,'PL'         ,0,0,0,0],  \
     110: [110, 8, 6,'EMEA','Portugal'                ,'PT'      ,'Portugal'      ,'PT'         ,0,0,0,0],  \
     111: [111, 9, 6,'EMEA','Spain'                   ,'SP'      ,'Spain'         ,'SP'         ,0,0,0,0],  \
-    131: [131,10, 6,'EMEA','Turkey'                  ,'TR'      ,'Turkey'        ,'TR'         ,0,0,0,0],  \
-    129: [129, 1, 7,'GC'  ,'Greater China North'     ,'GC-N'    ,'China-North'   ,'GC-N'       ,0,0,1,0],  \
-    130: [130, 2, 8,'GC'  ,'Greater China South'     ,'GC-S'    ,'China-South'   ,'GC-S'       ,0,0,1,0],  \
+    130: [130,10, 6,'EMEA','Ireland'                 ,'IR'      ,'Ireland'       ,'IR'         ,0,0,0,0],  \
+    131: [131,11, 6,'EMEA','Turkey'                  ,'TR'      ,'Turkey'        ,'TR'         ,0,0,0,0],  \
     100: [100, 3, 9,'GC'  ,'Greater China'           ,'GC'      ,'China'         ,'GC'         ,0,0,1,0],  \
     115: [115, 1,10,'AM'  ,'AM-NorthEast'            ,'US-NE'   ,'US-NorthEast'  ,'US-EAST'    ,0,1,0,0],  \
     116: [116, 2,10,'AM'  ,'AM-MidAtlantic'          ,'US-CE'   ,'US-MidAtlantic','US-EAST'    ,0,1,0,0],  \
@@ -35,7 +34,8 @@ LocDict =                                                                       
     104: [104, 1,15,'APAC','India'                   ,'IN'      ,'India'         ,'IN'         ,0,0,0,1],  \
     106: [106, 2,15,'APAC','Japan'                   ,'JP'      ,'Japan'         ,'JP'         ,0,0,0,1],  \
     107: [107, 3,15,'APAC','Korea'                   ,'KO'      ,'Korea'         ,'KO'         ,0,0,0,1],  \
-    108: [108, 4,16,'APAC','Malaysia'                ,'MA'      ,'Malaysia'      ,'MA'         ,0,0,0,0],  \
+    129: [129, 4,16,'APAC','Malaysia'                ,'MA'      ,'Malaysia'      ,'MA'         ,0,0,0,0],  \
+    108: [108, 5,16,'APAC','Singapore'               ,'SI'      ,'Singapore'     ,'SI'         ,0,0,0,0],  \
     128: [128, 1, 1,'ALL' ,'Other'                   ,'OTH'     ,'OTH'           ,'OTH'        ,0,0,0,0]   \
   }
 
@@ -103,7 +103,7 @@ class TsLocTable(Table):
         if (row[0] != tup[0]):
           raise
       else:
-        logging.error('Error finding location: ' + str(row[0]) + row[1])
+        logging.error('Error finding location: ' + str(row[0]) + ' ' + row[1])
         raise
 
       rows.append(tup)

@@ -1,20 +1,19 @@
 import logging
 from   database.database            import Database as Db
+from   summary.summaryitem          import SummaryItem
 from   summary.matrix.matrixdata    import MatrixData
-from   database.queries.getweeks    import GetWeeks
-from   database.queries.getutllssum import GetUtlLsSum
 
 #----------------------------------------------------------------------
 class UtlLsData(MatrixData):
-#----------------------------------------------------------------------
-  def __init__(self,region,mType,period):
+  #--------------------------------------------------------------------
+  def __init__(self,item):
 
-    super().__init__(region,mType,period)
+    super().__init__(item)
 
-    regionList = super().calcRegionList(region)
+    regionList = super().calcRegionList(self.region)
 
-    weekDict = GetWeeks(Db.db,regionList,period)
-    dataList = GetUtlLsSum(Db.db,regionList,weekDict)
+    weekDict = db.QueryWeeks.GetData(regionList,self.period)
+    dataList = db.QueryUtl(Db.db,regionList,weekDict,{'QTYPE':''})
 
     weekCnt = len(dataList)
     itemCnt = len(dataList[0])
@@ -34,37 +33,12 @@ class UtlLsData(MatrixData):
 
     self.colCompHdr.AddData(['Avg'])
     self.colHdr.AddData(super().calcWeekNumTextList(weekDict['MAX']))
-    super().calcTitle('Utilisation (Leave and Sickness)',regionList,period)
+    super().calcTitle('Utilisation (Leave and Sickness)',regionList,self.period)
     self.title.fmt['fill'] = 'Yellow 1'
     
     rowHdrData = ['For','Total Time','Utilisation as a %']
     self.rowHdr.AddData(rowHdrData,cols=1,rows=itemCnt)
 
-#    weekList = Db.WeeksTbl.GetWeeks(Db.db,period)
-#    data     = Db.TsEntryTbl.GetUtlLsSum(Db.db,region,weekList)
-#
-#    colSumList = super().calcColSum(data)
-#    rowSumList = super().calcRowSum(data)
-#    weeks      = super().calcCols(colSumList)
-#    if (weeks != len(weekList)):
-#      weeks = len(weekList)
-#    rowAvgList = super().calcRowAvg(rowSumList,weeks)
-#
-#    self.compData = [rowAvgList]
-#    self.data     = super().calcData(data,3,weeks)
-#
-#    self.dataCols = len(self.data)
-#    self.dataRows = len(self.data[0])
-#
-#    self.title = 'Utilisation (Leave and Sickness)'
-#    self.titleFmt = {'hAlign':'C','vAlign':'C','border':{'A':'thin'},'fill':'Yellow 1'}
-#
-#    self.colDesc = []
-#    for i in range(self.dataCols):
-#      self.colDesc.append('Week ' + str(i+1))
-#
-#    self.colCompDesc = ['Avg']
-#
-#    self.rowDesc = ['For','Total Time','Utilisation as a %']
-#
-#    self.rowCompDesc = []
+    super().calcSize()
+
+    self.rangeList = []

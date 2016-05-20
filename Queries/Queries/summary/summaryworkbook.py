@@ -1,8 +1,8 @@
 import logging
+from   collections                        import OrderedDict
 from   xlinterface.xlworkbook             import XlWorkBook
 from   xlinterface.xlworksheet            import XlWorkSheet
 from   summary.matrix.metricworksheet     import MetricWorkSheet
-#from   summary.matrix.faeworksheet        import FaeWorkSheet
 from   summary.summary.metricsummarysheet import MetricSummarySheet
 from   summary.summary.faesummarysheet    import FaeSummarySheet
 from   summary.charts.metricchartsheet    import MetricChartSheet
@@ -11,18 +11,25 @@ from   summary.charts.faechartsheet       import FaeChartSheet
 #----------------------------------------------------------------------
 class SummaryWorkBook:
   def __init__(self):
-    self.wsDict = {}
+    self.wsDict = OrderedDict()
     self.wb = XlWorkBook()
     ws = self.wb.GetActiveSheet()
     self.wb.SetName(ws,'Summary')
     self.wsDict['Summary'] = ws
 
   #--------------------------------------------------------------------
-  def AddMatrixSheet(self,wsName,matrixList):
+  def AddSheet(self,wsName,itemDict,fullDict):
 
     ws = self.wb.CreateXlWorkSheet(wsName)
-    matrix = MetricWorkSheet(ws,matrixList)
-    self.wsDict[wsName] = ('Matrix',matrix,ws,wsName)
+    sheet = MetricWorkSheet(ws,itemDict,fullDict)
+    self.wsDict[wsName] = (sheet,ws,wsName)
+
+  #--------------------------------------------------------------------
+  def AddSummarySheet(self,wsName,itemList):
+
+    ws = self.wb.CreateXlWorkSheet(wsName)
+    workSheet = MetricWorkSheet(ws,itemList)
+    self.wsDict[wsName] = (workSheet,ws,wsName)
 
   #--------------------------------------------------------------------
   def AddCharts(self,region,type,period):

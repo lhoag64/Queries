@@ -48,4 +48,7 @@ class ActivityAmMiData(MatrixData):
 
     self.rowCompDesc = []
 
+    super().calcSize()
+
+    self.rangeList = []
 

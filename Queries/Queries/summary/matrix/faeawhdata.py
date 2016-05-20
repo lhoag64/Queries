@@ -1,4 +1,5 @@
 import logging
+from   summary.summaryitem           import SummaryItem
 from   database.database             import Database as Db
 from   summary.matrix.matrixdata     import MatrixData
 from   database.queries.getfaeawhsum import GetFaeAwhSum
@@ -7,13 +8,13 @@ from   database.queries.getweeks     import GetWeeks
 #----------------------------------------------------------------------
 class FaeAwhData(MatrixData):
 #----------------------------------------------------------------------
-  def __init__(self,region,mType,period):
+  def __init__(self,item):
 
-    super().__init__(region,mType,period)
+    super().__init__(item)
 
-    regionList = super().calcRegionList(region)
+    regionList = super().calcRegionList(self.region)
 
-    weekDict = GetWeeks(Db.db,regionList,period)
+    weekDict = GetWeeks(Db.db,regionList,self.period)
     dbResult = GetFaeAwhSum(Db.db,regionList,weekDict)
 
     faeList  = dbResult.faeList
@@ -31,9 +32,13 @@ class FaeAwhData(MatrixData):
 
     #super().calcTitle('Actual Working Hours (exc Leave/Holiday)',regionList,period)
     #super().calcColHdr()
-    self.title.AddData(super().calcTitleText('Working Hours (exc Leave/Holiday)',regionList,period))
+    self.title.AddData(super().calcTitleText('Working Hours (exc Leave/Holiday)',regionList,self.period))
     self.colHdr.AddData(super().calcWeekNumTextList(weekDict['MAX']))
     super().calcFaeRowHdr(faeList)
+
+    super().calcSize()
+
+    self.rangeList = []
 
 
 

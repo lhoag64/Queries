@@ -1,4 +1,5 @@
 import logging
+from   summary.summaryitem          import SummaryItem
 from   database.database            import Database as Db
 from   database.queries.getweeks    import GetWeeks
 from   database.queries.getfaeltsum import GetFaeLtSum
@@ -7,13 +8,13 @@ from   summary.matrix.matrixdata    import MatrixData
 #----------------------------------------------------------------------
 class FaeLtData(MatrixData):
 #----------------------------------------------------------------------
-  def __init__(self,region,mType,period):
+  def __init__(self,item):
 
-    super().__init__(region,mType,period)
+    super().__init__(item)
 
-    regionList = super().calcRegionList(region)
+    regionList = super().calcRegionList(self.region)
 
-    weekDict    = GetWeeks(Db.db,regionList,period)
+    weekDict    = GetWeeks(Db.db,regionList,self.period)
     dataList    = GetFaeLtSum(Db.db,regionList,weekDict)
 
     weekCnt = len(dataList)
@@ -25,10 +26,8 @@ class FaeLtData(MatrixData):
     self.colCompData.AddData(rowAvgList,cols=1,rows=itemCnt)
 
     self.colCompHdr.AddData(['Avg'])
-    self.title.AddData(super().calcTitleText('Internal vs Contract Hours',regionList,period))
+    self.title.AddData(super().calcTitleText('Internal vs Contract Hours',regionList,self.period))
     self.colHdr.AddData(super().calcWeekNumTextList(weekDict['MAX']))
-    #super().calcTitle('Internal vs Contract Hours',regionList,period)
-    #super().calcColHdr()
 
     fmt =                                                                    \
       [                                                                      \
@@ -37,4 +36,9 @@ class FaeLtData(MatrixData):
       ]
 
     self.rowHdr.AddData(['Internal Hours','Contract Hours'],cols=1,rows=itemCnt,fmt=fmt)
+
+    super().calcSize()
+
+    self.rangeList = []
+
 

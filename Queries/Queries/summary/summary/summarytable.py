@@ -1,157 +1,15 @@
 import logging
+from   summary.summaryitem               import SummaryItem
 from   xlinterface.xlworkbook            import XlWorkBook
 from   xlinterface.xlworksheet           import XlWorkSheet
 from   summary.matrix.matrixdata         import MatrixData 
-from   summary.matrix.matrixtable        import MatrixTable
-from   openpyxl.chart                    import LineChart
-from   openpyxl.chart                    import BarChart
-from   openpyxl.chart                    import PieChart
-from   openpyxl.chart.reference          import Reference
-from   summary.matrix.actvitivydata      import ActivityData
-from   summary.matrix.actvitivyamdmrdata import ActivityAmDmrData
-from   summary.matrix.actvitivyammidata  import ActivityAmMiData
-from   summary.matrix.ltsdata            import LtsData
-from   summary.matrix.utlcfdata          import UtlCfData
-from   summary.matrix.utlpsdata          import UtlPsData
-from   summary.matrix.utldtdata          import UtlDtData
-from   summary.matrix.utllsdata          import UtlLsData
-from   summary.matrix.overtimedata       import OverTimeData
-from   summary.matrix.gkadata            import GkaData
-from   summary.matrix.amrkadata          import AmRkaData
-from   summary.matrix.amtmcardata        import AmTmCarData
-from   summary.matrix.amtmsmcdata        import AmTmSmcData
-from   summary.matrix.ammirkadata        import AmMiRkaData
-from   summary.matrix.actbylocdata       import ActByLocData
-from   summary.matrix.actbyprdteamdata   import ActByPrdTeamData
-from   summary.matrix.faeawhdata         import FaeAwhData
-from   summary.matrix.faewhdata          import FaeWhData
-from   summary.matrix.faeltdata          import FaeLtData
-from   summary.matrix.faeotdata          import FaeOtData
 
 #----------------------------------------------------------------------
-class MetricSummarySheet:
-  #--------------------------------------------------------------------
-  def __init__(self,ws,region,type,period):
-    self.ws     = ws
-    self.region = region
-    self.type   = type
-    self.period = period
+class SummaryTable:
+  def __init__(self,ws,row,col,item,itemDict):
 
-    startRow = 200
-    startCol = 200
+    self.ws = ws
 
-    self.tables = {}
-
-    data  = ActivityData(region,'ACTIVITY',period)
-    table = MatrixTable(ws,startRow,startCol,data)
-    self.tables['ACTIVITY'] = (data,table)
-
-    startRow += data.dataRows + 2
-
-    data  = LtsData(region,'LTS',period)
-    table = MatrixTable(ws,startRow,startCol,data)
-    self.tables['LTS'] = (data,table)
-
-    startRow += data.dataRows + 2
-
-    data  = UtlCfData(region,'UTL-CF',period)
-    table = MatrixTable(ws,startRow,startCol,data)
-    self.tables['ULT-CF'] = (data,table)
-
-    startRow += data.dataRows + 2
-
-    data  = UtlPsData(region,'UTL-PS',period)
-    table = MatrixTable(ws,startRow,startCol,data)
-    self.tables['ULT-PF'] = (data,table)
-
-    startRow += data.dataRows + 2
-
-    data  = UtlDtData(region,'UTL-DT',period)
-    table = MatrixTable(ws,startRow,startCol,data)
-    self.tables['ULT-DT'] = (data,table)
-
-    startRow += data.dataRows + 2
-
-    data  = UtlLsData(region,'UTL-LS',period)
-    table = MatrixTable(ws,startRow,startCol,data)
-    self.tables['ULT-LS'] = (data,table)
-
-    startRow += data.dataRows + 2
-
-    data  = OverTimeData(region,'OVERTIME',period)
-    table = MatrixTable(ws,startRow,startCol,data)
-    self.tables['OVERTIME'] = (data,table)
-
-    startRow += data.dataRows + 2
-
-    data  = GkaData(region,'GKA',period)
-    table = MatrixTable(ws,startRow,startCol,data)
-    self.tables['GKA'] = (data,table)
-
-    startRow += data.dataRows + 2
-
-    if (region == 'EMEA'):
-      actList = [10,11,12,13,14,15,16,17,18,19,20,21,22,23]
-      locList = ['UK','Sweden','Finland','France','Germany','Other (EMEA)']
-      for act in actList:
-        data  = ActByLocData(region,'ACT-BY-LOC',period,act=act,loc=locList)
-        table = MatrixTable(ws,startRow,startCol,data)
-        self.tables['ACT-' + str(act)] = (data,table)
-
-        startRow += data.dataRows + 2
-
-    elif (region == 'AM'):
-      data  = ActivityAmDmrData(region,'ACTIVITY-AM-DMR',period)
-      table = MatrixTable(ws,startRow,startCol,data)
-      self.tables['ACTIVITY-AM-DMR'] = (data,table)
-
-      startRow += data.dataRows + 2
-
-      data  = ActivityAmMiData(region,'ACTIVITY-AM-MI',period)
-      table = MatrixTable(ws,startRow,startCol,data)
-      self.tables['ACTIVITY-AM-MI'] = (data,table)
-
-      startRow += data.dataRows + 2
-
-      data  = AmRkaData(region,'AM-RKA',period)
-      table = MatrixTable(ws,startRow,startCol,data)
-      self.tables['AM-RKA'] = (data,table)
-
-      startRow += data.dataRows + 2
-
-      data  = AmTmCarData(region,'AM-TM-CAR',period)
-      table = MatrixTable(ws,startRow,startCol,data)
-      self.tables['AM-TM-CAR'] = (data,table)
-
-      startRow += data.dataRows + 2
-
-      data  = AmTmSmcData(region,'AM-TM-SMC',period)
-      table = MatrixTable(ws,startRow,startCol,data)
-      self.tables['AM-TM-SMC'] = (data,table)
-
-      startRow += data.dataRows + 2
-
-      data  = AmMiRkaData(region,'AM-MI-RKA',period)
-      table = MatrixTable(ws,startRow,startCol,data)
-      self.tables['AM-MI-RKA'] = (data,table)
-
-      startRow += data.dataRows + 2
-
-      actList = [10,11,12,13,14,15,16,17,18,19,20,21,22,23]
-      prdList = ['DMR','MI']
-      for act in actList:
-        data  = ActByPrdTeamData(region,'ACT-BY-PRD-TEAM',period,act=act,prd=prdList)
-        table = MatrixTable(ws,startRow,startCol,data)
-        self.tables['ACT-' + str(act)] = (data,table)
-
-        startRow += data.dataRows + 2
-
-    logging.debug('')
-
-    self.drawSummary()
-
-  #--------------------------------------------------------------------
-  def drawSummary(self):
     self.ws.SetColWid(2,10)
     self.ws.SetColWid(3,60)
     self.ws.SetColWid(4,20)
@@ -183,17 +41,25 @@ class MetricSummarySheet:
     self.ws.SetCell( 6, 3,'Hours',fmt2)
     self.ws.SetCell( 6, 4,'Hours',fmt2a)
     self.ws.SetCell( 6, 5,'As a % of Contracted',fmt2a)
+
     self.ws.SetCell( 7, 3,'Contracted number of hours',fmt3)
     self.ws.SetCell( 7, 4,'=SUM(GS243:HE243)',fmt3b)
+
     self.ws.SetCell( 7, 5,None,fmt3b)
+
     self.ws.SetCell( 8, 3,'Total Hours booked',fmt3)
     self.ws.SetCell( 8, 4,'=SUM(GS223:HE223)',fmt3b)
+
     self.ws.SetCell( 8, 5,None,fmt3b)
+
     self.ws.SetCell( 9, 3,'Additional hours worked over contracted',fmt3)
     self.ws.SetCell( 9, 4,'=SUM(GS242:HE242)',fmt3b)
+
     self.ws.SetCell( 9, 5,None,fmt3b)
+
     self.ws.SetCell(10, 3,'Number of Heads',fmt3)
     self.ws.ws.merge_cells('D10:E10')
+
     self.ws.SetCell(10, 4,16,fmt3b)
     self.ws.SetCell(10, 5,None,fmt3b)
 
@@ -204,67 +70,90 @@ class MetricSummarySheet:
     self.ws.ws.merge_cells('D16:E16')
     self.ws.SetCell(12, 3,'Activity (Summary) AVERAGE ACCROSS YEAR',fmt2)
     self.ws.SetCell(12, 4,'Percentage %',fmt2a)
+
     self.ws.SetCell(13, 3,'Utilisation (Customer Funded works)',fmt4)
     self.ws.SetCell(13, 4,'=HF224',fmt4b)
+
     self.ws.SetCell(13, 5,None,fmt4b)
+
     self.ws.SetCell(14, 3,'Utilisation (Pre Sales work)',fmt5)
     self.ws.SetCell(14, 4,'=HF229',fmt5b)
+
     self.ws.SetCell(14, 5,None,fmt5b)
     self.ws.SetCell(15, 3,'Utilisation (Downtime,Exc Leave and Sickness)',fmt6)
     self.ws.SetCell(15, 4,'=HF234',fmt6b)
+
     self.ws.SetCell(15, 5,None,fmt6b)
+
     self.ws.SetCell(16, 3,'Utilisation (Leave and Sickness)',fmt7)
     self.ws.SetCell(16, 4,'=HF239',fmt7b)
+
     self.ws.SetCell(16, 5,None,fmt7b)
 
     self.ws.SetCell(19, 3,'Activity (Detailed)',fmt2)
     self.ws.SetCell(19, 4,'Hours',fmt2a)
     self.ws.SetCell(19, 5,'As a % of Total',fmt2a)
+
     self.ws.SetCell(20, 3,'Support agreement (Software)',fmt4)
     self.ws.SetCell(20, 4,'=SUM(GS201:HE201)',fmt4b)
     self.ws.SetCell(20, 5,'=D20/SUM(D20:D27)*100',fmt4b)
+
     self.ws.SetCell(21, 3,'Hardware agreement (Hardware)',fmt4)
     self.ws.SetCell(21, 4,'=SUM(GS202:HE202)',fmt4b)
     self.ws.SetCell(21, 5,'=D21/SUM(D20:D27)*100',fmt4b)
+
     self.ws.SetCell(22, 3,'Post Sales support (SW-Customer Funded)',fmt4)
     self.ws.SetCell(22, 4,'=SUM(GS205:HE205)',fmt4b)
     self.ws.SetCell(22, 5,'=D22/SUM(D20:D27)*100',fmt4b)
+
     self.ws.SetCell(23, 3,'Post Sales support (HW-Customer Funded',fmt4)
     self.ws.SetCell(23, 4,'=SUM(GS206:HE206)',fmt4b)
     self.ws.SetCell(23, 5,'=D23/SUM(D20:D27)*100',fmt4b)
+
     self.ws.SetCell(24, 3,'NRE (Customer funded)',fmt4)
     self.ws.SetCell(24, 4,'=SUM(GS207:HE207)',fmt4b)
     self.ws.SetCell(24, 5,'=D24/SUM(D20:D27)*100',fmt4b)
+
     self.ws.SetCell(25, 3,'Training - Providing - Non Customer Specific',fmt4)
     self.ws.SetCell(25, 4,'=SUM(GS208:HE208)',fmt4b)
     self.ws.SetCell(25, 5,'=D25/SUM(D20:D27)*100',fmt4b)
+
     self.ws.SetCell(26, 3,'Training - Providing - Customer Specific',fmt4)
     self.ws.SetCell(26, 4,'=SUM(GS209:HE209)',fmt4b)
     self.ws.SetCell(26, 5,'=D26/SUM(D20:D27)*100',fmt4b)
+
     self.ws.SetCell(27, 3,'Post Sales Support (Warranty Period)',fmt4)
     self.ws.SetCell(27, 4,'=SUM(GS214:HE214)',fmt4b)
     self.ws.SetCell(27, 5,'=D27/SUM(D20:D27)*100',fmt4b)
+
     self.ws.SetCell(28, 3,'Pre Sales Support',fmt5)
     self.ws.SetCell(28, 4,'=SUM(GS203:HE203)',fmt5b)
     self.ws.SetCell(28, 5,'=D28/SUM(D28:D33)*100',fmt5b)
+
     self.ws.SetCell(29, 3,'Post Sales Support (Non contract)',fmt5)
     self.ws.SetCell(29, 4,'=SUM(GS204:HE204)',fmt5b)
     self.ws.SetCell(29, 5,'=D29/SUM(D28:D33)*100',fmt5b)
+
     self.ws.SetCell(30, 3,'Training - Receiving - Non Customer Specific',fmt5)
     self.ws.SetCell(30, 4,'=SUM(GS210:HE210)',fmt5b)
     self.ws.SetCell(30, 5,'=D30/SUM(D28:D33)*100',fmt5b)
+
     self.ws.SetCell(31, 3,'Training - Receiving - Customer Specific',fmt5)
     self.ws.SetCell(31, 4,'=SUM(GS211:HE211)',fmt5b)
     self.ws.SetCell(31, 5,'=D31/SUM(D28:D33)*100',fmt5b)
+
     self.ws.SetCell(32, 3,'Internal Business Meeting',fmt5)
     self.ws.SetCell(32, 4,'=SUM(GS212:HE212)',fmt5b)
     self.ws.SetCell(32, 5,'=D32/SUM(D28:D33)*100',fmt5b)
+
     self.ws.SetCell(33, 3,'Professional Services',fmt5)
     self.ws.SetCell(33, 4,'=SUM(GS213:HE213)',fmt5b)
     self.ws.SetCell(33, 5,'=D33/SUM(D28:D33)*100',fmt5b)
+
     self.ws.SetCell(34, 3,'Downtime - Excluding Leave & Sickness',fmt6)
     self.ws.SetCell(34, 4,'=SUM(GS232:HE232)',fmt6b)
     self.ws.SetCell(34, 5,'=D34/SUM(D34:D34)*100',fmt6b)
+
     self.ws.SetCell(35, 3,'Leave and Sickness',fmt7)
     self.ws.SetCell(35, 4,'=SUM(GS237:HE237)',fmt7b)
     self.ws.SetCell(35, 5,'=D35/SUM(D35:D35)*100',fmt7b)
@@ -319,12 +208,13 @@ class MetricSummarySheet:
     self.ws.DrawBorder(46, 3, 46, 5,'medium')
 
 
-    ltsChart = PieChart()
-    data   = Reference(self.ws.ws,min_col=5,min_row=47,max_row=49)
-    labels = Reference(self.ws.ws,min_col=3,min_row=47,max_row=49)
-    ltsChart.add_data(data)
-    ltsChart.set_categories(labels)
-    ltsChart.title = 'Labour Vs Travel'
-    self.ws.ws.add_chart(ltsChart,'H46')
+#    ltsChart = PieChart()
+#    data   = Reference(self.ws.ws,min_col=5,min_row=47,max_row=49)
+#    labels = Reference(self.ws.ws,min_col=3,min_row=47,max_row=49)
+#    ltsChart.add_data(data)
+#    ltsChart.set_categories(labels)
+#    ltsChart.title = 'Labour Vs Travel'
+#    self.ws.ws.add_chart(ltsChart,'H46')
+
 
 

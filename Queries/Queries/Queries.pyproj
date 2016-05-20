@@ -50,6 +50,14 @@
     <Compile Include="database\queries\getltssum.py" />
     <Compile Include="database\queries\getovertimesum.py" />
     <Compile Include="database\queries\getactivities.py" />
+    <Compile Include="database\queries\queryact.py" />
+    <Compile Include="database\queries\queryweeks.py" />
+    <Compile Include="database\queries\query.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="database\queries\queryutl.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="database\queries\getutldtsum.py" />
     <Compile Include="database\queries\getutllssum.py" />
     <Compile Include="database\queries\getutlcfsum.py" />
@@ -287,6 +295,7 @@
     <Compile Include="summary\matrix\metricworksheet.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="summary\matrix\utldata.py" />
     <Compile Include="summary\matrix\utlcfdata.py">
       <SubType>Code</SubType>
     </Compile>
@@ -298,11 +307,20 @@
     <Compile Include="summary\matrix\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="summary\summarydata.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="summary\summaryitem.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="summary\summaryworkbook.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="summary\summary\faesummarysheet.py" />
     <Compile Include="summary\summary\metricsummarysheet.py" />
+    <Compile Include="summary\summary\summarytable.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="summary\summary\__init__.py" />
     <Compile Include="summary\__init__.py">
       <SubType>Code</SubType>

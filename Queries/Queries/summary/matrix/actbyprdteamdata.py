@@ -1,13 +1,14 @@
 import logging
+from   summary.summaryitem       import SummaryItem
 from   database.database         import Database as Db
 from   summary.matrix.matrixdata import MatrixData
 
 #----------------------------------------------------------------------
 class ActByPrdTeamData(MatrixData):
 #----------------------------------------------------------------------
-  def __init__(self,region,mType,period,**kwargs):
+  def __init__(self,item):
 
-    super().__init__(region,mType,period)
+    super().__init__(item)
 
     raise
 
@@ -50,3 +51,7 @@ class ActByPrdTeamData(MatrixData):
     self.rowDesc = prdList
 
     self.rowCompDesc = []
+
+    super().calcSize()
+
+    self.rangeList = []

@@ -39,3 +39,8 @@ class AmTmCarData(MatrixData):
     self.rowDesc = ['Sprint','AT&T','T-Mobile']
 
     self.rowCompDesc = []
+
+    super().calcSize()
+
+    self.rangeList = []
+

@@ -6,6 +6,7 @@ from   timesheet.calendar      import Calendar
 from   timesheet.faeteam       import FaeTeam
 from   timesheet.fldata        import FlData
 from   timesheet.tsdata        import TsData
+from   summary.summarydata     import SummaryData
 from   summary.summaryworkbook import SummaryWorkBook
 
 #----------------------------------------------------------------------
@@ -59,116 +60,11 @@ if (__name__ == '__main__'):
   LogConfig('queries.log')
   logging.debug('Start of Program')
 
-  Db()
-  Db.Connect(r'X:\Reporting\Timesheets','timesheets.db')
+  Db(r'X:\Reporting\Timesheets','timesheets.db')
 
   if (False):
     InitializeDatabaseTables()
     InitializeTimesheetTables()
-
-#  summary = SummaryWorkBook()
-#
-#  matrixList = []
-#  matrixList.append(('START'    ,'EMEA','ACTIVITY'  ,'ALL',None))
-#  matrixList.append(('DOWN'     ,'EMEA','LTS'       ,'ALL',None))
-#  matrixList.append(('DOWN'     ,'EMEA','UTL-CF'    ,'ALL',None))
-#  matrixList.append(('DOWN'     ,'EMEA','UTL-PS'    ,'ALL',None))
-#  matrixList.append(('DOWN'     ,'EMEA','UTL-DT'    ,'ALL',None))
-#  matrixList.append(('DOWN'     ,'EMEA','UTL-LS'    ,'ALL',None))
-#  matrixList.append(('DOWN'     ,'EMEA','OVERTIME'  ,'ALL',None))
-#  matrixList.append(('DOWN'     ,'EMEA','GKA'       ,'ALL',None))
-#  for i in range(10,23+1):
-#    options = {'ACT':i}
-#    matrixList.append(('DOWN','EMEA','ACT-BY-LOC','ALL',options))
-#
-#  summary.AddMatrixSheet('EMEA YTD',matrixList)
-#
-#  matrixList = []
-#  matrixList.append(('START'    ,'EMEA','FAE-WH'    ,'ALL',None))
-#  matrixList.append(('RIGHT'    ,'EMEA','FAE-AWH'   ,'ALL',None))
-#  matrixList.append(('DOWN-LEFT','EMEA','FAE-LT'    ,'ALL',None))
-#  matrixList.append(('RIGHT'    ,'EMEA','FAE-OT'    ,'ALL',None))
-#
-#  summary.AddMatrixSheet('EMEA FAE YTD',matrixList)
-#
-#  matrixList = []
-#  matrixList.append(('START'    ,'EMEA','ACTIVITY'  ,'JAN',None))
-#  matrixList.append(('DOWN'     ,'EMEA','LTS'       ,'JAN',None))
-#  matrixList.append(('DOWN'     ,'EMEA','UTL-CF'    ,'JAN',None))
-#  matrixList.append(('DOWN'     ,'EMEA','UTL-PS'    ,'JAN',None))
-#  matrixList.append(('DOWN'     ,'EMEA','UTL-DT'    ,'JAN',None))
-#  matrixList.append(('DOWN'     ,'EMEA','UTL-LS'    ,'JAN',None))
-#
-#  for i in range(10,23+1):
-#    options = {'ACT':i}
-#    matrixList.append(('DOWN'     ,'EMEA','ACT-BY-LOC','JAN',options))
-#
-#  matrixList.append(('DOWN'     ,'EMEA','FAE-WH'    ,'JAN',None))
-#  matrixList.append(('DOWN'     ,'EMEA','FAE-AWH'   ,'JAN',None))
-#  matrixList.append(('DOWN'     ,'EMEA','FAE-LT'    ,'JAN',None))
-#  matrixList.append(('DOWN'     ,'EMEA','FAE-OT'    ,'JAN',None))
-#
-#  summary.AddMatrixSheet('EMEA JAN',matrixList)
-#
-#  matrixList = []
-#  matrixList.append(('START'    ,'EMEA','ACTIVITY'  ,'FEB',None))
-#  matrixList.append(('DOWN'     ,'EMEA','LTS'       ,'FEB',None))
-#  matrixList.append(('DOWN'     ,'EMEA','UTL-CF'    ,'FEB',None))
-#  matrixList.append(('DOWN'     ,'EMEA','UTL-PS'    ,'FEB',None))
-#  matrixList.append(('DOWN'     ,'EMEA','UTL-DT'    ,'FEB',None))
-#  matrixList.append(('DOWN'     ,'EMEA','UTL-LS'    ,'FEB',None))
-#
-#  for i in range(10,23+1):
-#    options = {'ACT':i}
-#    matrixList.append(('DOWN'     ,'EMEA','ACT-BY-LOC','FEB',options))
-#
-#  matrixList.append(('DOWN'     ,'EMEA','FAE-WH'    ,'FEB',None))
-#  matrixList.append(('DOWN'     ,'EMEA','FAE-AWH'   ,'FEB',None))
-#  matrixList.append(('DOWN'     ,'EMEA','FAE-LT'    ,'FEB',None))
-#  matrixList.append(('DOWN'     ,'EMEA','FAE-OT'    ,'FEB',None))
-#
-#  summary.AddMatrixSheet('EMEA FEB',matrixList)
-#
-#  matrixList = []
-#  matrixList.append(('START'    ,'EMEA','ACTIVITY'  ,'MAR',None))
-#  matrixList.append(('DOWN'     ,'EMEA','LTS'       ,'MAR',None))
-#  matrixList.append(('DOWN'     ,'EMEA','UTL-CF'    ,'MAR',None))
-#  matrixList.append(('DOWN'     ,'EMEA','UTL-PS'    ,'MAR',None))
-#  matrixList.append(('DOWN'     ,'EMEA','UTL-DT'    ,'MAR',None))
-#  matrixList.append(('DOWN'     ,'EMEA','UTL-LS'    ,'MAR',None))
-#
-#  for i in range(10,23+1):
-#    options = {'ACT':i}
-#    matrixList.append(('DOWN'     ,'EMEA','ACT-BY-LOC','MAR',options))
-#
-#  matrixList.append(('DOWN'     ,'EMEA','FAE-WH'    ,'MAR',None))
-#  matrixList.append(('DOWN'     ,'EMEA','FAE-AWH'   ,'MAR',None))
-#  matrixList.append(('DOWN'     ,'EMEA','FAE-LT'    ,'MAR',None))
-#  matrixList.append(('DOWN'     ,'EMEA','FAE-OT'    ,'MAR',None))
-#
-#  summary.AddMatrixSheet('EMEA MAR',matrixList)
-#
-#  matrixList = []
-#  matrixList.append(('START'    ,'EMEA','ACTIVITY'  ,'APR',None))
-#  matrixList.append(('DOWN'     ,'EMEA','LTS'       ,'APR',None))
-#  matrixList.append(('DOWN'     ,'EMEA','UTL-CF'    ,'APR',None))
-#  matrixList.append(('DOWN'     ,'EMEA','UTL-PS'    ,'APR',None))
-#  matrixList.append(('DOWN'     ,'EMEA','UTL-DT'    ,'APR',None))
-#  matrixList.append(('DOWN'     ,'EMEA','UTL-LS'    ,'APR',None))
-#
-#  for i in range(10,23+1):
-#    options = {'ACT':i}
-#    matrixList.append(('DOWN'     ,'EMEA','ACT-BY-LOC','APR',options))
-#
-#  matrixList.append(('DOWN'     ,'EMEA','FAE-WH'    ,'APR',None))
-#  matrixList.append(('DOWN'     ,'EMEA','FAE-AWH'   ,'APR',None))
-#  matrixList.append(('DOWN'     ,'EMEA','FAE-LT'    ,'APR',None))
-#  matrixList.append(('DOWN'     ,'EMEA','FAE-OT'    ,'APR',None))
-#
-#  summary.AddMatrixSheet('EMEA APR',matrixList)
-#
-#  summary.Order()
-#  summary.Save('FAE-EMEA-MATRIX.xlsx')
 
   logging.debug('------------------------------------------')
   logging.debug('------------------------------------------')
@@ -178,109 +74,100 @@ if (__name__ == '__main__'):
   logging.debug('------------------------------------------')
   logging.debug('------------------------------------------')
 
-  summary = SummaryWorkBook()
+  summaryWb   = SummaryWorkBook()
+  summaryData = SummaryData(summaryWb)
 
-  matrixList = []
-  matrixList.append(('START'    ,'AM'  ,'ACTIVITY'  ,'ALL',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'LTS'       ,'ALL',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'UTL-CF'    ,'ALL',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'UTL-PS'    ,'ALL',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'UTL-DT'    ,'ALL',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'UTL-LS'    ,'ALL',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'OVERTIME'  ,'ALL',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'GKA'       ,'ALL',None))
-  for i in range(10,23+1):
-    options = {'ACT':i}
-    matrixList.append(('DOWN','AM'  ,'ACT-BY-LOC','ALL',options))
+  amList =                                                                       \
+    [                                                                            \
+      ((' 0',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACTIVITY'  ,None,None)      ,  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','LTS'       ,None,None)      ,  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL'  ,'ALL','UTL-CF'    ,None,None)      ,  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL'  ,'ALL','UTL-PS'    ,None,None)      ,  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL'  ,'ALL','UTL-DT'    ,None,None)      ,  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL'  ,'ALL','UTL-LS'    ,None,None)      ,  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA' ,'ALL','UTL-CF'    ,None,None)      ,  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA' ,'ALL','UTL-PS'    ,None,None)      ,  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA' ,'ALL','UTL-DT'    ,None,None)      ,  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA' ,'ALL','UTL-LS'    ,None,None)      ,  \
+    ]                                                                            \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','OVERTIME'  ,None,None)      ,  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','GKA'       ,None,None)      ,  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','10',{'ACT':10}),  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','11',{'ACT':11}),  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','12',{'ACT':12}),  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','13',{'ACT':13}),  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','14',{'ACT':14}),  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','15',{'ACT':15}),  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','16',{'ACT':16}),  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','17',{'ACT':17}),  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','18',{'ACT':18}),  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','19',{'ACT':19}),  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','20',{'ACT':20}),  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','21',{'ACT':21}),  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','22',{'ACT':22}),  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','23',{'ACT':23}),  \
+#      ((' 0',' 0'),'ALL FAE YTD'  ,'MATRIX' ,'ALL' ,'ALL','FAE-WH'    ,None,None)      ,  \
+#      (('+1',' 0'),'ALL FAE YTD'  ,'MATRIX' ,'ALL' ,'ALL','FAE-AWH'   ,None,None)      ,  \
+#      (('+1',' 0'),'ALL FAE YTD'  ,'MATRIX' ,'ALL' ,'ALL','FAE-LT'    ,None,None)      ,  \
+#      (('+1',' 0'),'ALL FAE YTD'  ,'MATRIX' ,'ALL' ,'ALL','FAE-OT'    ,None,None)      ,  \
+#      ((' 0',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACTIVITY'  ,None,None)      ,  \
+#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','LTS'       ,None,None)      ,  \
+#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','UTL-CF'    ,None,None)      ,  \
+#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','UTL-PS'    ,None,None)      ,  \
+#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','UTL-DT'    ,None,None)      ,  \
+#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','UTL-LS'    ,None,None)      ,  \
+#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','OVERTIME'  ,None,None)      ,  \
+#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','GKA'       ,None,None)      ,  \
+#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','10',{'ACT':10}),  \
+#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','11',{'ACT':11}),  \
+#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','12',{'ACT':12}),  \
+#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','13',{'ACT':13}),  \
+#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','14',{'ACT':14}),  \
+#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','15',{'ACT':15}),  \
+#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','16',{'ACT':16}),  \
+#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','17',{'ACT':17}),  \
+#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','18',{'ACT':18}),  \
+#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','19',{'ACT':19}),  \
+#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','20',{'ACT':20}),  \
+#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','21',{'ACT':21}),  \
+#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','22',{'ACT':22}),  \
+#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','23',{'ACT':23}),  \
+#      ((' 0',' 0'),'AM FAE YTD'   ,'MATRIX' ,'AM'  ,'ALL','FAE-WH'    ,None,None)      ,  \
+#      (('+1',' 0'),'AM FAE YTD'   ,'MATRIX' ,'AM'  ,'ALL','FAE-AWH'   ,None,None)      ,  \
+#      (('+1',' 0'),'AM FAE YTD'   ,'MATRIX' ,'AM'  ,'ALL','FAE-LT'    ,None,None)      ,  \
+#      (('+1',' 0'),'AM FAE YTD'   ,'MATRIX' ,'AM'  ,'ALL','FAE-OT'    ,None,None)      ,  \
+#      ((' 0',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACTIVITY'  ,None,None)      ,  \
+#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','LTS'       ,None,None)      ,  \
+#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','UTL-CF'    ,None,None)      ,  \
+#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','UTL-PS'    ,None,None)      ,  \
+#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','UTL-DT'    ,None,None)      ,  \
+#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','UTL-LS'    ,None,None)      ,  \
+#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','10',{'ACT':10}),  \
+#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','11',{'ACT':11}),  \
+#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','12',{'ACT':12}),  \
+#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','13',{'ACT':13}),  \
+#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','14',{'ACT':14}),  \
+#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','15',{'ACT':15}),  \
+#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','16',{'ACT':16}),  \
+#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','17',{'ACT':17}),  \
+#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','18',{'ACT':18}),  \
+#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','19',{'ACT':19}),  \
+#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','20',{'ACT':20}),  \
+#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','21',{'ACT':21}),  \
+#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','22',{'ACT':22}),  \
+#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','23',{'ACT':23}),  \
+#      ((' 0',' 0'),'AM FAE APR'   ,'MATRIX' ,'AM'  ,'APR','FAE-WH'    ,None,None)      ,  \
+#      (('+1',' 0'),'AM FAE APR'   ,'MATRIX' ,'AM'  ,'APR','FAE-AWH'   ,None,None)      ,  \
+#      (('+1',' 0'),'AM FAE APR'   ,'MATRIX' ,'AM'  ,'APR','FAE-LT'    ,None,None)      ,  \
+#      (('+1',' 0'),'AM FAE APR'   ,'MATRIX' ,'AM'  ,'APR','FAE-OT'    ,None,None)      ,  \
+#      ((' 0',' 0'),'AM SUMMRY YTD','SUMMARY','AM'  ,'YTD','STD'       ,None,None)         \
+#    ]
 
-  summary.AddMatrixSheet('AM YTD',matrixList)
+  summaryData.AddList(amList)
+  summaryData.Process()
 
-  matrixList = []
-  matrixList.append(('START'    ,'AM'  ,'FAE-WH'    ,'ALL',None))
-  matrixList.append(('RIGHT'    ,'AM'  ,'FAE-AWH'   ,'ALL',None))
-  matrixList.append(('DOWN-LEFT','AM'  ,'FAE-LT'    ,'ALL',None))
-  matrixList.append(('RIGHT'    ,'AM'  ,'FAE-OT'    ,'ALL',None))
-
-  summary.AddMatrixSheet('AM FAE YTD',matrixList)
-
-  matrixList = []
-  matrixList.append(('START'    ,'AM'  ,'ACTIVITY'  ,'JAN',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'LTS'       ,'JAN',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'UTL-CF'    ,'JAN',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'UTL-PS'    ,'JAN',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'UTL-DT'    ,'JAN',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'UTL-LS'    ,'JAN',None))
-
-  for i in range(10,23+1):
-    options = {'ACT':i}
-    matrixList.append(('DOWN'     ,'AM'  ,'ACT-BY-LOC','JAN',options))
-
-  matrixList.append(('DOWN'     ,'AM'  ,'FAE-WH'    ,'JAN',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'FAE-AWH'   ,'JAN',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'FAE-LT'    ,'JAN',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'FAE-OT'    ,'JAN',None))
-
-  summary.AddMatrixSheet('AM JAN',matrixList)
-
-  matrixList = []
-  matrixList.append(('START'    ,'AM'  ,'ACTIVITY'  ,'FEB',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'LTS'       ,'FEB',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'UTL-CF'    ,'FEB',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'UTL-PS'    ,'FEB',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'UTL-DT'    ,'FEB',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'UTL-LS'    ,'FEB',None))
-
-  for i in range(10,23+1):
-    options = {'ACT':i}
-    matrixList.append(('DOWN'     ,'AM'  ,'ACT-BY-LOC','FEB',options))
-
-  matrixList.append(('DOWN'     ,'AM'  ,'FAE-WH'    ,'FEB',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'FAE-AWH'   ,'FEB',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'FAE-LT'    ,'FEB',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'FAE-OT'    ,'FEB',None))
-
-  summary.AddMatrixSheet('AM FEB',matrixList)
-
-  matrixList = []
-  matrixList.append(('START'    ,'AM'  ,'ACTIVITY'  ,'MAR',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'LTS'       ,'MAR',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'UTL-CF'    ,'MAR',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'UTL-PS'    ,'MAR',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'UTL-DT'    ,'MAR',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'UTL-LS'    ,'MAR',None))
-
-  for i in range(10,23+1):
-    options = {'ACT':i}
-    matrixList.append(('DOWN'     ,'AM'  ,'ACT-BY-LOC','MAR',options))
-
-  matrixList.append(('DOWN'     ,'AM'  ,'FAE-WH'    ,'MAR',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'FAE-AWH'   ,'MAR',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'FAE-LT'    ,'MAR',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'FAE-OT'    ,'MAR',None))
-
-  summary.AddMatrixSheet('AM MAR',matrixList)
-
-  matrixList = []
-  matrixList.append(('START'    ,'AM'  ,'ACTIVITY'  ,'APR',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'LTS'       ,'APR',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'UTL-CF'    ,'APR',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'UTL-PS'    ,'APR',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'UTL-DT'    ,'APR',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'UTL-LS'    ,'APR',None))
-
-  for i in range(10,23+1):
-    options = {'ACT':i}
-    matrixList.append(('DOWN'     ,'AM'  ,'ACT-BY-LOC','APR',options))
-
-  matrixList.append(('DOWN'     ,'AM'  ,'FAE-WH'    ,'APR',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'FAE-AWH'   ,'APR',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'FAE-LT'    ,'APR',None))
-  matrixList.append(('DOWN'     ,'AM'  ,'FAE-OT'    ,'APR',None))
-
-  summary.AddMatrixSheet('AM APR',matrixList)
-
-  summary.Order()
-  summary.Save('FAE AM MATRIX.xlsx')
+  summaryWb.Order()
+  summaryWb.Save('FAE AM MATRIX.xlsx')
 
 #  logging.debug('------------------------------------------')
 #  logging.debug('------------------------------------------')
@@ -428,6 +315,6 @@ if (__name__ == '__main__'):
 #  #matrixList.append(('RIGHT',    'EMEA',      'FAE-WH',   'ALL'))
 #  #matrixList.append(('DOWN-LEFT','GC',        'FAE-AWH',  'ALL'))
 #  #matrixList.append(('RIGHT',    'GC',        'FAE-WH',   'ALL'))
-#  #matrixList.append(('DOWN',     ['AM','GC'], 'FAE-AWH',  'JAN'))
+#  #matrixList.append(('DOWN',     ['AM','GC'], 'FAE-AWH',  'APR'))
 #  #matrixList.append(('DOWN',     ['AM','GC'], 'FAE-AWH',  'FEB'))
 ###

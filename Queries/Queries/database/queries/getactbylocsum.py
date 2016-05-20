@@ -15,15 +15,12 @@ NameLookup =                         \
     'FI'     :'Finland',             \
     'FR'     :'France',              \
     'DE'     :'Germany',             \
-    'GC-S'   :'Greater China South', \
-    'GC-N'   :'Greater China North'  \
+    'GC'     :'Greater China'        \
   }
 
 #----------------------------------------------------------------------
 def consolidate(regionList,weekCnt,hrsDict):
-
   hoursDict = {}
-
   grpDict = {}
   for region in ['EMEA','GC','AM','APAC']:
     if (region in regionList):
@@ -32,7 +29,7 @@ def consolidate(regionList,weekCnt,hrsDict):
         key  = locTup[6]
         grp  = locTup[2]
         name = locTup[5]
-        if (key == 0 or name == 'GC'):
+        if (key == 0):
           name = 'Other (' + region + ')'
         else:
           name = NameLookup[name]
@@ -106,52 +103,20 @@ def GetActByLocSum(db,regionList,weekDict,act):
 
     for region in regionList:
 
-      if (region in ['AM','EMEA','APAC']):
-        sqlopt  = [wcDate,weDate,act]
-        sqltxt  = 'SELECT loc.loc_group,SUM(ts.hours)'
-        sqltxt += '  FROM ts_entry AS ts'
-        sqltxt += '  INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)'
-        sqltxt += '  INNER JOIN ts_loc  AS loc ON (ts.work_loc = loc.loc)'
-        sqltxt += '  WHERE ts.region = \'' + region + '\''
-        sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?)'
-        sqltxt += '    and ts.activity= ?'
-        #sqltxt += '    and ' + KeyLocDict[region] + ' = 1'
-        sqltxt += '  GROUP BY loc.loc_group'
+      sqlopt  = [wcDate,weDate,act]
+      sqltxt  = 'SELECT loc.loc_group,SUM(ts.hours)'
+      sqltxt += '  FROM ts_entry AS ts'
+      sqltxt += '  INNER JOIN ts_loc  AS loc ON (ts.work_loc = loc.loc)'
+      sqltxt += '  WHERE ts.region = \'' + region + '\''
+      sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?)'
+      sqltxt += '    and ts.activity= ?'
+      #sqltxt += '    and ' + KeyLocDict[region] + ' = 1'
+      sqltxt += '  GROUP BY loc.loc_group'
 
-        c.execute(sqltxt,tuple(sqlopt))
-        dbResult = c.fetchall()
+      c.execute(sqltxt,tuple(sqlopt))
+      dbResult = c.fetchall()
 
-        hrsDict[region]['HOURS'].append(dbResult)
-
-      else:
-        sqlopt  = [wcDate,weDate,act]
-        sqltxt  = 'SELECT fae.fae_loc,SUM(ts.hours)'
-        sqltxt += '  FROM ts_entry AS ts'
-        sqltxt += '  INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)'
-        sqltxt += '  INNER JOIN ts_loc  AS loc ON (ts.work_loc = loc.loc)'
-        sqltxt += '  WHERE ts.region = \'' + region + '\''
-        sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?)'
-        sqltxt += '    and ts.activity= ?'
-        #sqltxt += '    and ' + KeyLocDict[region] + ' = 1'
-        sqltxt += '  GROUP BY fae.fae_loc'
-
-        c.execute(sqltxt,tuple(sqlopt))
-        dbResult = c.fetchall()
-
-        hrsList = []
-        for item in dbResult:
-          faeLoc = item[0]
-          hrs    = item[1]
-          for locTup in hrsDict[region]['LOCLIST']:
-            loc = locTup[5][3:]
-            if (loc == faeLoc):
-              grp = locTup[2]
-              hrsList.append((grp,hrs))
-
-        if (len(hrsList) != 2):
-          logging.warn('Hours list for GC expected to have 2 items')
-
-        hrsDict[region]['HOURS'].append(hrsList)
+      hrsDict[region]['HOURS'].append(dbResult)
 
   hoursDict = consolidate(regionList,minWeekCnt,hrsDict)
 
@@ -162,97 +127,4 @@ def GetActByLocSum(db,regionList,weekDict,act):
   hoursDict['TITLE'] = title
 
   return hoursDict
-
-#      sqlopt  = [wcDate,weDate,act]
-#      sqltxt  = 'SELECT ts.fname,ts.lname,ts.work_loc,fae.fae_loc,loc.rgn_loc,ts.hours'
-#      sqltxt += '  FROM ts_entry AS ts'
-#      sqltxt += '  INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)'
-#      sqltxt += '  INNER JOIN ts_loc  AS loc ON (ts.work_loc = loc.loc)'
-#      sqltxt += '  WHERE ts.region = \'' + region + '\''
-#      sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?)'
-#      sqltxt += '    and ts.activity= ?'
-#      sqltxt += '    and ' + KeyLocDict[region] + ' = 1'
-#      sqltxt += '  GROUP BY ts.work_loc,ts.fname,ts.lname'
-#
-#      c.execute(sqltxt,tuple(sqlopt))
-#      keyDetail = c.fetchall()
-#      c.execute(sqltxt,tuple(sqlopt))
-#      keyResult = c.fetchall()
-#      sqlopt  = [wcDate,weDate,act]
-#      sqltxt  = 'SELECT ts.fname,ts.lname,ts.work_loc,fae.fae_loc,loc.rgn_loc,ts.hours'
-#      sqltxt += '  FROM ts_entry AS ts'
-#      sqltxt += '  INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)'
-#      sqltxt += '  INNER JOIN ts_loc  AS loc ON (ts.work_loc = loc.loc)'
-#      sqltxt += '  WHERE ts.region = \'' + region + '\''
-#      sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?)'
-#      sqltxt += '    and ts.activity= ?'
-#      sqltxt += '    and ' + KeyLocDict[region] + ' = 0'
-#      sqltxt += '  GROUP BY ts.work_loc,ts.fname,ts.lname'
-#
-#      c.execute(sqltxt,tuple(sqlopt))
-#      othDetail = c.fetchall()
-#
-#      sqlopt  = [wcDate,weDate,act]
-#      sqltxt  = 'SELECT ts.work_loc,SUM(ts.hours)'
-#      sqltxt += '  FROM ts_entry AS ts'
-#      sqltxt += '  INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)'
-#      sqltxt += '  INNER JOIN ts_loc  AS loc ON (ts.work_loc = loc.loc)'
-#      sqltxt += '  WHERE ts.region = \'' + region + '\''
-#      sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?)'
-#      sqltxt += '    and ts.activity= ?'
-#      sqltxt += '    and ' + KeyLocDict[region] + ' = 0'
-#      sqltxt += '  GROUP BY ts.work_loc'
-
-#  locSet = set([])
-#  for item in loc:
-#    locSet.add(item)
-#
-#  c = db.cursor()
-#  weekList = []
-#  for i in range(len(weeks)):
-#
-#    wcDate = weeks[i][0]
-#    weDate = GetWeDate(wcDate)
-#
-#    if (region == 'ALL'):
-#      c.execute \
-#        ( \
-#          '''
-#            SELECT ts.activity,loc.loc,loc.desc,sum(ts.hours)
-#            FROM ts_entry AS ts
-#            INNER JOIN ts_loc AS loc ON ts.work_loc = loc.loc
-#            WHERE (ts.entry_date >= ? and ts.entry_date <= ?) and ts.activity = ?
-#            GROUP BY ts.work_loc
-#          ''',(wcDate,weDate,act))
-#    else:
-#        c.execute \
-#        ( \
-#          '''
-#            SELECT ts.activity,loc.loc,loc.desc,sum(ts.hours)
-#            FROM ts_entry AS ts
-#            INNER JOIN ts_loc AS loc ON ts.work_loc = loc.loc
-#            WHERE ts.region = ? and (ts.entry_date >= ? and ts.entry_date <= ?) and ts.activity = ?
-#            GROUP BY ts.work_loc
-#          ''',(region,wcDate,weDate,act))
-#
-#    resultList = c.fetchall()
-#    resultDict = {}
-#    resultDict['Other (EMEA)'] = 0
-#    for result in resultList:
-#      if (result[0] and len(result[0]) > 0):
-#        if (result[2] in locSet):
-#          resultDict[result[2]] = result[3]
-#        else:
-#          resultDict['Other (EMEA)'] += result[3]
-#
-#    data = []
-#    for item in loc:
-#      if (item in resultDict):
-#        data.append(float(resultDict[item]))
-#      else:
-#        data.append(0.0)
-#
-#    weekList.append(data)
-#
-#  return weekList
 

@@ -1,20 +1,19 @@
 import logging
 from   database.database            import Database as Db
+from   summary.summaryitem          import SummaryItem
 from   summary.matrix.matrixdata    import MatrixData
-from   database.queries.getweeks    import GetWeeks
-from   database.queries.getutldtsum import GetUtlDtSum
 
 #----------------------------------------------------------------------
 class UtlDtData(MatrixData):
 #----------------------------------------------------------------------
-  def __init__(self,region,mType,period):
+  def __init__(self,item):
 
-    super().__init__(region,mType,period)
+    super().__init__(item)
 
-    regionList = super().calcRegionList(region)
+    regionList = super().calcRegionList(self.region)
 
-    weekDict = GetWeeks(Db.db,regionList,period)
-    dataList = GetUtlDtSum(Db.db,regionList,weekDict)
+    weekDict = db.QueryWeeks.GetData(regionList,self.period)
+    dataList = db.QueryUtl(Db.db,regionList,weekDict,{'QTYPE':''})
 
     weekCnt = len(dataList)
     itemCnt = len(dataList[0])
@@ -34,8 +33,13 @@ class UtlDtData(MatrixData):
 
     self.colCompHdr.AddData(['Avg'])
     self.colHdr.AddData(super().calcWeekNumTextList(weekDict['MAX']))
-    super().calcTitle('Utilisation (Downtime, Exc Leave and Sickness)',regionList,period)
+    super().calcTitle('Utilisation (Downtime, Exc Leave and Sickness)',regionList,self.period)
     self.title.fmt['fill'] = 'Red 1'
     
     rowHdrData = ['For','Total Time','Utilisation as a %']
     self.rowHdr.AddData(rowHdrData,cols=1,rows=itemCnt)
+
+    super().calcSize()
+
+    self.rangeList = []
+

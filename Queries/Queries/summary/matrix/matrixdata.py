@@ -1,131 +1,162 @@
 import logging
-#from   database.database import Database as Db
+from   collections         import OrderedDict
+from   summary.summaryitem import SummaryItem
 
-class MatrixDataTitle:
-  def __init__(self,hgt,wid,fmt):
-    self.rows     = 1
-    self.cols     = 1
-    self.hgt      = hgt
-    self.wid      = wid
-    self.data     = None
-    self.fmt      = fmt
+#class TableSection:
+#  def __init__(self,hgt,wid,fmt):
+#    self.rows     = 0
+#    self.cols     = 0
+#    self.hgt      = hgt
+#    self.wid      = wid
+#    self.data     = None
+#    self.fmt      = fmt
+#
+#  def AddData(self,dataDict,fmt=None):
+#    rows     = dataDict['ROWS']
+#    cols     = dataDict['COLS']
+#    inpData = dataDict['DATA']
+#    if (type(rows) is list):
+#      rowRange = rows
+#      rowCnt   = len(rowRange)
+#    else:
+#      rowRange = range(rows)
+#      rowCnt   = rows
+#    if (type(cols) is list):
+#      colRange = cols
+#      colCnt   = len(colRange)
+#    else:
+#      colRange = range(cols)
+#      colCnt   = cols
+#    data = [[None for colIdx in range(colCnt)] for rowIdx in range(rowCnt)]
+#    for rowIdx in rowRange:
+#      for colIdx in colRange:
+#        data[rowIdx][colIdx] = inpData[rowIdx][colIdx]
+#
+#    self.data = data
+#    self.rows = rowCnt
+#    self.cols = colCnt
+#    if (fmt)  : self.fmt  = fmt
 
-  def AddData(self,data,cols=None,rows=None,fmt=None):
-    self.data = data
-    if (type(data) in [list,dict]):
-      self.cols = len(data)
-      if (type(data[0]) in [list,dict]):
-        self.rows = len(data[0])
-      else:
-        self.rows = 1
-    else:
-      self.cols = 1
-      self.rows = 1
-    if (cols) : self.cols = cols
-    if (rows) : self.rows = rows
-    if (fmt)  : self.fmt  = fmt
-
-class MatrixDataColHdr:
-  def __init__(self,hgt,wid,fmt):
-    self.rows     = 0
-    self.cols     = 0
-    self.hgt      = hgt
-    self.wid      = wid
-    self.data     = None
-    self.fmt      = fmt
-
-  def AddData(self,data,cols=None,rows=None,fmt=None):
-    self.data = data
-    if (type(data) in [list,dict]):
-      self.cols = len(data)
-      if (type(data[0]) in [list,dict]):
-        self.rows = len(data[0])
-      else:
-        self.rows = 1
-    else:
-      self.cols = 1
-      self.rows = 1
-    if (cols) : self.cols = cols
-    if (rows) : self.rows = rows
-    if (fmt)  : self.fmt  = fmt
-
-class MatrixDataRowHdr:
-  def __init__(self,hgt,wid,fmt):
-    self.rows     = 0
-    self.cols     = 0
-    self.hgt      = hgt
-    self.wid      = wid
-    self.data     = None
-    self.fmt      = fmt
-
-  def AddData(self,data,cols=None,rows=None,fmt=None):
-    self.data = data
-    if (type(data) in [list,dict]):
-      self.rows = len(data)
-    else:
-      self.rows = 1
-    if (cols) : self.cols = cols
-    if (rows) : self.rows = rows
-    if (fmt)  : self.fmt  = fmt
-
-class MatrixDataData:
-  def __init__(self,hgt,wid,fmt):
-    self.rows     = 0
-    self.cols     = 0
-    self.hgt      = hgt
-    self.wid      = wid
-    self.data     = None
-    self.fmt      = fmt
-  
-  def AddData(self,data,cols=None,rows=None,fmt=None):
-    self.data = data
-    if (type(data) is list):
-      self.cols = len(data)
-      if (type(data[0]) is list):
-        self.rows = len(data[0])
-      else:
-        self.rows = 1
-    else:
-      throw
-    if (cols) : self.cols = cols
-    if (rows) : self.rows = rows
-    if (fmt)  : self.fmt  = fmt
-
-  #--------------------------------------------------------------------
 #----------------------------------------------------------------------
 class MatrixData:
 
-  def __init__(self,region,mType,period):
+  titleFmt   = {'hAlign':'C','vAlign':'C','border':{'A':'thin'},'wrap':True,'font':{'emph':'B'}}
+  rowHdrFmt  = {'hAlign':'L','vAlign':'C','border':{'A':'thin'}}
+  colHdrFmt  = {'hAlign':'C','vAlign':'C','tAlign':90,'border':{'A':'thin'},'wrap':True}
+  dataFmt    = {'hAlign':'R','vAlign':'C','border':{'A':'thin'},'numFmt':'0.0'}
+
+  topHgt  = 55
+  leftWid = 45
+  dataHgt = 15
+  dataWid =  8
+
+  _tblItems =          \
+    [                  \
+      'TITLE'       ,  \
+      'ROW-DATA-HDR',  \
+      'COL-DATA-HDR',  \
+      'TBL-DATA'    ,  \
+      'ROW-COMP-HDR',  \
+      'ROW-COMP-TBL',  \
+      'COL-COMP-HDR',  \
+      'COL-COMP-TBL'   \
+    ]
+
+  _tblItemDefaults =                                 \
+    {                                                \
+      'TITLE'       : (topHgt,leftWid,titleFmt)  ,   \
+      'ROW-DATA-HDR': (dataHgt,leftWid,rowHdrFmt),   \
+      'COL-DATA-HDR': (topHgt,dataWid,colHdrFmt) ,   \
+      'TBL-DATA'    : (dataHgt,dataWid,dataFmt)  ,   \
+      'ROW-COMP-HDR': (dataHgt,leftWid,rowHdrFmt),   \
+      'ROW-COMP-TBL': (dataHgt,dataWid,dataFmt)  ,   \
+      'COL-COMP-HDR': (topHgt,dataWid,colHdrFmt) ,   \
+      'COL-COMP-TBL': (dataHgt,dataWid,dataFmt)      \
+    }
+
+  def __init__(self,item):
+
+
+    self.item    = item
+    self.region  = item.region
+    self.rptType = item.rptType  # MATRIX
+    self.rptName = item.rptName  # UTL-CF
+    self.period  = item.period
 
     name = ''
-    if (type(region) is list):
-      for rgn in region:
-        name += region + '_'
+    if (type(self.region) is list):
+      for rgn in self.region:
+        name += self.region + '_'
     else:
-      name += region + '_'
-    name += mType + '_'
-    name += period
+      name += self.region + '_'
+    name += self.rptName + '_'
+    name += self.period
 
+    self.tbl = OrderedDict()
+    self.tbl['NAME'] = name
+    for item in self._tblItems:
+      self.tbl[item] = OrderedDict()
 
-    titleFmt   = {'hAlign':'C','vAlign':'C','border':{'A':'thin'},'wrap':True,'font':{'emph':'B'}}
-    rowHdrFmt  = {'hAlign':'L','vAlign':'C','border':{'A':'thin'}}
-    colHdrFmt  = {'hAlign':'C','vAlign':'C','tAlign':90,'border':{'A':'thin'},'wrap':True}
-    dataFmt    = {'hAlign':'R','vAlign':'C','border':{'A':'thin'},'numFmt':'0.0'}
+  #--------------------------------------------------------------------
+  def _calcRowCompHdrDict(self):
 
-    topHgt  = 55
-    leftWid = 45
-    dataHgt = 15
-    dataWid =  7
+    compList = self.dataDict['ROW-COMP']['HDR']
+    rows = len(compList)
+    cols = 1
+    result = OrderedDict()
+    result['AVG' ] = compList[0]
+    result['SUM' ] = compList[1]
+    result['CNT' ] = compList[2]
+    result['ROWS'] = rows
+    result['COLS'] = cols
+    result['DATA'] = [[None for col in range(cols)] for row in range(rows)]
+    for rowIdx in range(result['ROWS']):
+      for colIdx in range(result['COLS']):
+        result['DATA'][rowIdx][colIdx] = compList[rowIdx]
 
-    self.name        = name
-    self.title       = MatrixDataTitle(topHgt,leftWid,titleFmt)
-    self.rowHdr      = MatrixDataRowHdr(dataHgt,leftWid,rowHdrFmt)
-    self.colHdr      = MatrixDataColHdr(topHgt,dataWid,colHdrFmt)
-    self.data        = MatrixDataData(dataHgt,dataWid,dataFmt)
-    self.rowCompHdr  = MatrixDataRowHdr(dataHgt,leftWid,rowHdrFmt)
-    self.rowCompData = MatrixDataData(dataHgt,dataWid,dataFmt)
-    self.colCompHdr  = MatrixDataColHdr(topHgt,dataWid,colHdrFmt)
-    self.colCompData = MatrixDataData(dataHgt,dataWid,dataFmt)
+    return result
+
+  #--------------------------------------------------------------------
+  def _calcColCompHdrDict(self):
+
+    compList = self.dataDict['COL-COMP']['HDR']
+    rows = 1
+    cols = len(compList)
+    result = OrderedDict()
+    result['AVG' ] = compList[0]
+    result['SUM' ] = compList[1]
+    result['CNT' ] = compList[2]
+    result['ROWS'] = rows
+    result['COLS'] = cols
+    result['DATA'] = [[None for col in range(cols)] for row in range(rows)]
+    for rowIdx in range(result['ROWS']):
+      for colIdx in range(result['COLS']):
+        result['DATA'][rowIdx][colIdx] = compList[colIdx]
+
+    return result
+
+  #--------------------------------------------------------------------
+  def _initTblItem(self,tblItem):
+    dataDict = OrderedDict()
+    tup = self._tblItemDefaults[tblItem]
+    dataDict['HGT'] = tup[0]
+    dataDict['WID'] = tup[1]
+    dataDict['FMT'] = tup[2]
+
+    return dataDict
+    
+  #--------------------------------------------------------------------
+  def calcSize(self):
+    colDataHdrRows = self.tbl['COL-DATA-HDR']['ROWS']
+    tblDataRows    = self.tbl['TBL-DATA'    ]['ROWS']
+    colCompHdrRows = self.tbl['COL-COMP-HDR']['ROWS']
+
+    rowDataHdrCols = self.tbl['ROW-DATA-HDR']['COLS']
+    tblDataCols    = self.tbl['TBL-DATA'    ]['COLS']
+    rowCompHdrCols = self.tbl['ROW-COMP-HDR']['COLS']
+
+    self.tbl['ROWS'] = colDataHdrRows + tblDataRows + colCompHdrRows
+    self.tbl['COLS'] = rowDataHdrCols + tblDataCols + rowCompHdrCols
 
   #--------------------------------------------------------------------
   def calcRegionList(self,region):
@@ -210,6 +241,37 @@ class MatrixData:
       for j in range(rows):
         table[i][j] = data[i][j]
     return table
+  
+  #--------------------------------------------------------------------
+  def _setTblItem(self,tblItem):
+    self.tbl[tblItem] = self.tbl[tblItem]['GET']()
+    logging.debug('')
+
+  #--------------------------------------------------------------------
+  def _calcData(self,inpData,rows,cols):
+    if (type(rows) is list):
+      rowRange = rows
+      rowCnt   = len(rowRange)
+    else:
+      rowRange = range(rows)
+      rowCnt   = rows
+    if (type(cols) is list):
+      colRange = cols
+      colCnt   = len(colRange)
+    else:
+      colRange = range(cols)
+      colCnt   = cols
+    outData = [[None for colIdx in range(colCnt)] for rowIdx in range(rowCnt)]
+    for rowIdx in rowRange:
+      for colIdx in colRange:
+        outData[rowIdx][colIdx] = inpData[rowIdx][colIdx]
+
+    result = OrderedDict()
+    result['DATA'] = outData
+    result['ROWS'] = rowCnt
+    result['COLS'] = colCnt
+
+    return outData
 
   #--------------------------------------------------------------------
   def calcWeekNumTextList(self,weekNumList):

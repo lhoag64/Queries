@@ -39,3 +39,7 @@ class AmTmSmcData(MatrixData):
     self.rowDesc = ['Qualcomm','Intel']
 
     self.rowCompDesc = []
+
+    super().calcSize()
+
+    self.rangeList = []

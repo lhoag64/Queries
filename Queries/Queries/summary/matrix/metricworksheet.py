@@ -1,92 +1,127 @@
 import logging
+from   collections                       import OrderedDict
 from   xlinterface.xlworkbook            import XlWorkBook
 from   xlinterface.xlworksheet           import XlWorkSheet
 from   summary.matrix.matrixdata         import MatrixData 
 from   summary.matrix.matrixtable        import MatrixTable
+from   summary.summary.summarytable      import SummaryTable
+from   summary.summaryitem               import SummaryItem
 from   openpyxl.chart                    import LineChart
 from   openpyxl.chart                    import BarChart
 from   openpyxl.chart.reference          import Reference
-from   summary.matrix.actvitivydata      import ActivityData
-from   summary.matrix.actvitivyamdmrdata import ActivityAmDmrData
-from   summary.matrix.actvitivyammidata  import ActivityAmMiData
-from   summary.matrix.ltsdata            import LtsData
-from   summary.matrix.utlcfdata          import UtlCfData
-from   summary.matrix.utlpsdata          import UtlPsData
-from   summary.matrix.utldtdata          import UtlDtData
-from   summary.matrix.utllsdata          import UtlLsData
-from   summary.matrix.overtimedata       import OverTimeData
-from   summary.matrix.gkadata            import GkaData
-from   summary.matrix.amrkadata          import AmRkaData
-from   summary.matrix.amtmcardata        import AmTmCarData
-from   summary.matrix.amtmsmcdata        import AmTmSmcData
-from   summary.matrix.ammirkadata        import AmMiRkaData
-from   summary.matrix.actbylocdata       import ActByLocData
-from   summary.matrix.actbyprdteamdata   import ActByPrdTeamData
-from   summary.matrix.faeawhdata         import FaeAwhData
-from   summary.matrix.faewhdata          import FaeWhData
-from   summary.matrix.faeltdata          import FaeLtData
-from   summary.matrix.faeotdata          import FaeOtData
+
 
 #----------------------------------------------------------------------
 class MetricWorkSheet:
-  FuncDict =                        \
-    {                               \
-      'FAE-AWH'   : FaeAwhData,     \
-      'FAE-WH'    : FaeWhData,      \
-      'FAE-LT'    : FaeLtData,      \
-      'FAE-OT'    : FaeOtData,      \
-      'ACTIVITY'  : ActivityData,   \
-      'GKA'       : GkaData,        \
-      'LTS'       : LtsData,        \
-      'UTL-CF'    : UtlCfData,      \
-      'UTL-DT'    : UtlDtData,      \
-      'UTL-PS'    : UtlPsData,      \
-      'UTL-LS'    : UtlLsData,      \
-      'OVERTIME'  : OverTimeData,   \
-      'ACT-BY-LOC': ActByLocData    \
-    }
-  #--------------------------------------------------------------------
-  def __init__(self,ws,matrixList):
-    self.ws     = ws
-    self.list   = matrixList
+  def __init__(self,ws,itemDict,fullDict):
+    self.ws       = ws
+    self.itemDict = itemDict
+#    self.itemList = itemList
+#    self.itemDict = OrderedDict()
+#
+#    for item in itemList:
+#      wsItem   = WsItem(item)
+#      self.itemDict[wsItem.fullName] = wsItem
 
-    startRow = 2
-    startCol = 2
+#    for name in self.itemDict:
+#      item    = self.itemDict[name]
+#      func    = item.funcName
+#      region  = item.region
+#      iName   = item.itemName
+#      period  = item.period
+#      options = item.options
+#      if (options != None):
+#        item.AddData(FuncDict[func](region,iName,period,opt=options))
+#      else:
+#        item.AddData(FuncDict[func](region,iName,period))
 
-    self.tables = {}
+    self.startRow  = 2
+    self.startCol = 2
 
-    for item in matrixList:
-      loc     = item[0]
-      region  = item[1]
-      mType   = item[2]
-      period  = item[3]
-      options = item[4]
-      if (mType in self.FuncDict):
+    self.prevRow = self.startRow
+    self.prevCol = self.startCol
+    self.prevHgt = 0
+    self.prevWid = 0
 
-        #--------------------------------------------------------------
-        # Find where to put it
-        #--------------------------------------------------------------
-        if (loc == 'START'):
-          startRow  = 2
-          startCol  = 2
-        elif (loc == 'RIGHT'):
-          startRow += 0
-          startCol  = table.rightCol + 2
-        elif (loc == 'DOWN-LEFT'):
-          startRow  = table.bottomRow + 2
-          startCol  = 2
-        elif (loc == 'DOWN'):
-          startRow  = table.bottomRow + 2
-          startCol += 0
+    for name in itemDict:
+      item = itemDict[name]
+      row,col = self.calcStartLoc(item)
+      if (item.rptType == 'MATRIX'):
+        item.AddWsRpt(MatrixTable(ws,row,col,item.data))
+      if (item.rptType == 'SUMMARY'):
+        item.AddWsRpt(SummaryTable(ws,row,col,item,fullDict))
+      self.prevRow = row
+      self.prevCol = col
+      self.prevHgt = item.hgt
+      self.prevWid = item.wid
 
-        if (options != None):
-          data  = self.FuncDict[mType](region,mType,period,opt=options)
-        else:
-          data  = self.FuncDict[mType](region,mType,period)
-        table = MatrixTable(ws,startRow,startCol,data)
+    logging.debug('')
 
-      else:
-        logging.debug('Function table does have: ' + mType)
+#----------------------------------------------------------------------
+  def calcStartLoc(self,item):
+    row = item.loc[0]
+    col = item.loc[1]
+
+    rowRelative = False
+    if (row[:1] == '+'):
+      rowRelative = True
+    row = row[1:]
+    colRelative = False
+    if (col[:1] == '+'):
+      colRelative = True
+    col = col[1:]
+
+    row = int(row)
+    col = int(col)
+
+    if (row == 0): row = self.startRow
+    if (col == 0): col = self.startCol
+
+    if (rowRelative == True):
+      row = self.prevRow + self.prevHgt + 2
+    if (colRelative == True):
+      col = self.prevCol + self.prevWid + 2
+
+    return (row,col)
+
+
+#    startRow = 2
+#    startCol = 2
+#
+#    self.tables = {}
+#
+#    for item in matrixList:
+#      loc     = item[0]
+#      type    = item[2]
+#      region  = item[1]
+#      period  = item[3]
+#      options = item[4]
+#      if (mType in self.FuncDict):
+#
+#        #--------------------------------------------------------------
+#        # Find where to put it
+#        #--------------------------------------------------------------
+#        if (loc == 'START'):
+#          startRow  = 2
+#          startCol  = 2
+#        elif (loc == 'RIGHT'):
+#          startRow += 0
+#          startCol  = table.rightCol + 2
+#        elif (loc == 'DOWN-LEFT'):
+#          startRow  = table.bottomRow + 2
+#          startCol  = 2
+#        elif (loc == 'DOWN'):
+#          startRow  = table.bottomRow + 2
+#          startCol += 0
+#
+#        if (options != None):
+#          data  = self.FuncDict[mType](region,mType,period,opt=options)
+#        else:
+#          data  = self.FuncDict[mType](region,mType,period)
+#        table = MatrixTable(ws,startRow,startCol,data)
+#
+#      else:
+#        logging.debug('Function table does have: ' + mType)
 
 
 '''

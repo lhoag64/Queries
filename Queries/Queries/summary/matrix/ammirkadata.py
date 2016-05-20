@@ -1,14 +1,17 @@
 import logging
-from   database.database       import Database as Db
-from   database.tables.tsentry import TsEntryTable
+from   summary.summaryitem       import SummaryItem
+from   database.database         import Database as Db
+from   database.tables.tsentry   import TsEntryTable
 from   summary.matrix.matrixdata import MatrixData
 
 #----------------------------------------------------------------------
 class AmMiRkaData(MatrixData):
 #----------------------------------------------------------------------
-  def __init__(self,region,mType,period):
+  def __init__(self,item):
 
-    super().__init__(region,mType,period)
+    super().__init__(item)
+
+    raise
 
     codes = ['QOR','TER','SKY']
 
@@ -39,3 +42,7 @@ class AmMiRkaData(MatrixData):
     self.rowDesc = ['Qorvo','Teradyne','Skyworks']
 
     self.rowCompDesc = []
+
+    super().calcSize()
+
+    self.rangeList = []

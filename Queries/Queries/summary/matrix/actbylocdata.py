@@ -1,4 +1,5 @@
 import logging
+from   summary.summaryitem             import SummaryItem
 from   database.database               import Database as Db
 from   summary.matrix.matrixdata       import MatrixData
 from   database.queries.getweeks       import GetWeeks
@@ -7,10 +8,12 @@ from   database.queries.getactbylocsum import GetActByLocSum
 #----------------------------------------------------------------------
 class ActByLocData(MatrixData):
 #----------------------------------------------------------------------
-  def __init__(self,region,mType,period,**kwargs):
+  def __init__(self,item):
+
+    super().__init__(item)
 
     act = None
-    opt = kwargs['opt']
+    opt = self.item.options
     if (opt):
       if ('ACT' in opt):
         act = opt['ACT']
@@ -18,13 +21,12 @@ class ActByLocData(MatrixData):
       logging.error('Activity by Location requres activity argument, skipping')
       return
 
-    super().__init__(region,mType,period)
 
     self.name += '_' + str(act).zfill(2)
 
-    regionList = super().calcRegionList(region)
+    regionList = super().calcRegionList(self.region)
 
-    weekDict = GetWeeks(Db.db,regionList,period)
+    weekDict = GetWeeks(Db.db,regionList,self.period)
     dataDict = GetActByLocSum(Db.db,regionList,weekDict,act)
 
     dataList = dataDict['HRSLIST']
@@ -47,7 +49,7 @@ class ActByLocData(MatrixData):
 
     self.colCompHdr.AddData(['Avg'])
     self.colHdr.AddData(super().calcWeekNumTextList(weekDict['MAX']))
-    super().calcTitle(dataDict['TITLE'],regionList,period)
+    super().calcTitle(dataDict['TITLE'],regionList,self.period)
 
     rowHdrData = []
     for item in dataDict['GRPLIST']:
@@ -55,42 +57,6 @@ class ActByLocData(MatrixData):
     
     self.rowHdr.AddData(rowHdrData,cols=1,rows=itemCnt)
 
-#    weekList = Db.WeeksTbl.GetWeeks(Db.db,period)
-#    actList  = Db.TsActTbl.GetActivities(Db.db,'ALL')
-#
-#    act     = kwargs['act']
-#    locList = kwargs['loc']
-#
-#    data = Db.TsEntryTbl.GetActByLocSum(Db.db,region,act,locList,weekList)
-#
-#    actDesc = ''
-#    for item in actList:
-#      if (item[0] == act):
-#        actDesc = item[1]
-#        break
-#    title = actDesc + ' - ' + str(act)
-#
-#    colSumList = super().calcColSum(data)
-#    rowSumList = super().calcRowSum(data)
-#    weeks      = super().calcCols(colSumList)
-#    if (weeks != len(weekList)):
-#      weeks = len(weekList)
-#    rowAvgList = super().calcRowAvg(rowSumList,weeks)
-#
-#    self.compData = [rowAvgList]
-#    self.data     = super().calcData(data,len(locList),weeks)
-#
-#    self.dataCols = len(self.data)
-#    self.dataRows = len(self.data[0])
-#
-#
-#    self.title = title
-#    self.colDesc = []
-#    for i in range(self.dataCols):
-#      self.colDesc.append('Week ' + str(i+1))
-#
-#    self.colCompDesc = ['Avg']
-#
-#    self.rowDesc = locList
-#
-#    self.rowCompDesc = []
+    super().calcSize()
+
+    self.rangeList = []

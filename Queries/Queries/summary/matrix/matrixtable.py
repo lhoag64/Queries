@@ -9,195 +9,123 @@ from openpyxl.styles.differential import DifferentialStyle
 from openpyxl.formatting.rule     import ColorScaleRule,CellIsRule,FormulaRule,IconSet,FormatObject,Rule
 
 #----------------------------------------------------------------------
-class MatrixTableArea:
-  def __init__(self,startRow,startCol,data):
-    self.sRow = startRow
-    self.sCol = startCol
-    self.eRow = startRow + data.rows - 1
-    self.eCol = startCol + data.cols - 1
-    self.rows = data.rows
-    self.cols = data.cols
-    self.hgt  = data.hgt
-    self.wid  = data.wid
-    self.data = data.data
-    self.fmt  = data.fmt
+class TableItem:
+  def __init__(self,sRow,sCol,data):
+    self.sRow = sRow
+    self.sCol = sCol
+    self.eRow = sRow + data['ROWS'] - 1
+    self.eCol = sCol + data['COLS'] - 1
+    self.rows = data['ROWS']
+    self.cols = data['COLS']
+    self.hgt  = data['HGT']
+    self.wid  = data['WID']
+    self.data = data['DATA']
+    self.fmt  = data['FMT']
 
 #----------------------------------------------------------------------
 class MatrixTable:
   #--------------------------------------------------------------------
-  def __init__(self,ws,startRow,startCol,data):
+  def __init__(self,ws,sRow,sCol,data):
     self.ws = ws
 
-    self.name        = data.name
-    self.title       = MatrixTableArea(startRow+0,startCol+0,data.title)
-    self.rowHdr      = MatrixTableArea(startRow+1,startCol+0,data.rowHdr)
-    self.colHdr      = MatrixTableArea(startRow+0,startCol+1,data.colHdr)
-    self.data        = MatrixTableArea(startRow+1,startCol+1,data.data)
-    self.rowCompHdr  = MatrixTableArea(startRow+1+self.data.rows,startCol+0,data.rowCompHdr)
-    self.rowCompData = MatrixTableArea(startRow+1+self.data.rows,startCol+1,data.rowCompData)
-    self.colCompHdr  = MatrixTableArea(startRow+0,startCol+1+self.data.cols,data.colCompHdr)
-    self.colCompData = MatrixTableArea(startRow+1,startCol+1+self.data.cols,data.colCompData)
+    dRows = data['TBL-DATA']['ROWS']
+    dCols = data['TBL-DATA']['COLS']
 
-    title = self.title.data.split('\r')
+    self.matrixData = data
+    self.name       = data['NAME']
+    self.title      = TableItem(sRow+0        ,sCol+0        ,data['TITLE'])
+    self.rowDataHdr = TableItem(sRow+1        ,sCol+0        ,data['ROW-DATA-HDR'])
+    self.colDataHdr = TableItem(sRow+0        ,sCol+1        ,data['COL-DATA-HDR'])
+    self.tblData    = TableItem(sRow+1        ,sCol+1        ,data['TBL-DATA'])
+    self.rowCompHdr = TableItem(sRow+1+dRows+0,sCol+0        ,data['ROW-COMP-HDR'])
+    self.rowCompTbl = TableItem(sRow+1+dRows+0,sCol+1        ,data['ROW-COMP-TBL'])
+    self.colCompHdr = TableItem(sRow+0        ,sCol+1+dCols+0,data['COL-COMP-HDR'])
+    self.colCompTbl = TableItem(sRow+1        ,sCol+1+dCols+0,data['COL-COMP-TBL'])
+
+    title = self.title.data[0][0].split('\r')
     title = ' '.join(title)
-    logging.debug('Creating ' + title.ljust(80) + ' ' + str(startRow).rjust(3) + ' ' + str(startCol).rjust(3))
+    logging.debug('Creating ' + title.ljust(80) + ' ' + str(sRow).rjust(3) + ' ' + str(sCol).rjust(3))
 
-    self.topRow    = startRow
-    self.bottomRow = startRow + self.colHdr.rows + self.data.rows + self.rowCompData.rows
-    self.leftCol   = startCol
-    self.rightCol  = startCol + self.rowHdr.cols + self.data.cols + self.colCompData.cols
+    self.topRow    = sRow
+    self.bottomRow = sRow + self.colDataHdr.rows + self.tblData.rows + self.rowCompTbl.rows
+    self.leftCol   = sCol
+    self.rightCol  = sCol + self.rowDataHdr.cols + self.tblData.cols + self.colCompTbl.cols
 
     # Set column sizes
-    wsCol = startCol
-    ws.SetColWid(wsCol,self.rowHdr.wid)
+    wsCol = sCol
+    ws.SetColWid(wsCol,self.rowDataHdr.wid)
     wsCol += 1
-    for i in range(self.data.cols):
-      ws.SetColWid(wsCol,self.data.wid)
+    for colIdx in range(self.tblData.cols):
+      ws.SetColWid(wsCol,self.tblData.wid)
       wsCol += 1
-    for i in range(self.colCompData.cols):
-      ws.SetColWid(wsCol,self.colCompData.wid)
+    for colIdx in range(self.colCompTbl.cols):
+      ws.SetColWid(wsCol,self.colCompTbl.wid)
       wsCol += 1
 
     # Set row sizes
-    wsRow = startRow
-    ws.SetRowHgt(wsRow,self.colHdr.hgt)
+    wsRow = sRow
+    ws.SetRowHgt(wsRow,self.colDataHdr.hgt)
     wsRow += 1
-    for j in range(self.data.rows):
-      ws.SetRowHgt(wsRow,self.data.hgt)
+    for rowIdx in range(self.tblData.rows):
+      ws.SetRowHgt(wsRow,self.tblData.hgt)
       wsRow += 1
-    for j in range(self.rowCompData.rows):
-      ws.SetRowHgt(wsRow,self.rowCompData.hgt)
-      wsRow += 1
-
-    # Draw title
-    title = self.title
-    ws.SetCell(title.sRow,title.sCol,title.data,title.fmt)
-
-    # Draw row descriptions
-    rowHdr = self.rowHdr
-    wsRow = rowHdr.sRow
-    wsCol = rowHdr.sCol
-    for i in range(rowHdr.rows):
-      if (type(rowHdr.fmt) is list):
-        ws.SetCell(wsRow,wsCol,rowHdr.data[i],rowHdr.fmt[i])
-      else:
-        ws.SetCell(wsRow,wsCol,rowHdr.data[i],rowHdr.fmt)
+    for rowIdx in range(self.rowCompHdr.rows):
+      ws.SetRowHgt(wsRow,self.rowCompHdr.hgt)
       wsRow += 1
 
-    # Draw row computed descriptions
-    rowCompHdr = self.rowCompHdr
-    wsRow = rowCompHdr.sRow
-    wsCol = rowCompHdr.sCol
-    for i in range(rowCompHdr.rows):
-      if (type(rowCompHdr.fmt) is list):
-        ws.SetCell(wsRow,wsCol,rowCompHdr.data[i],rowCompHdr.fmt[i])
-      else:
-        ws.SetCell(wsRow,wsCol,rowCompHdr.data[i],rowCompHdr.fmt)
-      wsRow += 1
+    itemList =            \
+      [                   \
+        self.title     ,  \
+        self.rowDataHdr,  \
+        self.colDataHdr,  \
+        self.tblData   ,  \
+        self.rowCompHdr,  \
+        self.rowCompTbl,  \
+        self.colCompHdr,  \
+        self.colCompTbl   \
+      ]
 
+    for item in itemList:
+      wsRow = item.sRow
+      wsCol = item.sCol
+      fmt   = item.fmt
+      for rowIdx in range(item.rows):
+        for colIdx in range(item.cols):
+          if (type(item.fmt) is list):
+            fmt = item.fmt[rowIdx]
+          ws.SetCell(wsRow+rowIdx,wsCol+colIdx,item.data[rowIdx][colIdx],fmt)
 
-    # Draw col descriptions
-    colHdr = self.colHdr
-    wsRow = colHdr.sRow
-    wsCol = colHdr.sCol
-    for i in range(colHdr.cols):
-      if (type(colHdr.fmt) is list):
-        ws.SetCell(wsRow,wsCol,colHdr.data[i],colHdr.fmt[i])
-      else:
-        ws.SetCell(wsRow,wsCol,colHdr.data[i],colHdr.fmt)
-      wsCol += 1
-
-    # Draw col computed descriptions
-    colCompHdr = self.colCompHdr
-    wsRow = colCompHdr.sRow
-    wsCol = colCompHdr.sCol
-    for i in range(colCompHdr.cols):
-      if (type(colCompHdr.fmt) is list):
-        ws.SetCell(wsRow,wsCol,colCompHdr.data[i],colCompHdr.fmt[i])
-      else:
-        ws.SetCell(wsRow,wsCol,colCompHdr.data[i],colCompHdr.fmt)
-      wsCol += 1
-
-    # Draw data
-    data = self.data
-    wsRow = data.sRow
-    wsCol = data.sCol
-    for i in range(data.cols):
-      wsRow = data.sRow
-      for j in range(data.rows):
-        ws.SetCell(wsRow,wsCol,data.data[i][j],data.fmt)
-        wsRow += 1
-      wsCol += 1
-
-    # Draw row computed data
-    data = self.rowCompData
-    wsRow = data.sRow
-    wsCol = data.sCol
-    if (type(data.data) is list):
-      for i in range(data.cols):
-        wsRow = data.sRow
-        if (type(data.data[i]) is list):
-          for j in range(data.rows):
-            ws.SetCell(wsRow,wsCol,data.data[i][j],data.fmt)
-            wsRow += 1
-        else:
-          ws.SetCell(wsRow,wsCol,data.data[i],data.fmt)
-        wsCol += 1
-
-
-    # Draw col computed data
-    data = self.colCompData
-    wsRow = data.sRow
-    wsCol = data.sCol
-    if (data.cols == 1):
-      wsRow = data.sRow
-      for i in range(data.rows):
-        ws.SetCell(wsRow,wsCol,data.data[i],data.fmt)
-        wsRow += 1
-    else:
-      for i in range(data.cols):
-        wsRow = data.sRow
-        for j in range(data.rows):
-          ws.SetCell(wsRow,wsCol,data.data[i][j],data.fmt)
-          wsRow += 1
-        wsCol += 1
-
-    ws.DrawBorder(self.title.sRow,      self.title.sCol,      self.title.eRow,      self.title.eCol,      'medium')
-    ws.DrawBorder(self.rowHdr.sRow,     self.rowHdr.sCol,     self.rowHdr.eRow,     self.rowHdr.eCol,     'medium')
-    ws.DrawBorder(self.colHdr.sRow,     self.colHdr.sCol,     self.colHdr.eRow,     self.colHdr.eCol,     'medium')
-    ws.DrawBorder(self.data.sRow,       self.data.sCol,       self.data.eRow,       self.data.eCol,       'medium')
-    ws.DrawBorder(self.rowCompHdr.sRow, self.rowCompHdr.sCol, self.rowCompHdr.eRow, self.rowCompHdr.eCol, 'medium')
-    ws.DrawBorder(self.rowCompData.sRow,self.rowCompData.sCol,self.rowCompData.eRow,self.rowCompData.eCol,'medium')
-    ws.DrawBorder(self.colCompHdr.sRow, self.colCompHdr.sCol, self.colCompHdr.eRow, self.colCompHdr.eCol, 'medium')
-    ws.DrawBorder(self.colCompData.sRow,self.colCompData.sCol,self.colCompData.eRow,self.colCompData.eCol,'medium')
+    for item in itemList:
+      ws.DrawBorder(item.sRow,item.sCol,item.eRow,item.eCol, 'medium')
 
     # Create named ranges
-    pyws = ws.ws
-    pywb = ws.wb
-    name = self.name
-
-    self.rowCompRanges = []
-    sRow = self.rowCompData.sRow
-    sCol = self.rowCompData.sCol
-    eRow = self.rowCompData.eRow
-    eCol = self.rowCompData.eCol
-    for row in range(self.rowCompHdr.rows):
-      name = self.name + '_' + self.colCompHdr.data[row].upper()
-      self.rowCompRanges.append(ws.AddNamedRange(name,sRow,sCol,eRow,eCol))
-      sRow += 1
-      eRow += 1
-
-    self.colCompRanges = []
-    sRow = self.colCompData.sRow
-    sCol = self.colCompData.sCol
-    eRow = self.colCompData.eRow
-    eCol = self.colCompData.eCol
-    for col in range(self.colCompHdr.cols):
-      name = self.name + '_' + self.colCompHdr.data[col].upper()
-      self.colCompRanges.append(ws.AddNamedRange(name,sRow,sCol,eRow,eCol))
-      sRow += 1
-      eRow += 1
-
-
+#    pyws = ws.ws
+#    pywb = ws.wb
+#    name = self.name
+#
+#    self.rowCompRanges = []
+#    sRow = self.rowCompTbl.sRow
+#    sCol = self.rowCompTbl.sCol
+#    eRow = self.rowCompTbl.eRow
+#    eCol = self.rowCompTbl.eCol
+##    for row in range(self.rowCompHdr.rows):
+##      name = self.name + '_' + self.colCompHdr.data[row].upper()
+##      self.rowCompRanges.append(ws.AddNamedRange(name,sRow,sCol,eRow,eCol))
+##      sRow += 1
+##      eRow += 1
+#
+#    self.colCompRanges = []
+#    sRow = self.colCompTbl.sRow
+#    sCol = self.colCompTbl.sCol
+#    eRow = self.colCompTbl.eRow
+#    eCol = self.colCompTbl.eCol
+##    for col in range(self.colCompHdr.cols):
+##      name = self.name + '_' + self.colCompHdr.data[col].upper()
+##      self.colCompRanges.append(ws.AddNamedRange(name,sRow,sCol,eRow,eCol))
+##      sRow += 1
+##      eRow += 1
+#
+##    for item in self.matrixData.rangeList:
+##      logging.debug('')
 
 

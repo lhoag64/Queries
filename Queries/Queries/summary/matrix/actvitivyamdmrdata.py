@@ -48,4 +48,6 @@ class ActivityAmDmrData(MatrixData):
 
     self.rowCompDesc = []
 
+    super().calcSize()
 
+    self.rangeList = []

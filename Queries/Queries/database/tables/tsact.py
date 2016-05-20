@@ -27,7 +27,8 @@ class TsActTable(Table):
                desc         TEXT,
                billable     INTEGER,
                pre_sales    INTEGER,
-               non_bill     INTEGER
+               non_bill     INTEGER,
+               standard     INTEGER
              )
         '''
       )
@@ -55,16 +56,20 @@ class TsActTable(Table):
       if (not billable and not preSales):
         nonBillable = 1
 
+      standard = 1
+
       if (activity not in activities):
         activities.add(activity)
       else:
         logging.error('Activity is already used:\'' + item + '\',skipping')
         continue
 
-      row = (activity,desc,billable,preSales,nonBillable)
+      row = (activity,desc,billable,preSales,nonBillable,standard)
       rows.append(row)
 
-    c.executemany('INSERT INTO ts_act VALUES (?,?,?,?,?)',rows)
+    #activities.add((99,'Other (Leave, Overhead, etc)',0,0,0,0))
+
+    c.executemany('INSERT INTO ts_act VALUES (?,?,?,?,?,?)',rows)
 
     db.commit()
  

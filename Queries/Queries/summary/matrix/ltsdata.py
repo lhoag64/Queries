@@ -1,4 +1,5 @@
 import logging
+from   summary.summaryitem        import SummaryItem
 from   database.database          import Database as Db
 from   summary.matrix.matrixdata  import MatrixData
 from   database.queries.getweeks  import GetWeeks
@@ -7,13 +8,13 @@ from   database.queries.getltssum import GetLtsSum
 #----------------------------------------------------------------------
 class LtsData(MatrixData):
 #----------------------------------------------------------------------
-  def __init__(self,region,mType,period):
+  def __init__(self,item):
 
-    super().__init__(region,mType,period)
+    super().__init__(item)
 
-    regionList = super().calcRegionList(region)
+    regionList = super().calcRegionList(self.region)
 
-    weekDict = GetWeeks(Db.db,regionList,period)
+    weekDict = GetWeeks(Db.db,regionList,self.period)
     ltsList  = GetLts(Db.db,'')
     dataList = GetLtsSum(Db.db,regionList,weekDict,ltsList)
 
@@ -35,7 +36,7 @@ class LtsData(MatrixData):
 
     self.colCompHdr.AddData(['Avg'])
     self.colHdr.AddData(super().calcWeekNumTextList(weekDict['MAX']))
-    super().calcTitle('Labour vs Travel',regionList,period)
+    super().calcTitle('Labour vs Travel',regionList,self.period)
 
     rowHdrData = []
     for item in ltsList:
@@ -44,50 +45,6 @@ class LtsData(MatrixData):
 
     self.rowHdr.AddData(rowHdrData,cols=1,rows=itemCnt)
 
-#    gFmt = {'hAlign':'L','vAlign':'C','border':{'A':'thin'},'fill':'Green 1'}
-#    oFmt = {'hAlign':'L','vAlign':'C','border':{'A':'thin'},'fill':'Orange 1'}
-#    nFmt = {'hAlign':'L','vAlign':'C','border':{'A':'thin'}}
-#    gSet = set([10,11,14,15,16,17,18,23])
-#    self.rowHdr.fmt = []
-#    for item in actList:
-#      if (item[0] in gSet):
-#        self.rowHdr.fmt.append(gFmt)
-#      else:
-#        self.rowHdr.fmt.append(oFmt)
-#    self.rowHdr.fmt.append(nFmt)
+    super().calcSize()
 
-'''
-    weekList = Db.WeeksTbl.GetWeeks(Db.db,period)
-    lts      = Db.TsLtsTbl.GetLts(Db.db,'ALL')
-
-    data = Db.TsEntryTbl.GetLtsSum(Db.db,region,lts,weekList)
-
-    colSumList = super().calcColSum(data)
-    rowSumList = super().calcRowSum(data)
-    weeks      = super().calcCols(colSumList)
-    if (weeks != len(weekList)):
-      weeks = len(weekList)
-    rowAvgList = super().calcRowAvg(rowSumList,weeks)
-
-    self.compData = [rowAvgList]
-    self.data     = super().calcData(data,len(lts),weeks)
-
-    self.dataCols = len(self.data)
-    self.dataRows = len(self.data[0])
-
-    self.title = 'Labour vs Travel'
-    self.colDesc = []
-    for i in range(self.dataCols):
-      self.colDesc.append('Week ' + str(i+1))
-
-    self.colCompDesc = ['Avg']
-
-    self.rowDesc = []
-    for i in range(self.dataRows):
-      self.rowDesc.append(lts[i][0])
-
-    self.rowCompDesc = []
-
-'''
-
-
+    self.rangeList = []
