@@ -79,8 +79,9 @@ if (__name__ == '__main__'):
 
   amList =                                                                                \
     [                                                                                     \
-#      ((' 0',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','10',{'ACT':10}),  \
-      ((' 0',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','GKA'       ,None,None)      ,  \
+      ((' 0',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','10',{'ACT':10}),  \
+      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC','10',{'ACT':10}),  \
+      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','GKA'       ,None,None)      ,  \
       (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACTIVITY'  ,None,None)      ,  \
       (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','LTS'       ,None,None)      ,  \
       (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','UTL-CF'    ,None,None)      ,  \

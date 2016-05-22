@@ -5,7 +5,7 @@ from   xlinterface.xlworksheet            import XlWorkSheet
 from   summary.matrix.metricworksheet     import MetricWorkSheet
 from   summary.summary.metricsummarysheet import MetricSummarySheet
 from   summary.summary.faesummarysheet    import FaeSummarySheet
-from   summary.charts.metricchartsheet    import MetricChartSheet
+#from   summary.charts.metricchartsheet    import MetricChartSheet
 from   summary.charts.faechartsheet       import FaeChartSheet
 
 #----------------------------------------------------------------------
