@@ -23,6 +23,8 @@ from   database.queries.queryact   import QueryAct
 from   database.queries.queryact   import QueryActList
 from   database.queries.querylts   import QueryLts
 from   database.queries.querylts   import QueryLtsList
+from   database.queries.querygka   import QueryGka
+from   database.queries.querygka   import QueryGkaList
 
 
 
@@ -59,6 +61,8 @@ class Database:
     Database.QueryActList     = QueryActList(Database.db)
     Database.QueryLts         = QueryLts(Database.db)
     Database.QueryLtsList     = QueryLtsList(Database.db)
+    Database.QueryGka         = QueryGka(Database.db)
+    Database.QueryGkaList     = QueryGkaList(Database.db)
 
   #--------------------------------------------------------------------
   def GetDb():

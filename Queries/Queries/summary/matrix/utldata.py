@@ -7,12 +7,13 @@ from   summary.matrix.matrixdata    import MatrixData
 #----------------------------------------------------------------------
 class UtlData(MatrixData):
 
-  _titleDict =                                                               \
-    {                                                                        \
-      'UTL-CF':('Utilisation (On Customer Funded Works'        ,'Green 1') , \
-      'UTL-PS':('Utilisation (On Pre-Sales Works'              ,'Orange 1'), \
-      'UTL-DT':('Utilisation (Downtime, Exc Leave and Sickness','Red 1')   , \
-      'UTL-LS':('Utilisation (Leave and Sickness'              ,'Yellow 1'), \
+  _titleDict =                                                                   \
+    {                                                                            \
+      'UTL-CF':('Utilisation (On Customer Funded Works'            ,'Green 1' ), \
+      'UTL-PS':('Utilisation (On Pre-Sales Works'                  ,'Orange 1'), \
+      'UTL-DT':('Utilisation (Downtime, Exc Leave and Sickness'    ,'Red 1'   ), \
+      'UTL-LS':('Utilisation (Leave and Sickness'                  ,'Yellow 1'), \
+      'UTL-OT':('Additional Hours vs Contracted Hours'             ,None      ), \
     }
  
   #--------------------------------------------------------------------
@@ -62,7 +63,8 @@ class UtlData(MatrixData):
     result['DATA'] = [[super()._calcTitleText(title,self.regionList,self.period)]]
     result['ROWS'] = 1
     result['COLS'] = 1
-    result['FMT' ]['fill'] = fmt
+    if (fmt != None):
+      result['FMT' ]['fill'] = fmt
 
     return result
 
@@ -74,7 +76,10 @@ class UtlData(MatrixData):
     #utlDict['DATA' ] = 'For'
     #utlDict['TOTAL'] = 'Total Time'
 
-    utlList = ['For','Total Time']
+    if (self.rptName in ['UTL-CF','UTL-PS','UTL-DT','UTL-LS']):
+      utlList = ['For','Total Time']
+    else:
+      utlList = ['Additional','Contracted']
 
     result['DATA'] = []
     for item in utlList:
@@ -113,7 +118,12 @@ class UtlData(MatrixData):
     result['ROWS'] = rowCompHdrDict['ROWS']
     result['COLS'] = rowCompHdrDict['COLS']
 
-    result['UTL' ] = 'Utilisation as a %'
+    if (self.rptName in ['UTL-CF','UTL-PS','UTL-DT','UTL-LS']):
+      utl = 'Utilisation as a %' 
+    else:
+      utl = 'Additional Hours as a %' 
+
+    result['UTL' ] = utl
     result['DATA'].insert(0,[result['UTL']])
     result['ROWS'] += 1
 

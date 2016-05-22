@@ -10,7 +10,7 @@ from   summary.matrix.utldata            import UtlData
 #from   summary.matrix.utlpsdata          import UtlPsData
 #from   summary.matrix.utldtdata          import UtlDtData
 #from   summary.matrix.utllsdata          import UtlLsData
-from   summary.matrix.overtimedata       import OverTimeData
+#from   summary.matrix.overtimedata       import OverTimeData
 from   summary.matrix.gkadata            import GkaData
 from   summary.matrix.amrkadata          import AmRkaData
 from   summary.matrix.amtmcardata        import AmTmCarData
@@ -37,7 +37,7 @@ FuncDict =                               \
     'MATRIX_UTL_DT'    : UtlData,        \
     'MATRIX_UTL_PS'    : UtlData,        \
     'MATRIX_UTL_LS'    : UtlData,        \
-    'MATRIX_OVERTIME'  : OverTimeData,   \
+    'MATRIX_UTL_OT'    : UtlData,        \
     'MATRIX_ACT_BY_LOC': ActByLocData    \
   }
 

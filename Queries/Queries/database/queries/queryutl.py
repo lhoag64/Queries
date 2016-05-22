@@ -14,6 +14,7 @@ class QueryUtl(Query):
         'UTL-PS': self._queryPs,  \
         'UTL-DT': self._queryDt,  \
         'UTL-LS': self._queryLs,  \
+        'UTL-OT': self._queryOt,  \
       }
 
   #--------------------------------------------------------------------
@@ -36,7 +37,7 @@ class QueryUtl(Query):
       if (tgt != None and tot != None):
         utl[colIdx] = tgt/tot * 100.0
 
-    rowComp['UTL'] = utl
+    rowComp['UTL' ] = utl
     rowComp['DATA'].insert(0,utl)
     rowComp['ROWS'] += 1
 
@@ -60,8 +61,19 @@ class QueryUtl(Query):
       tot = totResult[0][0]
       if (tgt == None): tgt = 0.0
       if (tot == None): tot = 0.0
-      data[0][colIdx] = float(tgt)
-      data[1][colIdx] = float(tot)
+
+      if (queryType in ['UTL-CF','UTL-PS','UTL-DT','UTL-LS']):
+        data[0][colIdx] = float(tgt)
+        data[1][colIdx] = float(tot)
+      elif (queryType == 'UTL-OT'):
+        ot = tot - tgt
+        if (ot < 0.0):
+          ot = 0.0
+        data[0][colIdx] = float(ot)
+        data[1][colIdx] = float(tgt)
+      else:
+        logging.critical('Invalidat UTL query type: ' + queryType)
+        raise
 
     result = {}
     result['DATA'] = data
@@ -130,6 +142,16 @@ class QueryUtl(Query):
     sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionList,'ts.region')
     sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?)'
     sqltxt += '    and wbs.leave = 1'
+
+    return super()._runQuery(sqlopt,sqltxt)
+  #--------------------------------------------------------------------
+  def _queryOt(self,wcDate,weDate,regionList):
+
+    sqlopt  = [wcDate,weDate]
+    sqltxt  = 'SELECT SUM(fae.norm_hours)'
+    sqltxt += '  FROM fae_team AS fae'
+    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionList,'fae.region')
+    sqltxt += '    and (fae.start_date <= ? and fae.end_date >= ?)'
 
     return super()._runQuery(sqlopt,sqltxt)
 

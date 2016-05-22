@@ -22,14 +22,15 @@ class TsCodeTable(Table):
         '''
            CREATE TABLE ts_code
              (
-               code           TEXT UNIQUE PRIMARY KEY,
-               desc           TEXT,
-               downtime       INTEGER,
-               leave          INTEGER,
-               gl_tm_key_acct INTEGER,
-               am_tm_car_acct INTEGER,
-               am_tm_smc_acct INTEGER,
-               am_mi_rka_acct INTEGER
+               code                 TEXT UNIQUE PRIMARY KEY,
+               desc                 TEXT,
+               downtime             INTEGER,
+               leave                INTEGER,
+               gl_tm_key_acct       INTEGER,
+               gl_tm_key_acct_order INTEGER,
+               am_tm_car_acct       INTEGER,
+               am_tm_smc_acct       INTEGER,
+               am_mi_rka_acct       INTEGER
              )
         '''
       )
@@ -54,12 +55,13 @@ class TsCodeTable(Table):
         logging.error('Code is already used:\'' + item + '\',skipping')
         continue
 
-      downtime       = 0
-      leave          = 0
-      gka            = 0
-      am_tm_car_acct = 0
-      am_tm_smc_acct = 0
-      am_mi_key_acct = 0
+      downtime       =   0
+      leave          =   0
+      gka            =   0
+      gka_order      = 100
+      am_tm_car_acct =   0
+      am_tm_smc_acct =   0
+      am_mi_key_acct =   0
 
 # downtime - 4804,4807,4803,4901,1006
 
@@ -72,8 +74,22 @@ class TsCodeTable(Table):
         else:
           logging.error('Invalid Code:' + code)
       elif (len(code) == 3):
-        if (code in ['ERC','NOK','NSN','ALU']):
+        if (code in ['ERC','NOK','NSN','ALU','ASB','TTT','COB','OTH']):
           gka = 1
+          if (code == 'ERC'):
+            gka_order = 0
+          elif (code == 'NOK'):
+            gka_order = 1
+          elif (code == 'ALU'):
+            gka_order = 2
+          elif (code == 'COB'):
+            gka_order = 5
+          elif (code == 'TTT'):
+            gka_order = 6
+          elif (code == 'OTH'):
+            gka_order = 7
+          else:
+            gka_order = 99
         if (code in ['ATT','TMO','SPR']):
           am_tm_car_acct = 1
         if (code in ['QUA','INT']):
@@ -81,10 +97,10 @@ class TsCodeTable(Table):
         if (code in ['QOR','TER','SKY']):
           am_mi_key_acct = 1
 
-      row = (code,desc,downtime,leave,gka,am_tm_car_acct,am_tm_smc_acct,am_mi_key_acct)
+      row = (code,desc,downtime,leave,gka,gka_order,am_tm_car_acct,am_tm_smc_acct,am_mi_key_acct)
       rows.append(row)
 
-    c.executemany('INSERT INTO ts_code VALUES (?,?,?,?,?,?,?,?)',rows)
+    c.executemany('INSERT INTO ts_code VALUES (?,?,?,?,?,?,?,?,?)',rows)
 
     db.commit()
 

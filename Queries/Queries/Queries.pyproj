@@ -43,11 +43,8 @@
     <Compile Include="database\queries\getfaeotsum.py" />
     <Compile Include="database\queries\getfaewhsum.py" />
     <Compile Include="database\queries\getgkasum.py" />
-    <Compile Include="database\queries\getlts.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="database\queries\getltssum.py" />
     <Compile Include="database\queries\getovertimesum.py" />
+    <Compile Include="database\queries\querygka.py" />
     <Compile Include="database\queries\querylts.py" />
     <Compile Include="database\queries\queryact.py" />
     <Compile Include="database\queries\queryweeks.py" />
@@ -55,9 +52,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="database\queries\queryutl.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="database\queries\regiondata.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="database\queries\__init__.py" />
