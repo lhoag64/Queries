@@ -79,21 +79,26 @@ if (__name__ == '__main__'):
 
   amList =                                                                                \
     [                                                                                     \
-      ((' 0',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','10',{'ACT':10}),  \
-      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC','10',{'ACT':10}),  \
-      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','GKA'       ,None,None)      ,  \
-      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACTIVITY'  ,None,None)      ,  \
-      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','LTS'       ,None,None)      ,  \
-      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','UTL-CF'    ,None,None)      ,  \
-      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','UTL-PS'    ,None,None)      ,  \
-      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','UTL-DT'    ,None,None)      ,  \
-      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','UTL-LS'    ,None,None)      ,  \
-      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','UTL-CF'    ,None,None)      ,  \
-      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','UTL-PS'    ,None,None)      ,  \
-      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','UTL-DT'    ,None,None)      ,  \
-      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','UTL-LS'    ,None,None)      ,  \
-      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','UTL-OT'    ,None,None)      ,  \
+      ((' 0',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','FAE-AWH'   ,None,None)      ,  \
+      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','10',{'ACT':10}),  \
     ]                                                                                     \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC','10',{'ACT':10}),  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC','11',{'ACT':11}),  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC','12',{'ACT':12}),  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC','13',{'ACT':13}),  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC','14',{'ACT':14}),  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','GKA'       ,None,None)      ,  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACTIVITY'  ,None,None)      ,  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','LTS'       ,None,None)      ,  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','UTL-CF'    ,None,None)      ,  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','UTL-PS'    ,None,None)      ,  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','UTL-DT'    ,None,None)      ,  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','UTL-LS'    ,None,None)      ,  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','UTL-CF'    ,None,None)      ,  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','UTL-PS'    ,None,None)      ,  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','UTL-DT'    ,None,None)      ,  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','UTL-LS'    ,None,None)      ,  \
+#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','UTL-OT'    ,None,None)      ,  \
 #      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','10',{'ACT':10}),  \
 #      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','11',{'ACT':11}),  \
 #      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','12',{'ACT':12}),  \

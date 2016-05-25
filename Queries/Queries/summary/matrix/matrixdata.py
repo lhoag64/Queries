@@ -64,38 +64,47 @@ class MatrixData:
   #--------------------------------------------------------------------
   def _calcRowCompHdrDict(self):
 
-    compList = self.dataDict['ROW-COMP']['HDR']
-    rows = len(compList)
-    cols = 1
+#    compList = self.dataDict['ROW-COMP']['RHDR']
+#    rows = len(compList)
+#    cols = 1
+#    result = OrderedDict()
+    #result['AVG' ] = compList[0]
+    #result['SUM' ] = compList[1]
+    #result['CNT' ] = compList[2]
+#    result['ROWS'] = rows
+#    result['COLS'] = cols
     result = OrderedDict()
-    result['AVG' ] = compList[0]
-    result['SUM' ] = compList[1]
-    result['CNT' ] = compList[2]
-    result['ROWS'] = rows
-    result['COLS'] = cols
-    result['DATA'] = [[None for col in range(cols)] for row in range(rows)]
-    for rowIdx in range(result['ROWS']):
-      for colIdx in range(result['COLS']):
-        result['DATA'][rowIdx][colIdx] = compList[rowIdx]
+    result['DATA'] = self.dataDict['ROW-COMP']['RHDR']
+    result['ROWS'] = self.dataDict['ROW-COMP']['ROWS']
+    result['COLS'] = 1
+#    result['DATA'] = [[None for col in range(cols)] for row in range(rows)]
+#    for rowIdx in range(result['ROWS']):
+#      for colIdx in range(result['COLS']):
+#        result['DATA'][rowIdx][colIdx] = compList[rowIdx]
 
     return result
 
   #--------------------------------------------------------------------
   def _calcColCompHdrDict(self):
 
-    compList = self.dataDict['COL-COMP']['HDR']
-    rows = 1
-    cols = len(compList)
+#    compList = self.dataDict['COL-COMP']['CHDR']
+#    rows = 1
+#    cols = len(compList)
+#    result = OrderedDict()
+#    #result['AVG' ] = compList[0]
+#    #result['SUM' ] = compList[1]
+#    #result['CNT' ] = compList[2]
+#    result['ROWS'] = rows
+#    result['COLS'] = cols
+#    result['DATA'] = [[None for col in range(cols)] for row in range(rows)]
+#    for rowIdx in range(result['ROWS']):
+#      for colIdx in range(result['COLS']):
+#        result['DATA'][rowIdx][colIdx] = compList[colIdx]
+
     result = OrderedDict()
-    result['AVG' ] = compList[0]
-    result['SUM' ] = compList[1]
-    result['CNT' ] = compList[2]
-    result['ROWS'] = rows
-    result['COLS'] = cols
-    result['DATA'] = [[None for col in range(cols)] for row in range(rows)]
-    for rowIdx in range(result['ROWS']):
-      for colIdx in range(result['COLS']):
-        result['DATA'][rowIdx][colIdx] = compList[colIdx]
+    result['DATA'] = self.dataDict['COL-COMP']['CHDR']
+    result['ROWS'] = 1
+    result['COLS'] = self.dataDict['COL-COMP']['COLS']
 
     return result
 

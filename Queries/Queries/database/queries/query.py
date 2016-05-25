@@ -67,18 +67,21 @@ class Query:
 
     cols = len(self.compList)
     result = {}
-    result['HDR' ] = self.compList
+    result['TEXT' ] = self.compList
     result['ROWS'] = rows
     result['COLS'] = cols
-    result['SUM' ] = sumList
-    result['AVG' ] = avgList
-    result['CNT' ] = cntList
+    #result['SUM' ] = sumList
+    #result['AVG' ] = avgList
+    #result['CNT' ] = cntList
     result['DATA'] = [[None for col in range(cols)] for row in range(rows)]
+    result['RHDR'] = None
+    result['CHDR'] = [[None for col in range(cols)] for row in range(   1)]
     for rowIdx in range(rows):
       for colIdx in range(cols):
         result['DATA'][rowIdx][0] = avgList[rowIdx]
         result['DATA'][rowIdx][1] = sumList[rowIdx]
         result['DATA'][rowIdx][2] = cntList[rowIdx]
+        result['CHDR'][0][colIdx] = self.compList[colIdx]
 
     return result
 
@@ -109,14 +112,17 @@ class Query:
 
     rows = len(self.compList)
     result = {}
-    result['HDR' ] = self.compList
+    #result['RHDR'] = self.compList
     result['ROWS'] = rows
     result['COLS'] = cols
-    result['SUM' ] = sumList
-    result['AVG' ] = avgList
-    result['CNT' ] = cntList
+    #result['SUM' ] = sumList
+    #result['AVG' ] = avgList
+    #result['CNT' ] = cntList
     result['DATA'] = [[None for col in range(cols)] for row in range(rows)]
+    result['RHDR'] = [[None for col in range(   1)] for row in range(rows)]
+    result['CHDR'] = None
     for rowIdx in range(rows):
+      result['RHDR'][rowIdx][0] = self.compList[rowIdx]
       for colIdx in range(cols):
         result['DATA'][0][colIdx] = avgList[colIdx]
         result['DATA'][1][colIdx] = sumList[colIdx]
@@ -151,18 +157,21 @@ class Query:
 
     rows = len(self.compList)
     result = {}
-    result['HDR' ] = self.compList
+    #result['CHDR'] = self.compList
     result['ROWS'] = rows
     result['COLS'] = cols
-    result['SUM' ] = sumList
-    result['AVG' ] = avgList
-    result['CNT' ] = cntList
+    #result['SUM' ] = sumList
+    #result['AVG' ] = avgList
+    #result['CNT' ] = cntList
     result['DATA'] = [[None for col in range(cols)] for row in range(rows)]
+    result['RHDR'] = None
+    result['CHDR'] = [[None for col in range(cols)] for row in range(   1)]
     for rowIdx in range(rows):
       for colIdx in range(cols):
         result['DATA'][0][colIdx] = avgList[colIdx]
         result['DATA'][1][colIdx] = sumList[colIdx]
         result['DATA'][2][colIdx] = cntList[colIdx]
+        result['CHDR'][0][colIdx] = self.compList[colIdx]
 
     return result
 

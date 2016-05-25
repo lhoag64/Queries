@@ -7,6 +7,11 @@ from   summary.matrix.matrixdata    import MatrixData
 #----------------------------------------------------------------------
 class ActByLocData(MatrixData):
 
+  _titleDict =                              \
+    {                                       \
+      'ACT-BY-LOC':('Activity By Location') \
+    }
+
   #--------------------------------------------------------------------
   def __init__(self,item):
 
@@ -35,7 +40,7 @@ class ActByLocData(MatrixData):
     self.weekDict = Db.QueryWeeks.GetData(self.regionList,self.period)
     self.dataDict = Db.QueryActByLoc.GetData(self.regionList,self.weekDict,act=item.options)
 
-    self.locDict  = Db.QueryActByLocList.GetData(rgnList=self.regionList)
+    #self.locDict  = Db.QueryActByLocList.GetData(rgnList=self.regionList)
 
     for tblItem in self.tbl:
       if (tblItem in funcTbl):
@@ -54,8 +59,12 @@ class ActByLocData(MatrixData):
   #--------------------------------------------------------------------
   def _getTitleDict(self,tblItem):
     result = super()._initTblItem(tblItem)
-    
-    result['DATA'] = [[super()._calcTitleText('Activities',self.regionList,self.period)]]
+
+    actDict = Db.QueryActList.GetData()
+    act     = self.item.options['ACT']
+    title   = actDict[act] + ' - ' + str(act) 
+        
+    result['DATA'] = [[super()._calcTitleText(title,self.regionList,self.period)]]
     result['ROWS'] = 1
     result['COLS'] = 1
 
@@ -63,24 +72,34 @@ class ActByLocData(MatrixData):
 
   #--------------------------------------------------------------------
   def _getRowDataHdrDict(self,tblItem):
-    result = super()._initTblItem(tblItem)
+#    result = super()._initTblItem(tblItem)
+#
+#    result['DATA'] = []
+#    for item in self.locDict:
+#      text = self.locDict[item]
+#      result['DATA'].append([text])
+#    result['ROWS'] = len(result['DATA'])
+#    result['COLS'] = 1
 
-    result['DATA'] = []
-    for item in self.locDict:
-      text = self.locDict[item]
-      result['DATA'].append([text])
-    result['ROWS'] = len(result['DATA'])
+    result = super()._initTblItem(tblItem)
+    result['DATA'] = self.dataDict['TBL-DATA']['RHDR']
+    result['ROWS'] = self.dataDict['TBL-DATA']['ROWS']
     result['COLS'] = 1
 
     return result
 
   #--------------------------------------------------------------------
   def _getColDataHdrDict(self,tblItem):
-    result = super()._initTblItem(tblItem)
+#    result = super()._initTblItem(tblItem)
+#
+#    result['DATA'] = [super().calcWeekNumTextList(self.weekDict['MAX'])]
+#    result['ROWS'] = 1
+#    result['COLS'] = len(result['DATA'][0])
 
-    result['DATA'] = [super().calcWeekNumTextList(self.weekDict['MAX'])]
+    result = super()._initTblItem(tblItem)
+    result['DATA'] = self.dataDict['TBL-DATA']['CHDR']
     result['ROWS'] = 1
-    result['COLS'] = len(result['DATA'][0])
+    result['COLS'] = self.dataDict['TBL-DATA']['COLS']
 
     return result
 
@@ -131,52 +150,3 @@ class ActByLocData(MatrixData):
 
     return result
 
-
-#    act = None
-#    opt = self.item.options
-#    if (opt):
-#      if ('ACT' in opt):
-#        act = opt['ACT']
-#    if (act == None):
-#      logging.error('Activity by Location requres activity argument, skipping')
-#      return
-#
-#
-#    self.name += '_' + str(act).zfill(2)
-#
-#    regionList = super().calcRegionList(self.region)
-#
-#    weekDict = GetWeeks(Db.db,regionList,self.period)
-#    dataDict = GetActByLocSum(Db.db,regionList,weekDict,act)
-#
-#    dataList = dataDict['HRSLIST']
-#
-#    weekCnt = len(dataList)
-#    itemCnt = len(dataList[0])
-#
-#    hours = [[None for j in range(itemCnt)] for i in range(weekCnt)]
-#    for week in range(weekCnt):
-#      for item in range(itemCnt):
-#        if (dataList[week] != None):
-#          hours[week][item] = float(dataList[week][item][2])
-#        else:
-#          hours[week][item] = None
-#
-#    self.data.AddData(hours)
-#
-#    rowAvgList = super().calcRowAvg(super().calcRowSum(hours))
-#    self.colCompData.AddData(rowAvgList,cols=1,rows=itemCnt)
-#
-#    self.colCompHdr.AddData(['Avg'])
-#    self.colHdr.AddData(super().calcWeekNumTextList(weekDict['MAX']))
-#    super().calcTitle(dataDict['TITLE'],regionList,self.period)
-#
-#    rowHdrData = []
-#    for item in dataDict['GRPLIST']:
-#      rowHdrData.append(item[1])
-#    
-#    self.rowHdr.AddData(rowHdrData,cols=1,rows=itemCnt)
-#
-#    super().calcSize()
-#
-#    self.rangeList = []

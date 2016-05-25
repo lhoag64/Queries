@@ -93,7 +93,8 @@ class MatrixTable:
         for colIdx in range(item.cols):
           if (type(item.fmt) is list):
             fmt = item.fmt[rowIdx]
-          ws.SetCell(wsRow+rowIdx,wsCol+colIdx,item.data[rowIdx][colIdx],fmt)
+          if (item.data != None):
+            ws.SetCell(wsRow+rowIdx,wsCol+colIdx,item.data[rowIdx][colIdx],fmt)
 
     for item in itemList:
       ws.DrawBorder(item.sRow,item.sCol,item.eRow,item.eCol, 'medium')

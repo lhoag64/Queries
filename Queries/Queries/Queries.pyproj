@@ -28,6 +28,7 @@
     <Compile Include="database\queries\faedata.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="database\queries\queryfae.py" />
     <Compile Include="database\queries\queryactbyloc.py" />
     <Compile Include="database\queries\getactbylocsum.py" />
     <Compile Include="database\queries\getactbyprdteam.py" />
@@ -260,6 +261,7 @@
     <Compile Include="summary\matrix\ammirkadata.py" />
     <Compile Include="summary\matrix\amtmsmcdata.py" />
     <Compile Include="summary\matrix\amtmcardata.py" />
+    <Compile Include="summary\matrix\faeawhdata - Copy.py" />
     <Compile Include="summary\matrix\faeotdata.py" />
     <Compile Include="summary\matrix\faeltdata.py" />
     <Compile Include="summary\matrix\faewhdata.py" />
@@ -267,7 +269,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="summary\matrix\actbylocdata.py" />
-    <Compile Include="summary\matrix\faeawhdata.py" />
+    <Compile Include="summary\matrix\faedata.py" />
     <Compile Include="summary\matrix\amrkadata.py" />
     <Compile Include="summary\matrix\ltsdata.py">
       <SubType>Code</SubType>
@@ -279,9 +281,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="summary\matrix\metricworksheet.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="summary\matrix\oldactbyloc.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="summary\matrix\utldata.py" />

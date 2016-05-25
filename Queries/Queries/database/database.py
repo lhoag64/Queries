@@ -26,7 +26,8 @@ from   database.queries.querylts        import QueryLtsList
 from   database.queries.querygka        import QueryGka
 from   database.queries.querygka        import QueryGkaList
 from   database.queries.queryactbyloc   import QueryActByLoc
-from   database.queries.queryactbyloc   import QueryActByLocList
+#from   database.queries.queryactbyloc   import QueryActByLocList
+from   database.queries.queryfae        import QueryFae
 
 #----------------------------------------------------------------------
 class Database:
@@ -64,7 +65,8 @@ class Database:
     Database.QueryGka          = QueryGka(Database.db)
     Database.QueryGkaList      = QueryGkaList(Database.db)
     Database.QueryActByLoc     = QueryActByLoc(Database.db)
-    Database.QueryActByLocList = QueryActByLocList(Database.db)
+    #Database.QueryActByLocList = QueryActByLocList(Database.db)
+    Database.QueryFae          = QueryFae(Database.db)
 
   #--------------------------------------------------------------------
   def GetDb():

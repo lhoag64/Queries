@@ -13,7 +13,8 @@ from   summary.matrix.amtmsmcdata        import AmTmSmcData
 from   summary.matrix.ammirkadata        import AmMiRkaData
 from   summary.matrix.actbylocdata       import ActByLocData
 from   summary.matrix.actbyprdteamdata   import ActByPrdTeamData
-from   summary.matrix.faeawhdata         import FaeAwhData
+from   summary.matrix.faedata            import FaeData
+#from   summary.matrix.faeawhdata         import FaeAwhData
 from   summary.matrix.faewhdata          import FaeWhData
 from   summary.matrix.faeltdata          import FaeLtData
 from   summary.matrix.faeotdata          import FaeOtData
@@ -21,8 +22,8 @@ from   summary.matrix.faeotdata          import FaeOtData
 #----------------------------------------------------------------------
 FuncDict =                               \
   {                                      \
-    'MATRIX_FAE_AWH'   : FaeAwhData,     \
-    'MATRIX_FAE_WH'    : FaeWhData,      \
+    'MATRIX_FAE_AWH'   : FaeData,        \
+    'MATRIX_FAE_WH'    : FaeData,        \
     'MATRIX_FAE_LT'    : FaeLtData,      \
     'MATRIX_FAE_OT'    : FaeOtData,      \
     'MATRIX_ACTIVITY'  : ActivityData,   \

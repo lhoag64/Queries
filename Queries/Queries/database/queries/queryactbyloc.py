@@ -50,8 +50,9 @@ class QueryActByLoc(Query):
     locDict = self._getLocDict(regionList)
     locCnt  = len(locDict['GRP'])
 
-    data = [[None for col in range(maxWeeks)] for row in range(locCnt)]
-
+    data   = [[None for col in range(maxWeeks)] for row in range(locCnt)]
+    rowHdr = [[None for col in range(       1)] for row in range(locCnt)]
+    colHdr = [[None for col in range(maxWeeks)] for row in range(     1)]
     for colIdx in range(minWeeks):
 
       wcDate = weekDict['MIN'][colIdx][0]
@@ -74,8 +75,15 @@ class QueryActByLoc(Query):
         if (data[rowIdx][colIdx] == None):
           data[rowIdx][colIdx] = 0.0
 
+      colHdr[0][colIdx] = 'Week ' + str(weekDict['MAX'][colIdx][1])
+
+    for (idx,item) in enumerate(locDict['HDR']):
+      rowHdr[idx][0] = locDict['HDR'][item]
+
     result = {}
     result['DATA'] = data
+    result['RHDR'] = rowHdr
+    result['CHDR'] = colHdr
     result['ROWS'] = locCnt
     result['COLS'] = maxWeeks
 
@@ -113,6 +121,7 @@ class QueryActByLoc(Query):
     result['KEY'   ] = OrderedDict()
     result['GRP'   ] = OrderedDict()
     result['OTHERS'] = OrderedDict()
+    result['HDR'   ] = None
 
     grpDict = {}
 
@@ -146,21 +155,7 @@ class QueryActByLoc(Query):
       idx += 1
     result['GRP']['OTHER'] = idx
 
-    return result
-
-#----------------------------------------------------------------------
-class QueryActByLocList(Query):
-
-  #--------------------------------------------------------------------
-  def __init__(self,db):
-    super().__init__(db)
-
-  #--------------------------------------------------------------------
-  def GetData(self,**kwargs):
-
-    regionList = kwargs['rgnList']
-
-    result  = OrderedDict()
+    hdrDict = OrderedDict()
     grpDict = {}
 
     for region in regionList:
@@ -171,21 +166,51 @@ class QueryActByLocList(Query):
 
     grpList = sorted(grpDict)
     for item in grpList:
-      result[item] = grpDict[item]
-    result['OTHER'] = NameLookup['OTHER']
+      hdrDict[item] = grpDict[item]
+    hdrDict['OTHER'] = NameLookup['OTHER']
+
+    result['HDR'] = hdrDict
 
     return result
 
-  #--------------------------------------------------------------------
-  def _queryRgnLoc(self,region):
-
-    sqlopt  = []
-    sqltxt  = 'SELECT loc,loc_order,loc_group,desc,rgn_desc,rgn_loc,' + KeyLocDict[region]
-    sqltxt += '  FROM ts_loc'
-    sqltxt += '  WHERE region = \'' + region + '\''
-    sqltxt += '  ORDER BY loc_group,loc_order'
-
-    return super()._runQuery(sqlopt,sqltxt)
+#----------------------------------------------------------------------
+#class QueryActByLocList(Query):
+#
+#  #--------------------------------------------------------------------
+#  def __init__(self,db):
+#    super().__init__(db)
+#
+#  #--------------------------------------------------------------------
+#  def GetData(self,**kwargs):
+#
+#    regionList = kwargs['rgnList']
+#
+#    result  = OrderedDict()
+#    grpDict = {}
+#
+#    for region in regionList:
+#      dbResult = self._queryRgnLoc(region)
+#      for item in dbResult:
+#        if (item[2] not in grpDict):
+#          grpDict[item[2]] = NameLookup[item[2]]
+#
+#    grpList = sorted(grpDict)
+#    for item in grpList:
+#      result[item] = grpDict[item]
+#    result['OTHER'] = NameLookup['OTHER']
+#
+#    return result
+#
+#  #--------------------------------------------------------------------
+#  def _queryRgnLoc(self,region):
+#
+#    sqlopt  = []
+#    sqltxt  = 'SELECT loc,loc_order,loc_group,desc,rgn_desc,rgn_loc,' + KeyLocDict[region]
+#    sqltxt += '  FROM ts_loc'
+#    sqltxt += '  WHERE region = \'' + region + '\''
+#    sqltxt += '  ORDER BY loc_group,loc_order'
+#
+#    return super()._runQuery(sqlopt,sqltxt)
 
 
 ##----------------------------------------------------------------------
