@@ -15,7 +15,7 @@ class QueryLts(Query):
     minWeeks = self.minWeekCnt
     maxWeeks = self.maxWeekCnt
 
-    data = self._getData(regionList,weekDict,maxWeeks,minWeeks)
+    data = self._getData(regionList,weekDict,maxWeeks,minWeeks,kwargs)
 
     colComp = super()._calcRowMetrics(data['DATA'])
     rowComp = super()._calcColMetrics(data['DATA'])
@@ -24,12 +24,14 @@ class QueryLts(Query):
     return {'TBL-DATA':data,'ROW-COMP':rowComp,'COL-COMP':colComp,'TBL-COMP':tblComp}
 
   #--------------------------------------------------------------------
-  def _getData(self,regionList,weekDict,maxWeeks,minWeeks):
+  def _getData(self,regionList,weekDict,maxWeeks,minWeeks,kwargs):
 
     ltsDict = self._getLtsDict()
-    ltsCnt  = len(ltsDict) + 1
+    ltsCnt  = len(ltsDict)
 
-    data = [[None for col in range(maxWeeks)] for row in range(ltsCnt)]
+    data   = [[None for col in range(maxWeeks)] for row in range(ltsCnt)]
+    rowHdr = [[None for col in range(       1)] for row in range(ltsCnt)]
+    colHdr = [[None for col in range(maxWeeks)] for row in range(     1)]
     for colIdx in range(minWeeks):
 
       wcDate = weekDict['MIN'][colIdx][0]
@@ -55,8 +57,15 @@ class QueryLts(Query):
         if (data[rowIdx][colIdx] == None):
           data[rowIdx][colIdx] = 0.0
 
+      colHdr[0][colIdx] = 'Week ' + str(weekDict['MAX'][colIdx][1])
+
+    for (idx,item) in enumerate(ltsDict):
+      rowHdr[idx][0] = item
+
     result = {}
     result['DATA'] = data
+    result['RHDR'] = rowHdr
+    result['CHDR'] = colHdr
     result['ROWS'] = ltsCnt
     result['COLS'] = maxWeeks
 
@@ -84,33 +93,34 @@ class QueryLts(Query):
     dbResult = super()._runQuery(sqlopt,sqltxt)
 
     idx    = 0
-    result = {}
+    result = OrderedDict()
     for item in dbResult:
       result[item[0]] = idx
       idx += 1
+    result['Other (Not Specified)'] = idx
 
     return result
 
 #----------------------------------------------------------------------
-class QueryLtsList(Query):
-
-  #--------------------------------------------------------------------
-  def __init__(self,db):
-    super().__init__(db)
-
-  #--------------------------------------------------------------------
-  def GetData(self,**kwargs):
-
-    sqlopt  = []
-    sqltxt  = 'SELECT key'
-    sqltxt += '  FROM ts_lts'
-
-    dbResult = super()._runQuery(sqlopt,sqltxt)
-
-    result = OrderedDict()
-    for item in dbResult:
-      result[item[0]] = item[0]
-
-    return result
+#class QueryLtsList(Query):
+#
+#  #--------------------------------------------------------------------
+#  def __init__(self,db):
+#    super().__init__(db)
+#
+#  #--------------------------------------------------------------------
+#  def GetData(self,**kwargs):
+#
+#    sqlopt  = []
+#    sqltxt  = 'SELECT key'
+#    sqltxt += '  FROM ts_lts'
+#
+#    dbResult = super()._runQuery(sqlopt,sqltxt)
+#
+#    result = OrderedDict()
+#    for item in dbResult:
+#      result[item[0]] = item[0]
+#
+#    return result
 
 

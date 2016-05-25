@@ -30,7 +30,9 @@ class QueryGka(Query):
     gkaDict = self._getGkaDict()
     gkaCnt  = len(gkaDict)
 
-    data = [[None for col in range(maxWeeks)] for row in range(gkaCnt)]
+    data   = [[None for col in range(maxWeeks)] for row in range(gkaCnt)]
+    rowHdr = [[None for col in range(       1)] for row in range(gkaCnt)]
+    colHdr = [[None for col in range(maxWeeks)] for row in range(     1)]
     for colIdx in range(minWeeks):
 
       wcDate = weekDict['MIN'][colIdx][0]
@@ -51,21 +53,30 @@ class QueryGka(Query):
             aluSum += float(item[1])
         else:
           if (item[0] in gkaDict):
-            data[gkaDict[item[0]]][colIdx] = item[1]
+            data[gkaDict[item[0]][0]][colIdx] = item[1]
           else:
             logging.debug(item[0])
 
-      data[gkaDict['NOK'    ]][colIdx] = nokSum
-      data[gkaDict['ALU'    ]][colIdx] = aluSum
-      data[gkaDict['NOK-ALU']][colIdx] = nokAluSum
-      data[gkaDict['Others' ]][colIdx] = othResult[0][0]
+      data[gkaDict['NOK'    ][0]][colIdx] = nokSum
+      data[gkaDict['ALU'    ][0]][colIdx] = aluSum
+      data[gkaDict['NOK-ALU'][0]][colIdx] = nokAluSum
+      data[gkaDict['Others' ][0]][colIdx] = othResult[0][0]
 
       for rowIdx in range(gkaCnt):
         if (data[rowIdx][colIdx] == None):
           data[rowIdx][colIdx] = 0.0
 
+      colHdr[0][colIdx] = 'Week ' + str(weekDict['MAX'][colIdx][1])
+
+    idx = 0
+    for item in gkaDict:
+      rowHdr[idx][0] = gkaDict[item][1]
+      idx += 1
+
     result = {}
     result['DATA'] = data
+    result['RHDR'] = rowHdr
+    result['CHDR'] = colHdr
     result['ROWS'] = gkaCnt
     result['COLS'] = maxWeeks
 
@@ -117,38 +128,38 @@ class QueryGka(Query):
 
     result = OrderedDict()
     for item in dbResult:
-      result[item[0]] = item[2]
+      result[item[0]] = (item[2],item[1])
 
     return result
 
 #----------------------------------------------------------------------
-class QueryGkaList(Query):
-
-  #--------------------------------------------------------------------
-  def __init__(self,db):
-    super().__init__(db)
-
-  #--------------------------------------------------------------------
-  def GetData(self,**kwargs):
-
-    sqlopt  = []
-    sqltxt  = 'SELECT wbs.code,wbs.desc,wbs.gl_tm_key_acct_order'
-    sqltxt += '  FROM ts_entry AS ts'
-    sqltxt += '  INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code'
-    sqltxt += '  WHERE '
-    sqltxt += '        (wbs.gl_tm_key_acct = 1)'
-    sqltxt += '    and (wbs.gl_tm_key_acct_order < 99)'
-    sqltxt += '  GROUP BY wbs.gl_tm_key_acct_order,wbs.code'
-
-    dbResult = super()._runQuery(sqlopt,sqltxt)
-
-    dbResult.insert(3,('NOK-ALU','Nokia/ALU Combined',3))
-    dbResult.insert(4,('Others' ,'All Others',4))
-
-    result = OrderedDict()
-    for item in dbResult:
-      result[item[0]] = item[1]
-
-    return result
+#class QueryGkaList(Query):
+#
+#  #--------------------------------------------------------------------
+#  def __init__(self,db):
+#    super().__init__(db)
+#
+#  #--------------------------------------------------------------------
+#  def GetData(self,**kwargs):
+#
+#    sqlopt  = []
+#    sqltxt  = 'SELECT wbs.code,wbs.desc,wbs.gl_tm_key_acct_order'
+#    sqltxt += '  FROM ts_entry AS ts'
+#    sqltxt += '  INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code'
+#    sqltxt += '  WHERE '
+#    sqltxt += '        (wbs.gl_tm_key_acct = 1)'
+#    sqltxt += '    and (wbs.gl_tm_key_acct_order < 99)'
+#    sqltxt += '  GROUP BY wbs.gl_tm_key_acct_order,wbs.code'
+#
+#    dbResult = super()._runQuery(sqlopt,sqltxt)
+#
+#    dbResult.insert(3,('NOK-ALU','Nokia/ALU Combined',3))
+#    dbResult.insert(4,('Others' ,'All Others',4))
+#
+#    result = OrderedDict()
+#    for item in dbResult:
+#      result[item[0]] = item[1]
+#
+#    return result
 
 

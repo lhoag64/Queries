@@ -15,7 +15,7 @@ class QueryAct(Query):
     minWeeks = self.minWeekCnt
     maxWeeks = self.maxWeekCnt
 
-    data = self._getData(regionList,weekDict,maxWeeks,minWeeks)
+    data = self._getData(regionList,weekDict,maxWeeks,minWeeks,kwargs)
 
     colComp = super()._calcRowMetrics(data['DATA'])
     rowComp = super()._calcColMetrics(data['DATA'])
@@ -24,12 +24,14 @@ class QueryAct(Query):
     return {'TBL-DATA':data,'ROW-COMP':rowComp,'COL-COMP':colComp,'TBL-COMP':tblComp}
 
   #--------------------------------------------------------------------
-  def _getData(self,regionList,weekDict,maxWeeks,minWeeks):
+  def _getData(self,regionList,weekDict,maxWeeks,minWeeks,kwargs):
 
     actDict = self._getActDict()
     actCnt  = len(actDict) + 1
 
-    data = [[None for col in range(maxWeeks)] for row in range(actCnt)]
+    data   = [[None for col in range(maxWeeks)] for row in range(actCnt)]
+    rowHdr = [[None for col in range(       1)] for row in range(actCnt)]
+    colHdr = [[None for col in range(maxWeeks)] for row in range(     1)]
     for colIdx in range(minWeeks):
 
       wcDate = weekDict['MIN'][colIdx][0]
@@ -43,7 +45,7 @@ class QueryAct(Query):
           other += float(item[1])
         else:
           try:
-            idx = actDict[item[0]]
+            idx = actDict[item[0]][0]
           except KeyError:
             raise
           hrs = float(item[1])
@@ -55,14 +57,15 @@ class QueryAct(Query):
         if (data[rowIdx][colIdx] == None):
           data[rowIdx][colIdx] = 0.0
 
-      #for rowIdx in range(actCnt):
-      #  text  = ''
-      #  for colIdx in range(maxWeeks):
-      #    text += ''
-      #  logging.debug(text)
+      colHdr[0][colIdx] = 'Week ' + str(weekDict['MAX'][colIdx][1])
+
+    for (idx,item) in enumerate(actDict):
+      rowHdr[idx][0] = actDict[item][2] + ' - ' + str(actDict[item][1])
 
     result = {}
     result['DATA'] = data
+    result['RHDR'] = rowHdr
+    result['CHDR'] = colHdr
     result['ROWS'] = actCnt
     result['COLS'] = maxWeeks
 
@@ -70,9 +73,6 @@ class QueryAct(Query):
 
   #--------------------------------------------------------------------
   def _query(self,wcDate,weDate,regionList):
-
-    # Detailed query
-    #sqltxt  = 'SELECT fname,lname,region,activity,wbs_code,entry_date'
 
     sqlopt  = [wcDate,weDate]
     sqltxt  = 'SELECT activity,SUM(hours)'
@@ -87,15 +87,15 @@ class QueryAct(Query):
   def _getActDict(self):
 
     sqlopt  = []
-    sqltxt  = 'SELECT act'
+    sqltxt  = 'SELECT act,desc'
     sqltxt += '  FROM ts_act'
 
     dbResult = super()._runQuery(sqlopt,sqltxt)
 
     idx    = 0
-    result = {}
+    result = OrderedDict()
     for item in dbResult:
-      result[str(item[0])] = idx
+      result[str(item[0])] = (idx,item[0],item[1])
       idx += 1
 
     return result

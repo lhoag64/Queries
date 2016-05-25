@@ -12,11 +12,6 @@ class ActByLocData(MatrixData):
       'ACT-BY-LOC':('Activity By Location') \
     }
 
-  #--------------------------------------------------------------------
-  def __init__(self,item):
-
-    super().__init__(item)
-
 #----------------------------------------------------------------------
   def __init__(self,item):
 
@@ -39,8 +34,6 @@ class ActByLocData(MatrixData):
     #------------------------------------------------------------------
     self.weekDict = Db.QueryWeeks.GetData(self.regionList,self.period)
     self.dataDict = Db.QueryActByLoc.GetData(self.regionList,self.weekDict,act=item.options)
-
-    #self.locDict  = Db.QueryActByLocList.GetData(rgnList=self.regionList)
 
     for tblItem in self.tbl:
       if (tblItem in funcTbl):
@@ -72,15 +65,6 @@ class ActByLocData(MatrixData):
 
   #--------------------------------------------------------------------
   def _getRowDataHdrDict(self,tblItem):
-#    result = super()._initTblItem(tblItem)
-#
-#    result['DATA'] = []
-#    for item in self.locDict:
-#      text = self.locDict[item]
-#      result['DATA'].append([text])
-#    result['ROWS'] = len(result['DATA'])
-#    result['COLS'] = 1
-
     result = super()._initTblItem(tblItem)
     result['DATA'] = self.dataDict['TBL-DATA']['RHDR']
     result['ROWS'] = self.dataDict['TBL-DATA']['ROWS']
@@ -90,12 +74,6 @@ class ActByLocData(MatrixData):
 
   #--------------------------------------------------------------------
   def _getColDataHdrDict(self,tblItem):
-#    result = super()._initTblItem(tblItem)
-#
-#    result['DATA'] = [super().calcWeekNumTextList(self.weekDict['MAX'])]
-#    result['ROWS'] = 1
-#    result['COLS'] = len(result['DATA'][0])
-
     result = super()._initTblItem(tblItem)
     result['DATA'] = self.dataDict['TBL-DATA']['CHDR']
     result['ROWS'] = 1
@@ -114,11 +92,15 @@ class ActByLocData(MatrixData):
 
   #--------------------------------------------------------------------
   def _getRowCompHdrDict(self,tblItem):
-    rowCompHdrDict = super()._calcRowCompHdrDict()
+    #rowCompHdrDict = super()._calcRowCompHdrDict()
+    #result = super()._initTblItem(tblItem)
+    #result['DATA'] = rowCompHdrDict['DATA']
+    #result['ROWS'] = rowCompHdrDict['ROWS']
+    #result['COLS'] = rowCompHdrDict['COLS']
     result = super()._initTblItem(tblItem)
-    result['DATA'] = rowCompHdrDict['DATA']
-    result['ROWS'] = rowCompHdrDict['ROWS']
-    result['COLS'] = rowCompHdrDict['COLS']
+    result['DATA'] = self.dataDict['ROW-COMP']['RHDR']
+    result['ROWS'] = self.dataDict['ROW-COMP']['ROWS']
+    result['COLS'] = 1
 
     return result
 
@@ -133,11 +115,15 @@ class ActByLocData(MatrixData):
 
   #--------------------------------------------------------------------
   def _getColCompHdrDict(self,tblItem):
-    colCompHdrDict = super()._calcColCompHdrDict()
+    #colCompHdrDict = super()._calcColCompHdrDict()
+    #result = super()._initTblItem(tblItem)
+    #result['DATA'] = colCompHdrDict['DATA']
+    #result['ROWS'] = colCompHdrDict['ROWS']
+    #result['COLS'] = colCompHdrDict['COLS']
     result = super()._initTblItem(tblItem)
-    result['DATA'] = colCompHdrDict['DATA']
-    result['ROWS'] = colCompHdrDict['ROWS']
-    result['COLS'] = colCompHdrDict['COLS']
+    result['DATA'] = self.dataDict['COL-COMP']['CHDR']
+    result['ROWS'] = 1
+    result['COLS'] = self.dataDict['COL-COMP']['COLS']
 
     return result
 
@@ -149,4 +135,5 @@ class ActByLocData(MatrixData):
     result['COLS'] = self.dataDict['COL-COMP']['COLS']
 
     return result
+
 

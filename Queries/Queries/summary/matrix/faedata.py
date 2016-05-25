@@ -6,13 +6,13 @@ from   summary.matrix.matrixdata    import MatrixData
 
 #----------------------------------------------------------------------
 class FaeData(MatrixData):
+
   _titleDict =                              \
     {                                       \
-      'FAE-AWH':('FAE-AHW') \
+      'FAE-AWH':('FAE-AHW')   \
     }
 
-
-  #--------------------------------------------------------------------
+#----------------------------------------------------------------------
   def __init__(self,item):
 
     super().__init__(item)

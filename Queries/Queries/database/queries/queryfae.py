@@ -137,7 +137,7 @@ class QueryFae(Query):
 
       rowIdx = 0
       for item in wdList:
-        data[rowIdx][colIdx] = dbResult[0][rowIdx]
+        data[rowIdx][colIdx] = int(dbResult[0][rowIdx])
         rowIdx += 1
 
     rowIdx = 0
@@ -241,26 +241,5 @@ class QueryFae(Query):
 
     return super()._runQuery(sqlopt,sqltxt)
 
-#----------------------------------------------------------------------
-#class QueryFaeList(Query):
-#
-#  #--------------------------------------------------------------------
-#  def __init__(self,db):
-#    super().__init__(db)
-#
-#  #--------------------------------------------------------------------
-#  def GetData(self,**kwargs):
-#
-##    sqlopt  = []
-##    sqltxt  = 'SELECT act,desc'
-##    sqltxt += '  FROM ts_act'
-##
-##    dbResult = super()._runQuery(sqlopt,sqltxt)
-#
-#    result = OrderedDict()
-##    for item in dbResult:
-##      result[item[0]] = item[1]
-#
-#    return result
 
 

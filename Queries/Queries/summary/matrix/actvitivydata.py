@@ -7,7 +7,12 @@ from   summary.matrix.matrixdata    import MatrixData
 #----------------------------------------------------------------------
 class ActivityData(MatrixData):
 
-  #--------------------------------------------------------------------
+  _titleDict =                              \
+    {                                       \
+      'ACTIVITY':('Activity')   \
+    }
+
+#----------------------------------------------------------------------
   def __init__(self,item):
 
     super().__init__(item)
@@ -30,7 +35,7 @@ class ActivityData(MatrixData):
     self.weekDict = Db.QueryWeeks.GetData(self.regionList,self.period)
     self.dataDict = Db.QueryAct.GetData(self.regionList,self.weekDict)
 
-    self.actDict  = Db.QueryActList.GetData()
+    #self.actDict  = Db.QueryActList.GetData()
 
     for tblItem in self.tbl:
       if (tblItem in funcTbl):
@@ -49,8 +54,10 @@ class ActivityData(MatrixData):
   #--------------------------------------------------------------------
   def _getTitleDict(self,tblItem):
     result = super()._initTblItem(tblItem)
-    
-    result['DATA'] = [[super()._calcTitleText('Activities',self.regionList,self.period)]]
+
+    title = self._titleDict[self.rptName]
+
+    result['DATA'] = [[super()._calcTitleText(title,self.regionList,self.period)]]
     result['ROWS'] = 1
     result['COLS'] = 1
 
@@ -58,25 +65,35 @@ class ActivityData(MatrixData):
 
   #--------------------------------------------------------------------
   def _getRowDataHdrDict(self,tblItem):
-    result = super()._initTblItem(tblItem)
+#    result = super()._initTblItem(tblItem)
+#
+#    result['DATA'] = []
+#    for item in self.actDict:
+#      text = self.actDict[item] + ' - ' + str(item)
+#      result['DATA'].append([text])
+#    result['DATA'].append(['Other (leave, overhead, etc.)'])
+#    result['ROWS'] = len(result['DATA'])
+#    result['COLS'] = 1
 
-    result['DATA'] = []
-    for item in self.actDict:
-      text = self.actDict[item] + ' - ' + str(item)
-      result['DATA'].append([text])
-    result['DATA'].append(['Other (leave, overhead, etc.)'])
-    result['ROWS'] = len(result['DATA'])
+    result = super()._initTblItem(tblItem)
+    result['DATA'] = self.dataDict['TBL-DATA']['RHDR']
+    result['ROWS'] = self.dataDict['TBL-DATA']['ROWS']
     result['COLS'] = 1
 
     return result
 
   #--------------------------------------------------------------------
   def _getColDataHdrDict(self,tblItem):
-    result = super()._initTblItem(tblItem)
+#    result = super()._initTblItem(tblItem)
+#
+#    result['DATA'] = [super().calcWeekNumTextList(self.weekDict['MAX'])]
+#    result['ROWS'] = 1
+#    result['COLS'] = len(result['DATA'][0])
 
-    result['DATA'] = [super().calcWeekNumTextList(self.weekDict['MAX'])]
+    result = super()._initTblItem(tblItem)
+    result['DATA'] = self.dataDict['TBL-DATA']['CHDR']
     result['ROWS'] = 1
-    result['COLS'] = len(result['DATA'][0])
+    result['COLS'] = self.dataDict['TBL-DATA']['COLS']
 
     return result
 
@@ -91,11 +108,16 @@ class ActivityData(MatrixData):
 
   #--------------------------------------------------------------------
   def _getRowCompHdrDict(self,tblItem):
-    rowCompHdrDict = super()._calcRowCompHdrDict()
+#    rowCompHdrDict = super()._calcRowCompHdrDict()
+#    result = super()._initTblItem(tblItem)
+#    result['DATA'] = rowCompHdrDict['DATA']
+#    result['ROWS'] = rowCompHdrDict['ROWS']
+#    result['COLS'] = rowCompHdrDict['COLS']
+
     result = super()._initTblItem(tblItem)
-    result['DATA'] = rowCompHdrDict['DATA']
-    result['ROWS'] = rowCompHdrDict['ROWS']
-    result['COLS'] = rowCompHdrDict['COLS']
+    result['DATA'] = self.dataDict['ROW-COMP']['RHDR']
+    result['ROWS'] = self.dataDict['ROW-COMP']['ROWS']
+    result['COLS'] = 1
 
     return result
 
@@ -110,11 +132,16 @@ class ActivityData(MatrixData):
 
   #--------------------------------------------------------------------
   def _getColCompHdrDict(self,tblItem):
-    colCompHdrDict = super()._calcColCompHdrDict()
+#    colCompHdrDict = super()._calcColCompHdrDict()
+#    result = super()._initTblItem(tblItem)
+#    result['DATA'] = colCompHdrDict['DATA']
+#    result['ROWS'] = colCompHdrDict['ROWS']
+#    result['COLS'] = colCompHdrDict['COLS']
+
     result = super()._initTblItem(tblItem)
-    result['DATA'] = colCompHdrDict['DATA']
-    result['ROWS'] = colCompHdrDict['ROWS']
-    result['COLS'] = colCompHdrDict['COLS']
+    result['DATA'] = self.dataDict['COL-COMP']['CHDR']
+    result['ROWS'] = 1
+    result['COLS'] = self.dataDict['COL-COMP']['COLS']
 
     return result
 
