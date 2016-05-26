@@ -35,7 +35,6 @@ class GkaData(MatrixData):
     self.weekDict = Db.QueryWeeks.GetData(self.regionList,self.period)
     self.dataDict = Db.QueryGka.GetData(self.regionList,self.weekDict)
 
-    #self.gkaDict  = Db.QueryGkaList.GetData()
 
     for tblItem in self.tbl:
       if (tblItem in funcTbl):
@@ -58,7 +57,6 @@ class GkaData(MatrixData):
     title = self._titleDict[self.rptName]
 
     result['DATA'] = [[super()._calcTitleText(title,self.regionList,self.period)]]
-    #result['DATA'] = [[super()._calcTitleText('Global Key Accounts',self.regionList,self.period)]]
     result['ROWS'] = 1
     result['COLS'] = 1
 
@@ -66,17 +64,6 @@ class GkaData(MatrixData):
 
   #--------------------------------------------------------------------
   def _getRowDataHdrDict(self,tblItem):
-#    result = super()._initTblItem(tblItem)
-#
-#    result['DATA'] = []
-#    for item in self.gkaDict:
-#      text = self.gkaDict[item]
-#      result['DATA'].append([text])
-#    result['ROWS'] = len(result['DATA'])
-#    result['COLS'] = 1
-#
-#    return result
-
     result = super()._initTblItem(tblItem)
     result['DATA'] = self.dataDict['TBL-DATA']['RHDR']
     result['ROWS'] = self.dataDict['TBL-DATA']['ROWS']
@@ -87,14 +74,6 @@ class GkaData(MatrixData):
 
   #--------------------------------------------------------------------
   def _getColDataHdrDict(self,tblItem):
-#    result = super()._initTblItem(tblItem)
-#
-#    result['DATA'] = [super().calcWeekNumTextList(self.weekDict['MAX'])]
-#    result['ROWS'] = 1
-#    result['COLS'] = len(result['DATA'][0])
-#
-#    return result
-
     result = super()._initTblItem(tblItem)
     result['DATA'] = self.dataDict['TBL-DATA']['CHDR']
     result['ROWS'] = 1
@@ -114,12 +93,6 @@ class GkaData(MatrixData):
 
   #--------------------------------------------------------------------
   def _getRowCompHdrDict(self,tblItem):
-#    rowCompHdrDict = super()._calcRowCompHdrDict()
-#    result = super()._initTblItem(tblItem)
-#    result['DATA'] = rowCompHdrDict['DATA']
-#    result['ROWS'] = rowCompHdrDict['ROWS']
-#    result['COLS'] = rowCompHdrDict['COLS']
-
     result = super()._initTblItem(tblItem)
     result['DATA'] = self.dataDict['ROW-COMP']['RHDR']
     result['ROWS'] = self.dataDict['ROW-COMP']['ROWS']
@@ -138,12 +111,6 @@ class GkaData(MatrixData):
 
   #--------------------------------------------------------------------
   def _getColCompHdrDict(self,tblItem):
-#    colCompHdrDict = super()._calcColCompHdrDict()
-#    result = super()._initTblItem(tblItem)
-#    result['DATA'] = colCompHdrDict['DATA']
-#    result['ROWS'] = colCompHdrDict['ROWS']
-#    result['COLS'] = colCompHdrDict['COLS']
-
     result = super()._initTblItem(tblItem)
     result['DATA'] = self.dataDict['COL-COMP']['CHDR']
     result['ROWS'] = 1

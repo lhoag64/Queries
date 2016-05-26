@@ -2,32 +2,32 @@ import logging
 from   collections                       import OrderedDict
 from   summary.summaryitem               import SummaryItem
 from   summary.matrix.actvitivydata      import ActivityData
-from   summary.matrix.actvitivyamdmrdata import ActivityAmDmrData
-from   summary.matrix.actvitivyammidata  import ActivityAmMiData
+#from   summary.matrix.actvitivyamdmrdata import ActivityAmDmrData
+#from   summary.matrix.actvitivyammidata  import ActivityAmMiData
 from   summary.matrix.ltsdata            import LtsData
+from   summary.matrix.ltypedata          import LTypeData
 from   summary.matrix.utldata            import UtlData
 from   summary.matrix.gkadata            import GkaData
-from   summary.matrix.amrkadata          import AmRkaData
-from   summary.matrix.amtmcardata        import AmTmCarData
-from   summary.matrix.amtmsmcdata        import AmTmSmcData
-from   summary.matrix.ammirkadata        import AmMiRkaData
+#from   summary.matrix.amrkadata          import AmRkaData
+#from   summary.matrix.amtmcardata        import AmTmCarData
+#from   summary.matrix.amtmsmcdata        import AmTmSmcData
+#from   summary.matrix.ammirkadata        import AmMiRkaData
 from   summary.matrix.actbylocdata       import ActByLocData
-from   summary.matrix.actbyprdteamdata   import ActByPrdTeamData
+#from   summary.matrix.actbyprdteamdata   import ActByPrdTeamData
 from   summary.matrix.faedata            import FaeData
 #from   summary.matrix.faeawhdata         import FaeAwhData
-from   summary.matrix.faewhdata          import FaeWhData
-from   summary.matrix.faeltdata          import FaeLtData
-from   summary.matrix.faeotdata          import FaeOtData
+#from   summary.matrix.faewhdata          import FaeWhData
+#from   summary.matrix.faeotdata          import FaeOtData
 
 #----------------------------------------------------------------------
 FuncDict =                               \
   {                                      \
     'MATRIX_FAE_AWH'   : FaeData,        \
     'MATRIX_FAE_WH'    : FaeData,        \
-    'MATRIX_FAE_LT'    : FaeLtData,      \
-    'MATRIX_FAE_OT'    : FaeOtData,      \
+    'MATRIX_FAE_OT'    : FaeData,        \
     'MATRIX_ACTIVITY'  : ActivityData,   \
     'MATRIX_GKA'       : GkaData,        \
+    'MATRIX_LTYPE'     : LTypeData,      \
     'MATRIX_LTS'       : LtsData,        \
     'MATRIX_UTL_CF'    : UtlData,        \
     'MATRIX_UTL_DT'    : UtlData,        \

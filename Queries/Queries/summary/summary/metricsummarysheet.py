@@ -8,20 +8,20 @@ from   openpyxl.chart                    import BarChart
 from   openpyxl.chart                    import PieChart
 from   openpyxl.chart.reference          import Reference
 from   summary.matrix.actvitivydata      import ActivityData
-from   summary.matrix.actvitivyamdmrdata import ActivityAmDmrData
-from   summary.matrix.actvitivyammidata  import ActivityAmMiData
+#from   summary.matrix.actvitivyamdmrdata import ActivityAmDmrData
+#from   summary.matrix.actvitivyammidata  import ActivityAmMiData
 from   summary.matrix.ltsdata            import LtsData
 from   summary.matrix.gkadata            import GkaData
-from   summary.matrix.amrkadata          import AmRkaData
-from   summary.matrix.amtmcardata        import AmTmCarData
-from   summary.matrix.amtmsmcdata        import AmTmSmcData
-from   summary.matrix.ammirkadata        import AmMiRkaData
+#from   summary.matrix.amrkadata          import AmRkaData
+#from   summary.matrix.amtmcardata        import AmTmCarData
+#from   summary.matrix.amtmsmcdata        import AmTmSmcData
+#from   summary.matrix.ammirkadata        import AmMiRkaData
 from   summary.matrix.actbylocdata       import ActByLocData
-from   summary.matrix.actbyprdteamdata   import ActByPrdTeamData
+#from   summary.matrix.actbyprdteamdata   import ActByPrdTeamData
 #from   summary.matrix.faeawhdata         import FaeAwhData
-from   summary.matrix.faewhdata          import FaeWhData
-from   summary.matrix.faeltdata          import FaeLtData
-from   summary.matrix.faeotdata          import FaeOtData
+#from   summary.matrix.faewhdata          import FaeWhData
+#from   summary.matrix.faeltdata          import FaeLtData
+#from   summary.matrix.faeotdata          import FaeOtData
 
 #----------------------------------------------------------------------
 class MetricSummarySheet:

@@ -6,9 +6,9 @@ from   openpyxl.chart.reference          import Reference
 from   summary.matrix.matrixdata  import MatrixData 
 from   summary.matrix.matrixtable import MatrixTable 
 #from   summary.matrix.faeawhdata  import FaeAwhData
-from   summary.matrix.faewhdata   import FaeWhData
-from   summary.matrix.faeltdata   import FaeLtData
-from   summary.matrix.faeotdata   import FaeOtData
+#from   summary.matrix.faewhdata   import FaeWhData
+#from   summary.matrix.faeltdata   import FaeLtData
+#from   summary.matrix.faeotdata   import FaeOtData
 
 #----------------------------------------------------------------------
 class FaeChartSheet:

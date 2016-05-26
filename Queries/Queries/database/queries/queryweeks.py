@@ -80,41 +80,41 @@ class QueryWeeks(Query):
     return weekDict
 
 #----------------------------------------------------------------------
-class QueryWeekNumbers(Query):
-
-  #--------------------------------------------------------------------
-  def __init__(self,db):
-    super().__init__(db)
-
-  #--------------------------------------------------------------------
-  def GetData(self,period):
-    sqlopt  = []
-    sqltxt  = 'SELECT MAX(entry_date)'
-    sqltxt += '  FROM ts_entry'
-
-    dbResult = super()._runQuery(sqlopt,sqltxt)
-
-    now = datetime.date.today().strftime("%Y-%m-%d")
-    max = dbResult[0][0]
-
-    weekStart = '2016-01-04'
-    weekEnd   = max
-
-    if (period != 'ALL'):
-      if (period in WeekTable):
-        weekStart = WeekTable[period][0]
-        weekEnd   = WeekTable[period][1]
-        if (weekEnd > max):
-          weekEnd = max
-      else:
-        logging.error('Invalid period:' + period)
-        weekEnd = weekStart
-
-    sqlopt  = [weekStart,weekEnd]
-    sqltxt  = 'SELECT week'
-    sqltxt += '  FROM weeks'
-    sqltxt += '  WHERE wc_date >= > and wc_date <= ?'
-
-    dbResult = super()._runQuery(sqlopt,sqltxt)
-
-    return dbResult
+#class QueryWeekNumbers(Query):
+#
+#  #--------------------------------------------------------------------
+#  def __init__(self,db):
+#    super().__init__(db)
+#
+#  #--------------------------------------------------------------------
+#  def GetData(self,period):
+#    sqlopt  = []
+#    sqltxt  = 'SELECT MAX(entry_date)'
+#    sqltxt += '  FROM ts_entry'
+#
+#    dbResult = super()._runQuery(sqlopt,sqltxt)
+#
+#    now = datetime.date.today().strftime("%Y-%m-%d")
+#    max = dbResult[0][0]
+#
+#    weekStart = '2016-01-04'
+#    weekEnd   = max
+#
+#    if (period != 'ALL'):
+#      if (period in WeekTable):
+#        weekStart = WeekTable[period][0]
+#        weekEnd   = WeekTable[period][1]
+#        if (weekEnd > max):
+#          weekEnd = max
+#      else:
+#        logging.error('Invalid period:' + period)
+#        weekEnd = weekStart
+#
+#    sqlopt  = [weekStart,weekEnd]
+#    sqltxt  = 'SELECT week'
+#    sqltxt += '  FROM weeks'
+#    sqltxt += '  WHERE wc_date >= > and wc_date <= ?'
+#
+#    dbResult = super()._runQuery(sqlopt,sqltxt)
+#
+##    return dbResult

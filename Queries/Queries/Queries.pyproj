@@ -28,22 +28,23 @@
     <Compile Include="database\queries\faedata.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="database\queries\queryltype.py" />
     <Compile Include="database\queries\queryfae.py" />
     <Compile Include="database\queries\queryactbyloc.py" />
-    <Compile Include="database\queries\getactbylocsum.py" />
-    <Compile Include="database\queries\getactbyprdteam.py" />
-    <Compile Include="database\queries\getactivityamdmrsum.py" />
-    <Compile Include="database\queries\getactivityammisum.py" />
-    <Compile Include="database\queries\getatmcarsum.py" />
-    <Compile Include="database\queries\getammirkasum.py" />
-    <Compile Include="database\queries\getamrkasum.py" />
-    <Compile Include="database\queries\getamtmsmcsum.py" />
-    <Compile Include="database\queries\getfaeawhsum.py" />
-    <Compile Include="database\queries\getfaehoursummary.py" />
-    <Compile Include="database\queries\getfaelist.py" />
-    <Compile Include="database\queries\getfaeltsum.py" />
-    <Compile Include="database\queries\getfaeotsum.py" />
-    <Compile Include="database\queries\getfaewhsum.py" />
+    <Compile Include="database\queries\Archive\getactbylocsum.py" />
+    <Compile Include="database\queries\Archive\getactbyprdteam.py" />
+    <Compile Include="database\queries\Archive\getactivityamdmrsum.py" />
+    <Compile Include="database\queries\Archive\getactivityammisum.py" />
+    <Compile Include="database\queries\Archive\getatmcarsum.py" />
+    <Compile Include="database\queries\Archive\getammirkasum.py" />
+    <Compile Include="database\queries\Archive\getamrkasum.py" />
+    <Compile Include="database\queries\Archive\getamtmsmcsum.py" />
+    <Compile Include="database\queries\Archive\getfaeawhsum.py" />
+    <Compile Include="database\queries\Archive\getfaehoursummary.py" />
+    <Compile Include="database\queries\Archive\getfaelist.py" />
+    <Compile Include="database\queries\Archive\getfaeltsum.py" />
+    <Compile Include="database\queries\Archive\getfaeotsum.py" />
+    <Compile Include="database\queries\Archive\getfaewhsum.py" />
     <Compile Include="database\queries\querygka.py" />
     <Compile Include="database\queries\querylts.py" />
     <Compile Include="database\queries\queryact.py" />
@@ -254,23 +255,23 @@
     <Compile Include="summary\charts\faechartsheet.py" />
     <Compile Include="summary\charts\metricchartsheet.py" />
     <Compile Include="summary\charts\__init__.py" />
-    <Compile Include="summary\matrix\actbyprdteamdata.py" />
-    <Compile Include="summary\matrix\actvitivyammidata.py" />
-    <Compile Include="summary\matrix\actvitivyamdmrdata.py" />
+    <Compile Include="summary\matrix\Archive\actbyprdteamdata.py" />
+    <Compile Include="summary\matrix\Archive\actvitivyammidata.py" />
+    <Compile Include="summary\matrix\Archive\actvitivyamdmrdata.py" />
     <Compile Include="summary\matrix\actvitivydata.py" />
-    <Compile Include="summary\matrix\ammirkadata.py" />
-    <Compile Include="summary\matrix\amtmsmcdata.py" />
-    <Compile Include="summary\matrix\amtmcardata.py" />
-    <Compile Include="summary\matrix\faeawhdata - Copy.py" />
-    <Compile Include="summary\matrix\faeotdata.py" />
-    <Compile Include="summary\matrix\faeltdata.py" />
-    <Compile Include="summary\matrix\faewhdata.py" />
-    <Compile Include="summary\matrix\faeworksheet.py">
+    <Compile Include="summary\matrix\Archive\ammirkadata.py" />
+    <Compile Include="summary\matrix\Archive\amtmsmcdata.py" />
+    <Compile Include="summary\matrix\Archive\amtmcardata.py" />
+    <Compile Include="summary\matrix\ltypedata.py" />
+    <Compile Include="summary\matrix\Archive\faeotdata.py" />
+    <Compile Include="summary\matrix\Archive\faeltdata.py" />
+    <Compile Include="summary\matrix\Archive\faewhdata.py" />
+    <Compile Include="summary\matrix\Archive\faeworksheet.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="summary\matrix\actbylocdata.py" />
     <Compile Include="summary\matrix\faedata.py" />
-    <Compile Include="summary\matrix\amrkadata.py" />
+    <Compile Include="summary\matrix\Archive\amrkadata.py" />
     <Compile Include="summary\matrix\ltsdata.py">
       <SubType>Code</SubType>
     </Compile>
@@ -321,6 +322,7 @@
   <ItemGroup>
     <Folder Include="database\" />
     <Folder Include="database\queries\" />
+    <Folder Include="database\queries\Archive\" />
     <Folder Include="database\tables\" />
     <Folder Include="summary\" />
     <Folder Include="openpyxl\" />
@@ -344,6 +346,7 @@
     <Folder Include="openpyxl\xml\" />
     <Folder Include="summary\matrix\" />
     <Folder Include="summary\charts\" />
+    <Folder Include="summary\matrix\Archive\" />
     <Folder Include="summary\summary\" />
     <Folder Include="timesheet\" />
     <Folder Include="xlinterface\" />

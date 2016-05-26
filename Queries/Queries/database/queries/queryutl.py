@@ -1,4 +1,5 @@
 import logging
+from   collections            import OrderedDict
 from   database.queries.query import Query
 
 #----------------------------------------------------------------------
@@ -23,6 +24,8 @@ class QueryUtl(Query):
     minWeeks = self.minWeekCnt
     maxWeeks = self.maxWeekCnt
 
+    queryType = kwargs['qtype']
+
     data = self._getData(regionList,weekDict,maxWeeks,minWeeks,kwargs)
 
     colComp = super()._calcRowMetrics(data['DATA'])
@@ -37,9 +40,15 @@ class QueryUtl(Query):
       if (tgt != None and tot != None):
         utl[colIdx] = tgt/tot * 100.0
 
-    rowComp['UTL' ] = utl
     rowComp['DATA'].insert(0,utl)
     rowComp['ROWS'] += 1
+    if (queryType in ['UTL-CF','UTL-PS','UTL-DT','UTL-LS']):
+      rowComp['RHDR'].insert(0,['Utilisation as a %'])
+    elif (queryType == 'UTL-OT'):
+      rowComp['RHDR'].insert(0,['Additional Hours as a %'])
+    else:
+      logging.critical('Invalidat UTL query type: ' + queryType)
+      raise
 
     return {'TBL-DATA':data,'ROW-COMP':rowComp,'COL-COMP':colComp,'TBL-COMP':tblComp}
 
@@ -48,7 +57,9 @@ class QueryUtl(Query):
 
     queryType = kwargs['qtype']
 
-    data = [[None for col in range(maxWeeks)] for row in range(2)]
+    data   = [[None for col in range(maxWeeks)] for row in range(2)]
+    rowHdr = [[None for col in range(       1)] for row in range(2)]
+    colHdr = [[None for col in range(maxWeeks)] for row in range(1)]
     for colIdx in range(minWeeks):
 
       wcDate = weekDict['MIN'][colIdx][0]
@@ -75,8 +86,22 @@ class QueryUtl(Query):
         logging.critical('Invalidat UTL query type: ' + queryType)
         raise
 
+      colHdr[0][colIdx] = 'Week ' + str(weekDict['MAX'][colIdx][1])
+
+    if (queryType in ['UTL-CF','UTL-PS','UTL-DT','UTL-LS']):
+      rowHdr[0][0] = 'For'
+      rowHdr[1][0] = 'Total Time'
+    elif (queryType == 'UTL-OT'):
+      rowHdr[0][0] = 'Additional'
+      rowHdr[1][0] = 'Contracted'
+    else:
+      logging.critical('Invalidat UTL query type: ' + queryType)
+      raise
+
     result = {}
     result['DATA'] = data
+    result['RHDR'] = rowHdr
+    result['CHDR'] = colHdr
     result['ROWS'] = 2
     result['COLS'] = maxWeeks
 

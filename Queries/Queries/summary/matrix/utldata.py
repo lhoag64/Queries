@@ -71,21 +71,8 @@ class UtlData(MatrixData):
   #--------------------------------------------------------------------
   def _getRowDataHdrDict(self,tblItem):
     result = super()._initTblItem(tblItem)
-
-    #utlDict = OrderedDict()
-    #utlDict['DATA' ] = 'For'
-    #utlDict['TOTAL'] = 'Total Time'
-
-    if (self.rptName in ['UTL-CF','UTL-PS','UTL-DT','UTL-LS']):
-      utlList = ['For','Total Time']
-    else:
-      utlList = ['Additional','Contracted']
-
-    result['DATA'] = []
-    for item in utlList:
-      text = item
-      result['DATA'].append([text])
-    result['ROWS'] = len(result['DATA'])
+    result['DATA'] = self.dataDict['TBL-DATA']['RHDR']
+    result['ROWS'] = self.dataDict['TBL-DATA']['ROWS']
     result['COLS'] = 1
 
     return result
@@ -93,10 +80,9 @@ class UtlData(MatrixData):
   #--------------------------------------------------------------------
   def _getColDataHdrDict(self,tblItem):
     result = super()._initTblItem(tblItem)
-
-    result['DATA'] = [super().calcWeekNumTextList(self.weekDict['MAX'])]
+    result['DATA'] = self.dataDict['TBL-DATA']['CHDR']
     result['ROWS'] = 1
-    result['COLS'] = len(result['DATA'][0])
+    result['COLS'] = self.dataDict['TBL-DATA']['COLS']
 
     return result
 
@@ -111,21 +97,10 @@ class UtlData(MatrixData):
 
   #--------------------------------------------------------------------
   def _getRowCompHdrDict(self,tblItem):
-    rowCompHdrDict = super()._calcRowCompHdrDict()
     result = super()._initTblItem(tblItem)
-
-    result['DATA'] = rowCompHdrDict['DATA']
-    result['ROWS'] = rowCompHdrDict['ROWS']
-    result['COLS'] = rowCompHdrDict['COLS']
-
-    if (self.rptName in ['UTL-CF','UTL-PS','UTL-DT','UTL-LS']):
-      utl = 'Utilisation as a %' 
-    else:
-      utl = 'Additional Hours as a %' 
-
-    result['UTL' ] = utl
-    result['DATA'].insert(0,[result['UTL']])
-    result['ROWS'] += 1
+    result['DATA'] = self.dataDict['ROW-COMP']['RHDR']
+    result['ROWS'] = self.dataDict['ROW-COMP']['ROWS']
+    result['COLS'] = 1
 
     return result
 
@@ -140,11 +115,10 @@ class UtlData(MatrixData):
 
   #--------------------------------------------------------------------
   def _getColCompHdrDict(self,tblItem):
-    colCompHdrDict = super()._calcColCompHdrDict()
     result = super()._initTblItem(tblItem)
-    result['DATA'] = colCompHdrDict['DATA']
-    result['ROWS'] = colCompHdrDict['ROWS']
-    result['COLS'] = colCompHdrDict['COLS']
+    result['DATA'] = self.dataDict['COL-COMP']['CHDR']
+    result['ROWS'] = 1
+    result['COLS'] = self.dataDict['COL-COMP']['COLS']
 
     return result
 

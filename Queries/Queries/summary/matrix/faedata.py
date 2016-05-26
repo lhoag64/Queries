@@ -7,9 +7,11 @@ from   summary.matrix.matrixdata    import MatrixData
 #----------------------------------------------------------------------
 class FaeData(MatrixData):
 
-  _titleDict =                              \
-    {                                       \
-      'FAE-AWH':('FAE-AHW')   \
+  _titleDict =                \
+    {                         \
+      'FAE-AWH':('FAE-AHW'),  \
+      'FAE-WH' :('FAE-WH'),   \
+      'FAE-OT' :('FAE-OT')    \
     }
 
 #----------------------------------------------------------------------

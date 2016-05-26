@@ -132,34 +132,4 @@ class QueryGka(Query):
 
     return result
 
-#----------------------------------------------------------------------
-#class QueryGkaList(Query):
-#
-#  #--------------------------------------------------------------------
-#  def __init__(self,db):
-#    super().__init__(db)
-#
-#  #--------------------------------------------------------------------
-#  def GetData(self,**kwargs):
-#
-#    sqlopt  = []
-#    sqltxt  = 'SELECT wbs.code,wbs.desc,wbs.gl_tm_key_acct_order'
-#    sqltxt += '  FROM ts_entry AS ts'
-#    sqltxt += '  INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code'
-#    sqltxt += '  WHERE '
-#    sqltxt += '        (wbs.gl_tm_key_acct = 1)'
-#    sqltxt += '    and (wbs.gl_tm_key_acct_order < 99)'
-#    sqltxt += '  GROUP BY wbs.gl_tm_key_acct_order,wbs.code'
-#
-#    dbResult = super()._runQuery(sqlopt,sqltxt)
-#
-#    dbResult.insert(3,('NOK-ALU','Nokia/ALU Combined',3))
-#    dbResult.insert(4,('Others' ,'All Others',4))
-#
-#    result = OrderedDict()
-#    for item in dbResult:
-#      result[item[0]] = item[1]
-#
-#    return result
-
 

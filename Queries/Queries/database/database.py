@@ -17,16 +17,13 @@ from   database.tables.tsfile           import TsFileTable
 from   database.tables.tsentry          import TsEntryTable
 from   database.tables.weeks            import WeeksTable
 from   database.queries.queryweeks      import QueryWeeks
-from   database.queries.queryweeks      import QueryWeekNumbers
 from   database.queries.queryutl        import QueryUtl
 from   database.queries.queryact        import QueryAct
 from   database.queries.queryact        import QueryActList
 from   database.queries.querylts        import QueryLts
-#from   database.queries.querylts        import QueryLtsList
+from   database.queries.queryltype      import QueryLType
 from   database.queries.querygka        import QueryGka
-#from   database.queries.querygka        import QueryGkaList
 from   database.queries.queryactbyloc   import QueryActByLoc
-#from   database.queries.queryactbyloc   import QueryActByLocList
 from   database.queries.queryfae        import QueryFae
 
 #----------------------------------------------------------------------
@@ -56,16 +53,13 @@ class Database:
     Database.WeeksTbl    = WeeksTable()
 
     Database.QueryWeeks        = QueryWeeks(Database.db)
-    Database.QueryWeekNumbers  = QueryWeekNumbers(Database.db)
     Database.QueryUtl          = QueryUtl(Database.db)
     Database.QueryAct          = QueryAct(Database.db)
     Database.QueryActList      = QueryActList(Database.db)
     Database.QueryLts          = QueryLts(Database.db)
-#    Database.QueryLtsList      = QueryLtsList(Database.db)
+    Database.QueryLType        = QueryLType(Database.db)
     Database.QueryGka          = QueryGka(Database.db)
-#    Database.QueryGkaList      = QueryGkaList(Database.db)
     Database.QueryActByLoc     = QueryActByLoc(Database.db)
-    #Database.QueryActByLocList = QueryActByLocList(Database.db)
     Database.QueryFae          = QueryFae(Database.db)
 
   #--------------------------------------------------------------------

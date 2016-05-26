@@ -92,11 +92,6 @@ class ActByLocData(MatrixData):
 
   #--------------------------------------------------------------------
   def _getRowCompHdrDict(self,tblItem):
-    #rowCompHdrDict = super()._calcRowCompHdrDict()
-    #result = super()._initTblItem(tblItem)
-    #result['DATA'] = rowCompHdrDict['DATA']
-    #result['ROWS'] = rowCompHdrDict['ROWS']
-    #result['COLS'] = rowCompHdrDict['COLS']
     result = super()._initTblItem(tblItem)
     result['DATA'] = self.dataDict['ROW-COMP']['RHDR']
     result['ROWS'] = self.dataDict['ROW-COMP']['ROWS']
@@ -115,11 +110,6 @@ class ActByLocData(MatrixData):
 
   #--------------------------------------------------------------------
   def _getColCompHdrDict(self,tblItem):
-    #colCompHdrDict = super()._calcColCompHdrDict()
-    #result = super()._initTblItem(tblItem)
-    #result['DATA'] = colCompHdrDict['DATA']
-    #result['ROWS'] = colCompHdrDict['ROWS']
-    #result['COLS'] = colCompHdrDict['COLS']
     result = super()._initTblItem(tblItem)
     result['DATA'] = self.dataDict['COL-COMP']['CHDR']
     result['ROWS'] = 1

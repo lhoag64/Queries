@@ -35,8 +35,6 @@ class ActivityData(MatrixData):
     self.weekDict = Db.QueryWeeks.GetData(self.regionList,self.period)
     self.dataDict = Db.QueryAct.GetData(self.regionList,self.weekDict)
 
-    #self.actDict  = Db.QueryActList.GetData()
-
     for tblItem in self.tbl:
       if (tblItem in funcTbl):
         self.tbl[tblItem] = funcTbl[tblItem](tblItem)
@@ -65,16 +63,6 @@ class ActivityData(MatrixData):
 
   #--------------------------------------------------------------------
   def _getRowDataHdrDict(self,tblItem):
-#    result = super()._initTblItem(tblItem)
-#
-#    result['DATA'] = []
-#    for item in self.actDict:
-#      text = self.actDict[item] + ' - ' + str(item)
-#      result['DATA'].append([text])
-#    result['DATA'].append(['Other (leave, overhead, etc.)'])
-#    result['ROWS'] = len(result['DATA'])
-#    result['COLS'] = 1
-
     result = super()._initTblItem(tblItem)
     result['DATA'] = self.dataDict['TBL-DATA']['RHDR']
     result['ROWS'] = self.dataDict['TBL-DATA']['ROWS']
@@ -84,12 +72,6 @@ class ActivityData(MatrixData):
 
   #--------------------------------------------------------------------
   def _getColDataHdrDict(self,tblItem):
-#    result = super()._initTblItem(tblItem)
-#
-#    result['DATA'] = [super().calcWeekNumTextList(self.weekDict['MAX'])]
-#    result['ROWS'] = 1
-#    result['COLS'] = len(result['DATA'][0])
-
     result = super()._initTblItem(tblItem)
     result['DATA'] = self.dataDict['TBL-DATA']['CHDR']
     result['ROWS'] = 1
@@ -108,12 +90,6 @@ class ActivityData(MatrixData):
 
   #--------------------------------------------------------------------
   def _getRowCompHdrDict(self,tblItem):
-#    rowCompHdrDict = super()._calcRowCompHdrDict()
-#    result = super()._initTblItem(tblItem)
-#    result['DATA'] = rowCompHdrDict['DATA']
-#    result['ROWS'] = rowCompHdrDict['ROWS']
-#    result['COLS'] = rowCompHdrDict['COLS']
-
     result = super()._initTblItem(tblItem)
     result['DATA'] = self.dataDict['ROW-COMP']['RHDR']
     result['ROWS'] = self.dataDict['ROW-COMP']['ROWS']
@@ -132,12 +108,6 @@ class ActivityData(MatrixData):
 
   #--------------------------------------------------------------------
   def _getColCompHdrDict(self,tblItem):
-#    colCompHdrDict = super()._calcColCompHdrDict()
-#    result = super()._initTblItem(tblItem)
-#    result['DATA'] = colCompHdrDict['DATA']
-#    result['ROWS'] = colCompHdrDict['ROWS']
-#    result['COLS'] = colCompHdrDict['COLS']
-
     result = super()._initTblItem(tblItem)
     result['DATA'] = self.dataDict['COL-COMP']['CHDR']
     result['ROWS'] = 1
