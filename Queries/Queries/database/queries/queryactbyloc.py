@@ -38,7 +38,7 @@ class QueryActByLoc(Query):
 
     colComp = super()._calcRowMetrics(data['DATA'])
     rowComp = super()._calcColMetrics(data['DATA'])
-    tblComp = super()._calcTblMetrics(data)
+    tblComp = super()._calcTblMetrics(data['DATA'])
 
     return {'TBL-DATA':data,'ROW-COMP':rowComp,'COL-COMP':colComp,'TBL-COMP':tblComp}
 

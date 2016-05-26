@@ -30,7 +30,7 @@ class QueryUtl(Query):
 
     colComp = super()._calcRowMetrics(data['DATA'])
     rowComp = super()._calcColMetrics(data['DATA'])
-    tblComp = super()._calcTblMetrics(data)
+    tblComp = super()._calcTblMetrics(data['DATA'])
 
     cols = data['COLS']
     utl  = [None for col in range(maxWeeks)]

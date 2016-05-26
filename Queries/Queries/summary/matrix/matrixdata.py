@@ -41,73 +41,29 @@ class MatrixData:
 
   def __init__(self,item):
 
-    self.item    = item
-    self.region  = item.region
-    self.rptType = item.rptType  # MATRIX
-    self.rptName = item.rptName  # UTL-CF
-    self.period  = item.period
+    self.item        = item
+    self.region      = item.region
+    self.rptType     = item.rptType  # MATRIX
+    self.rptName     = item.rptName  # UTL-CF
+    self.period      = item.period
+    self.funcTbl     = None
+    self.regionList  = None
+    self.namedRanges = None
 
-    name = ''
-    if (type(self.region) is list):
-      for rgn in self.region:
-        name += self.region + '_'
-    else:
-      name += self.region + '_'
-    name += self.rptName + '_'
-    name += self.period
+    #name = ''
+    #if (type(self.region) is list):
+    #  for rgn in self.region:
+    #    name += self.region + '_'
+    #else:
+    #  name += self.region + '_'
+    #name += self.rptName + '_'
+    #name += self.period
 
     self.tbl = OrderedDict()
-    self.tbl['NAME'] = name
+    self.tbl['NAME'] = item.fullName
     for item in self._tblItems:
       self.tbl[item] = OrderedDict()
 
-#  #--------------------------------------------------------------------
-#  def _calcRowCompHdrDict(self):
-#
-##    compList = self.dataDict['ROW-COMP']['RHDR']
-##    rows = len(compList)
-##    cols = 1
-##    result = OrderedDict()
-#    #result['AVG' ] = compList[0]
-#    #result['SUM' ] = compList[1]
-#    #result['CNT' ] = compList[2]
-##    result['ROWS'] = rows
-##    result['COLS'] = cols
-#    result = OrderedDict()
-#    result['DATA'] = self.dataDict['ROW-COMP']['RHDR']
-#    result['ROWS'] = self.dataDict['ROW-COMP']['ROWS']
-#    result['COLS'] = 1
-##    result['DATA'] = [[None for col in range(cols)] for row in range(rows)]
-##    for rowIdx in range(result['ROWS']):
-##      for colIdx in range(result['COLS']):
-##        result['DATA'][rowIdx][colIdx] = compList[rowIdx]
-#
-#    return result
-#
-#  #--------------------------------------------------------------------
-#  def _calcColCompHdrDict(self):
-#
-##    compList = self.dataDict['COL-COMP']['CHDR']
-##    rows = 1
-##    cols = len(compList)
-##    result = OrderedDict()
-##    #result['AVG' ] = compList[0]
-##    #result['SUM' ] = compList[1]
-##    #result['CNT' ] = compList[2]
-##    result['ROWS'] = rows
-##    result['COLS'] = cols
-##    result['DATA'] = [[None for col in range(cols)] for row in range(rows)]
-##    for rowIdx in range(result['ROWS']):
-##      for colIdx in range(result['COLS']):
-##        result['DATA'][rowIdx][colIdx] = compList[colIdx]
-#
-#    result = OrderedDict()
-#    result['DATA'] = self.dataDict['COL-COMP']['CHDR']
-#    result['ROWS'] = 1
-#    result['COLS'] = self.dataDict['COL-COMP']['COLS']
-#
-#    return result
-#
   #--------------------------------------------------------------------
   def _initTblItem(self,tblItem):
     dataDict = OrderedDict()
@@ -146,114 +102,10 @@ class MatrixData:
       else:
         regionList = [region]
 
+    self.regionList = regionList
+
     return regionList
 
-#  #--------------------------------------------------------------------
-##  def calcColSum(self,data):
-##    colSumList = []
-##    for i in range(len(data)):
-##      colCnt = 0
-##      sum = 0.0
-##      for j in range(len(data[0])):
-##        if (data[i] != None):
-##          if (type(data[i][j]) is float):
-##            sum += data[i][j]
-##            colCnt += 1
-##      colSumList.append((sum,colCnt))
-##    return colSumList
-#
-#  #--------------------------------------------------------------------
-##  def calcRowSum(self,data):
-##    rowSumList = []
-##    for j in range(len(data[0])):
-##      rowCnt = 0
-##      sum = 0.0
-##      for i in range(len(data)):
-##        if (data[i] != None):
-##          if (type(data[i][j]) is float):
-##            sum += data[i][j]
-##            rowCnt += 1
-##      rowSumList.append((sum,rowCnt))
-##    return rowSumList
-#
-#  #--------------------------------------------------------------------
-##  def calcCols(self,colSumList):
-##    count = 0
-##    for i in range(len(colSumList)):
-##      if (colSumList[i] > 0):
-##        count += 1
-##    return count
-#
-#  #--------------------------------------------------------------------
-##  def calcColAvg(self,colSumList):
-##    colAvgList = []
-##    for i in range(len(colSumList)):
-##      sum = colSumList[i][0]
-##      cnt = colSumList[i][1]
-##      if (cnt != 0):
-##        colAvgList.append(sum / float(cnt))
-##      else:
-##        colAvgList.append(0.0)
-##    return colAvgList
-#
-#  #--------------------------------------------------------------------
-##  def calcRowAvg(self,rowSumList):
-##    rowAvgList = []
-##    for i in range(len(rowSumList)):
-##      sum = rowSumList[i][0]
-##      cnt = rowSumList[i][1]
-##      if (cnt != 0):
-##        rowAvgList.append(sum / float(cnt))
-##      else:
-##        rowAvgList.append(0.0)
-##    return rowAvgList
-#
-#  #--------------------------------------------------------------------
-##  def calcData(self,data,rows,cols):
-##    table = [[0.0 for j in range(rows)] for i in range(cols)]
-##    for i in range(cols):
-##      for j in range(rows):
-##        table[i][j] = data[i][j]
-##    return table
-  
-###  #--------------------------------------------------------------------
-###  def _setTblItem(self,tblItem):
-###    self.tbl[tblItem] = self.tbl[tblItem]['GET']()
-###    logging.debug('')
-###
-#  #--------------------------------------------------------------------
-##  def _calcData(self,inpData,rows,cols):
-##    if (type(rows) is list):
-##      rowRange = rows
-##      rowCnt   = len(rowRange)
-##    else:
-##      rowRange = range(rows)
-##      rowCnt   = rows
-##    if (type(cols) is list):
-##      colRange = cols
-##      colCnt   = len(colRange)
-##    else:
-##      colRange = range(cols)
-##      colCnt   = cols
-##    outData = [[None for colIdx in range(colCnt)] for rowIdx in range(rowCnt)]
-##    for rowIdx in rowRange:
-##      for colIdx in colRange:
-##        outData[rowIdx][colIdx] = inpData[rowIdx][colIdx]
-##
-##    result = OrderedDict()
-##    result['DATA'] = outData
-##    result['ROWS'] = rowCnt
-##    result['COLS'] = colCnt
-##
-##    return outData
-
-###  #--------------------------------------------------------------------
-###  def calcWeekNumTextList(self,weekNumList):
-###    weekList = []
-###    for week in weekNumList:
-###      weekList.append('Week ' + week[1])
-###    return weekList
-  
   #--------------------------------------------------------------------
   def _calcTitleText(self,text,regionList,period):
     if (period == 'ALL'): period = 'YTD'
@@ -269,149 +121,267 @@ class MatrixData:
 
     return title
 
-#  #--------------------------------------------------------------------
-##  def calcTitle(self,text,regionList,period):
-##    self.title.AddData(self.calcTitleText(text,regionList,period))
-#
-#  #--------------------------------------------------------------------
-##  def calcColHdr(self):
-##    self.colHdr.data = []
-##    for i in range(self.data.cols):
-##      self.colHdr.data.append('Week ' + str(i+1))
-##    self.colHdr.cols = len(self.colHdr.data)
-#
-#  #--------------------------------------------------------------------
-##  def calcFaeRowHdr(self,faeList):
-##    pfmt  = {'hAlign':'L','vAlign':'C','border':{'A':'thin'},'fill':'Green 1'}
-##    cfmt  = {'hAlign':'L','vAlign':'C','border':{'A':'thin'},'fill':'Yellow 1'}
-##    hdrData = []
-##    hdrFmt  = []
-##    for fae in faeList:
-##      name = fae.fname + ' ' + fae.lname
-##      hdrData.append(name)
-##      if (fae.lbrType == 'P'):
-##        hdrFmt.append(pfmt)
-##      else:
-##        hdrFmt.append(cfmt)
-##    self.rowHdr.AddData(hdrData,fmt=hdrFmt)
-#
-#  #--------------------------------------------------------------------
-##  def calcFaeColCompHdr(self,regionList,textList=None):
-##
-##    hdrText = []
-##    if (not textList):
-##      hdrText.append('Avg')
-##    else:
-##      for item in textList:
-##        if (type(item) is dict):
-##          rgnData = None
-##          for rgn in item:
-##            if (rgn in regionList):
-##              rgnData = item[rgn]
-##              break
-##          if (not rgnData):
-##            rgnData = item['OTHER']
-##          hdrText.append(rgnData)
-##        else:
-##          hdrText.append(item)
-##    if (len(regionList) > 1):
-##      hdrText.append('Region')
-##
-##    self.colCompHdr.AddData(hdrText)
-#
-#  #--------------------------------------------------------------------
-##  def calcFaeRowCompHdr(self,regionList,textList=None):
-##
-##    self.rowCompHdr.data = []
-##    self.rowCompHdr.data.append('Week Average')
-##    self.rowCompHdr.data.append('HeadCount')
-##    if ('AM' in regionList):
-##      self.rowCompHdr.data.append('AM Working Days')
-##    if ('EMEA' in regionList):
-##      self.rowCompHdr.data.append('UK Working Days')
-##      self.rowCompHdr.data.append('FR Working Days')
-##      self.rowCompHdr.data.append('DE Working Days')
-##      self.rowCompHdr.data.append('FI Working Days')
-##      self.rowCompHdr.data.append('SE Working Days')
-##    if ('GC' in regionList):
-##      self.rowCompHdr.data.append('GC Working Days')
-##
-##    self.rowCompHdr.rows = len(self.rowCompHdr.data)
-##
-##  #--------------------------------------------------------------------
-##  def calcFaeData(self,faeList,faeCnt,dataList,weekCnt):
-##    data = [[None for i in range(faeCnt)] for j in range(weekCnt)]
-##    for i in range(weekCnt):
-##      for j in range(faeCnt):
-##        fname = faeList[j].fname
-##        lname = faeList[j].lname
-##        if (dataList[i].hours != None):
-##          tup   = dataList[i].hours[j]
-##          if (fname != tup[0] and lname != tup[1]):
-##            logging.error('Database corrupt matching FAE names')
-##            return None
-##          data[i][j] = tup[2]
-##        else:
-##          data[i][j] = None
-##
-##    self.data.data = self.calcData(data,faeCnt,weekCnt)
-##    self.data.cols = weekCnt
-##    self.data.rows = faeCnt
-##
-##  #--------------------------------------------------------------------
-##  def calcFaeColCompData(self,data,faeList,faeCnt,regionList):
-##    rowAvgList = self.calcRowAvg(self.calcRowSum(data))
-##    conHrsList = []
-##    maxHrsList = []
-##    faeRgnList = []
-##    for fae in faeList:
-##      conHrsList.append(fae.nrmHrs)
-##      maxHrsList.append(fae.maxHrs)
-##      if (len(regionList) > 1):
-##        faeRgnList.append(fae.region)
-##
-##    if (len(regionList) > 1):
-##      self.colCompData.data = [rowAvgList,conHrsList,maxHrsList,faeRgnList]
-##    else:
-##      self.colCompData.data = [rowAvgList,conHrsList,maxHrsList]
-##    self.colCompData.cols = len(self.colCompData.data)
-##    self.colCompData.rows = faeCnt
-##
-##  #--------------------------------------------------------------------
-##  def calcFaeRowCompData(self,data,faeList,faeCnt,dataList,weekCnt,regionList):
-##    colAvgList = self.calcColAvg(self.calcColSum(data))
-##
-##    compDataFmt = {'hAlign':'R','vAlign':'C','border':{'A':'thin'},'numFmt':'0'}
-##    self.rowCompData.fmt = compDataFmt
-##    self.rowCompData.data = [[] for i in range(weekCnt)]
-##    for i in range(weekCnt):
-##      if (dataList[i].headCount != None and dataList[i].workingDays != None):
-##        self.rowCompData.data[i].append(colAvgList[i])
-##        self.rowCompData.data[i].append(dataList[i].headCount)
-##        if ('AM' in regionList):
-##          self.rowCompData.data[i].append(dataList[i].workingDays.am_days)
-##        if ('EMEA' in regionList):
-##          self.rowCompData.data[i].append(dataList[i].workingDays.uk_days)
-##          self.rowCompData.data[i].append(dataList[i].workingDays.fr_days)
-##          self.rowCompData.data[i].append(dataList[i].workingDays.de_days)
-##          self.rowCompData.data[i].append(dataList[i].workingDays.fi_days)
-##          self.rowCompData.data[i].append(dataList[i].workingDays.se_days)
-##        if ('GC' in regionList):
-##          self.rowCompData.data[i].append(dataList[i].workingDays.gc_days)
-##      else:
-##        self.rowCompData.data[i].append(None)
-##        self.rowCompData.data[i].append(None)
-##        if ('AM' in regionList):
-##          self.rowCompData.data[i].append(None)
-##        if ('EMEA' in regionList):
-##          self.rowCompData.data[i].append(None)
-##          self.rowCompData.data[i].append(None)
-##          self.rowCompData.data[i].append(None)
-##          self.rowCompData.data[i].append(None)
-##          self.rowCompData.data[i].append(None)
-##        if ('GC' in regionList):
-##          self.rowCompData.data[i].append(None)
-##
-##    self.rowCompData.rows = len(self.rowCompData.data[0])
-##    self.rowCompData.cols = weekCnt
+  #--------------------------------------------------------------------
+  #--------------------------------------------------------------------
+  def _calcFuncTable(self):
+
+    self.funcTbl = OrderedDict()
+    self.funcTbl['TITLE'       ] = self._createTitleDict
+    self.funcTbl['ROW-DATA-HDR'] = self._createRowDataHdrDict
+    self.funcTbl['COL-DATA-HDR'] = self._createColDataHdrDict
+    self.funcTbl['TBL-DATA'    ] = self._createDataTblDict
+    self.funcTbl['ROW-COMP-HDR'] = self._createRowCompHdrDict
+    self.funcTbl['ROW-COMP-TBL'] = self._createRowCompTblDict
+    self.funcTbl['COL-COMP-HDR'] = self._createColCompHdrDict
+    self.funcTbl['COL-COMP-TBL'] = self._createColCompTblDict
+
+  #--------------------------------------------------------------------
+  def _calcTitleDict(self,title,tblItem):
+    result = self._initTblItem(tblItem)
+    result['DATA'] = [[self._calcTitleText(title,self.regionList,self.period)]]
+    result['ROWS'] = 1
+    result['COLS'] = 1
+
+    return result
+
+  #--------------------------------------------------------------------
+  def _calcRowDataHdrDict(self,tblItem):
+    result = self._initTblItem(tblItem)
+    result['DATA'] = self.dataDict['TBL-DATA']['RHDR']
+    result['ROWS'] = self.dataDict['TBL-DATA']['ROWS']
+    result['COLS'] = 1
+
+    return result
+
+  #--------------------------------------------------------------------
+  def _calcColDataHdrDict(self,tblItem):
+    result = self._initTblItem(tblItem)
+    result['DATA'] = self.dataDict['TBL-DATA']['CHDR']
+    result['ROWS'] = 1
+    result['COLS'] = self.dataDict['TBL-DATA']['COLS']
+
+    return result
+
+  #--------------------------------------------------------------------
+  def _calcDataTblDict(self,tblItem):
+    result = self._initTblItem(tblItem)
+    result['DATA'] = self.dataDict['TBL-DATA']['DATA']
+    result['ROWS'] = self.dataDict['TBL-DATA']['ROWS']
+    result['COLS'] = self.dataDict['TBL-DATA']['COLS']
+
+    return result
+
+  #--------------------------------------------------------------------
+  def _calcRowCompHdrDict(self,tblItem):
+    result = self._initTblItem(tblItem)
+    result['DATA'] = self.dataDict['ROW-COMP']['RHDR']
+    result['ROWS'] = self.dataDict['ROW-COMP']['ROWS']
+    result['COLS'] = 1
+
+    return result
+
+  #--------------------------------------------------------------------
+  def _calcRowCompTblDict(self,tblItem):
+    result = self._initTblItem(tblItem)
+    result['DATA'] = self.dataDict['ROW-COMP']['DATA']
+    result['ROWS'] = self.dataDict['ROW-COMP']['ROWS']
+    result['COLS'] = self.dataDict['ROW-COMP']['COLS']
+
+    return result
+
+  #--------------------------------------------------------------------
+  def _calcColCompHdrDict(self,tblItem):
+    result = self._initTblItem(tblItem)
+    result['DATA'] = self.dataDict['COL-COMP']['CHDR']
+    result['ROWS'] = 1
+    result['COLS'] = self.dataDict['COL-COMP']['COLS']
+
+    return result
+
+  #--------------------------------------------------------------------
+  def _calcColCompTblDict(self,tblItem):
+    result = self._initTblItem(tblItem)
+    result['DATA'] = self.dataDict['COL-COMP']['DATA']
+    result['ROWS'] = self.dataDict['COL-COMP']['ROWS']
+    result['COLS'] = self.dataDict['COL-COMP']['COLS']
+
+    return result
+
+  #--------------------------------------------------------------------
+  def _calcNamedRanges(self):
+
+    names = OrderedDict()
+
+    fname = self.item.fullName
+
+    #--------------------------------------------------------------------
+    name = fname + '.TITLE'
+    rows = self.tbl['TITLE']['ROWS']
+    cols = self.tbl['TITLE']['COLS']
+    srow = 0
+    scol = 0
+    data = self.tbl['TITLE']['DATA']
+    names[name] = (rows,cols,srow,scol,data)
+
+    #--------------------------------------------------------------------
+    name = fname + '.ROW_DATA_HDR'
+    rows = self.tbl['ROW-DATA-HDR']['ROWS']
+    cols = self.tbl['ROW-DATA-HDR']['COLS']
+    srow = 0
+    scol = 0
+    data = self.tbl['ROW-DATA-HDR']['DATA']
+    names[name] = (rows,cols,srow,scol,data)
+ 
+    #--------------------------------------------------------------------
+    name = fname + '.COL_DATA_HDR'
+    rows = self.tbl['COL-DATA-HDR']['ROWS']
+    cols = self.tbl['COL-DATA-HDR']['COLS']
+    srow = 0
+    scol = 0
+    data = self.tbl['COL-DATA-HDR']['DATA']
+    names[name] = (rows,cols,srow,scol,data)
+
+    #--------------------------------------------------------------------
+    name = fname + '.TBL_DATA'
+    rows = self.tbl['TBL-DATA']['ROWS']
+    cols = self.tbl['TBL-DATA']['COLS']
+    srow = 0
+    scol = 0
+    data = self.tbl['TBL-DATA']['DATA']
+    names[name] = (rows,cols,srow,scol,data)
+
+    #--------------------------------------------------------------------
+    name = fname + '.ROW_COMP_HDR'
+    rows = self.tbl['ROW-COMP-HDR']['ROWS']
+    cols = self.tbl['ROW-COMP-HDR']['COLS']
+    srow = 0
+    scol = 0
+    data = self.tbl['ROW-COMP-HDR']['DATA']
+    names[name] = (rows,cols,srow,scol,data)
+
+    name = fname + '.ROW_COMP_HDR_AVG'
+    rows = 1
+    cols = 1
+    srow = 0
+    scol = 0
+    data = self.tbl['ROW-COMP-HDR']['DATA']
+    names[name] = (rows,cols,srow,scol,data)
+
+    name = fname + '.ROW_COMP_HDR_SUM'
+    rows = 1
+    cols = 1
+    srow = 1
+    scol = 0
+    data = self.tbl['ROW-COMP-HDR']['DATA']
+    names[name] = (rows,cols,srow,scol,data)
+
+    name = fname + '.ROW_COMP_HDR_CNT'
+    rows = 1
+    cols = 1
+    srow = 2
+    scol = 0
+    data = self.tbl['ROW-COMP-HDR']['DATA']
+    names[name] = (rows,cols,srow,scol,data)
+
+    #--------------------------------------------------------------------
+    name = fname + '.ROW_COMP_TBL'
+    rows = self.tbl['ROW-COMP-TBL']['ROWS']
+    cols = self.tbl['ROW-COMP-TBL']['COLS']
+    srow = 0
+    scol = 0
+    data = self.tbl['ROW-COMP-TBL']['DATA']
+    names[name] = (rows,cols,srow,scol,data)
+
+    name = fname + '.ROW_COMP_TBL_AVG'
+    rows = 1
+    cols = self.tbl['ROW-COMP-TBL']['COLS']
+    srow = 0
+    scol = 0
+    data = self.tbl['ROW-COMP-TBL']['DATA']
+    names[name] = (rows,cols,srow,scol,data)
+
+    name = fname + '.ROW_COMP_TBL_SUM'
+    rows = 1
+    cols = self.tbl['ROW-COMP-TBL']['COLS']
+    srow = 1
+    scol = 0
+    data = self.tbl['ROW-COMP-TBL']['DATA']
+    names[name] = (rows,cols,srow,scol,data)
+
+    name = fname + '.ROW_COMP_TBL_CNT'
+    rows = 1
+    cols = self.tbl['ROW-COMP-TBL']['COLS']
+    srow = 2
+    scol = 0
+    data = self.tbl['ROW-COMP-TBL']['DATA']
+    names[name] = (rows,cols,srow,scol,data)
+
+    #--------------------------------------------------------------------
+    name = fname + '.COL_COMP_HDR'
+    rows = self.tbl['COL-COMP-HDR']['ROWS']
+    cols = self.tbl['COL-COMP-HDR']['COLS']
+    srow = 0
+    scol = 0
+    data = self.tbl['COL-COMP-HDR']['DATA']
+    names[name] = (rows,cols,srow,scol,data)
+
+    name = fname + '.COL_COMP_HDR_AVG'
+    rows = 1
+    cols = 1
+    srow = 0
+    scol = 0
+    data = self.tbl['COL-COMP-HDR']['DATA'][0][0]
+    names[name] = (rows,cols,srow,scol,data)
+
+    name = fname + '.COL_COMP_HDR_SUM'
+    rows = 1
+    cols = 1
+    srow = 0
+    scol = 1
+    data = self.tbl['COL-COMP-HDR']['DATA'][0][1]
+    names[name] = (rows,cols,srow,scol,data)
+
+    name = fname + '.COL_COMP_HDR_CNT'
+    rows = 1
+    cols = 1
+    srow = 0
+    scol = 2
+    data = self.tbl['COL-COMP-HDR']['DATA'][0][2]
+    names[name] = (rows,cols,srow,scol,data)
+
+    #--------------------------------------------------------------------
+    name = fname + '.COL_COMP_TBL'
+    rows = self.tbl['COL-COMP-TBL']['ROWS']
+    cols = self.tbl['COL-COMP-TBL']['COLS']
+    srow = 0
+    scol = 0
+    data = self.tbl['COL-COMP-TBL']['DATA']
+    names[name] = (rows,cols,srow,scol,data)
+
+    name = fname + '.COL_COMP_TBL_AVG'
+    rows = self.tbl['COL-COMP-TBL']['ROWS']
+    cols = 1
+    srow = 0
+    scol = 0
+    data = self.tbl['COL-COMP-TBL']['DATA'][0]
+    names[name] = (rows,cols,srow,scol,data)
+
+    name = fname + '.COL_COMP_TBL_SUM'
+    rows = self.tbl['COL-COMP-TBL']['ROWS']
+    cols = 1
+    srow = 0
+    scol = 1
+    data = self.tbl['COL-COMP-TBL']['DATA'][0]
+    names[name] = (rows,cols,srow,scol,data)
+
+    name = fname + '.COL_COMP_TBL_CNT'
+    rows = self.tbl['COL-COMP-TBL']['ROWS']
+    cols = 1
+    srow = 0
+    scol = 2
+    data = self.tbl['COL-COMP-TBL']['DATA'][0]
+    names[name] = (rows,cols,srow,scol,data)
+
+
+
 

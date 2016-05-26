@@ -19,7 +19,7 @@ class QueryLts(Query):
 
     colComp = super()._calcRowMetrics(data['DATA'])
     rowComp = super()._calcColMetrics(data['DATA'])
-    tblComp = super()._calcTblMetrics(data)
+    tblComp = super()._calcTblMetrics(data['DATA'])
 
     return {'TBL-DATA':data,'ROW-COMP':rowComp,'COL-COMP':colComp,'TBL-COMP':tblComp}
 
@@ -100,27 +100,5 @@ class QueryLts(Query):
     result['Other (Not Specified)'] = idx
 
     return result
-
-#----------------------------------------------------------------------
-#class QueryLtsList(Query):
-#
-#  #--------------------------------------------------------------------
-#  def __init__(self,db):
-#    super().__init__(db)
-#
-#  #--------------------------------------------------------------------
-#  def GetData(self,**kwargs):
-#
-#    sqlopt  = []
-#    sqltxt  = 'SELECT key'
-#    sqltxt += '  FROM ts_lts'
-#
-#    dbResult = super()._runQuery(sqlopt,sqltxt)
-#
-#    result = OrderedDict()
-#    for item in dbResult:
-#      result[item[0]] = item[0]
-#
-#    return result
 
 

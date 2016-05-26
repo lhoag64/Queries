@@ -67,12 +67,8 @@ class Query:
 
     cols = len(self.compList)
     result = {}
-    result['TEXT' ] = self.compList
     result['ROWS'] = rows
     result['COLS'] = cols
-    #result['SUM' ] = sumList
-    #result['AVG' ] = avgList
-    #result['CNT' ] = cntList
     result['DATA'] = [[None for col in range(cols)] for row in range(rows)]
     result['RHDR'] = None
     result['CHDR'] = [[None for col in range(cols)] for row in range(   1)]
@@ -112,12 +108,8 @@ class Query:
 
     rows = len(self.compList)
     result = {}
-    #result['RHDR'] = self.compList
     result['ROWS'] = rows
     result['COLS'] = cols
-    #result['SUM' ] = sumList
-    #result['AVG' ] = avgList
-    #result['CNT' ] = cntList
     result['DATA'] = [[None for col in range(cols)] for row in range(rows)]
     result['RHDR'] = [[None for col in range(   1)] for row in range(rows)]
     result['CHDR'] = None
@@ -135,48 +127,45 @@ class Query:
     rows = len(data)
     cols = len(data[0])
 
-    sumList = [None for col in range(cols)]
-    avgList = [None for col in range(cols)]
-    cntList = [None for col in range(cols)]
-    for colIdx in range(cols):
-      sum     = 0.0
-      avg     = 0.0
-      cnt     =   0
-      noneCnt =   0
-      for rowIdx in range(rows):
-        if (data[rowIdx][colIdx] != None):
-          sum += float(data[rowIdx][colIdx])
-          cnt += 1
-        else:
-          noneCnt += 1
-      if (noneCnt != rows):
-        if (cnt > 0):
-          avgList[colIdx] = sum / float(cnt)
-        sumList[colIdx] = sum
-        cntList[colIdx] = cnt
+#    sumList = [None for col in range(cols)]
+#    avgList = [None for col in range(cols)]
+#    cntList = [None for col in range(cols)]
+#    for colIdx in range(cols):
+#      sum     = 0.0
+#      avg     = 0.0
+#      cnt     =   0
+#      noneCnt =   0
+#      for rowIdx in range(rows):
+#        if (data[rowIdx][colIdx] != None):
+#          sum += float(data[rowIdx][colIdx])
+#          cnt += 1
+#        else:
+#          noneCnt += 1
+#      if (noneCnt != rows):
+#        if (cnt > 0):
+#          avgList[colIdx] = sum / float(cnt)
+#        sumList[colIdx] = sum
+#        cntList[colIdx] = cnt
+#
+#    rows = len(self.compList)
+#    result = {}
+#    result['ROWS'] = rows
+#    result['COLS'] = cols
+#    result['DATA'] = [[None for col in range(cols)] for row in range(rows)]
+#    result['RHDR'] = None
+#    result['CHDR'] = [[None for col in range(cols)] for row in range(   1)]
+#    for rowIdx in range(rows):
+#      for colIdx in range(cols):
+#        result['DATA'][0][colIdx] = avgList[colIdx]
+#        result['DATA'][1][colIdx] = sumList[colIdx]
+#        result['DATA'][2][colIdx] = cntList[colIdx]
+#        result['CHDR'][0][colIdx] = self.compList[colIdx]
 
-    rows = len(self.compList)
-    result = {}
-    #result['CHDR'] = self.compList
-    result['ROWS'] = rows
-    result['COLS'] = cols
-    #result['SUM' ] = sumList
-    #result['AVG' ] = avgList
-    #result['CNT' ] = cntList
-    result['DATA'] = [[None for col in range(cols)] for row in range(rows)]
-    result['RHDR'] = None
-    result['CHDR'] = [[None for col in range(cols)] for row in range(   1)]
-    for rowIdx in range(rows):
-      for colIdx in range(cols):
-        result['DATA'][0][colIdx] = avgList[colIdx]
-        result['DATA'][1][colIdx] = sumList[colIdx]
-        result['DATA'][2][colIdx] = cntList[colIdx]
-        result['CHDR'][0][colIdx] = self.compList[colIdx]
-
+    result = None
     return result
 
-  #--------------------------------------------------------------------
-  def _calcTblMetrics(self,data):
+#  #--------------------------------------------------------------------
+#  def _calcTblMetrics(self,data):
 #    rows = len(data)
 #    cols = len(data[0])
 #
@@ -203,7 +192,7 @@ class Query:
 #    result['AVG' ] = avgList
 #    result['CNT' ] = cntList
 #    result['DATA'] = [sumList,avgList,cntList] 
-
-    return None
+#
+#    return None
 
 

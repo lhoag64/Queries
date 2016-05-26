@@ -19,7 +19,7 @@ class QueryLType(Query):
 
     colComp = super()._calcRowMetrics(data['DATA'])
     rowComp = super()._calcColMetrics(data['DATA'])
-    tblComp = super()._calcTblMetrics(data)
+    tblComp = super()._calcTblMetrics(data['DATA'])
 
     return {'TBL-DATA':data,'ROW-COMP':rowComp,'COL-COMP':colComp,'TBL-COMP':tblComp}
 
@@ -39,10 +39,11 @@ class QueryLType(Query):
 
       dbResult = self._query(wcDate,weDate,regionList)
 
-      other = 0.0
+      #other = 0.0
       for item in dbResult:
         if (item[0] not in ltDict):
-          other += float(item[1])
+          #other += float(item[1])
+          pass
         else:
           try:
             idx = ltDict[item[0]][0]
@@ -51,7 +52,7 @@ class QueryLType(Query):
           hrs = float(item[1])
           data[idx][colIdx] = hrs
 
-      data[ltCnt-1][colIdx] = other
+      #data[ltCnt-1][colIdx] = other
 
       for rowIdx in range(ltCnt):
         if (data[rowIdx][colIdx] == None):
@@ -92,7 +93,6 @@ class QueryLType(Query):
     result = OrderedDict()
     result['P'] = (0,'Internal Hours')
     result['C'] = (1,'Contracted Hours')
-
 
     return result
 

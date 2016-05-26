@@ -29,7 +29,7 @@ class QueryFae(Query):
 
     colComp = super()._calcRowMetrics(data['DATA'])
     rowComp = super()._calcColMetrics(data['DATA'])
-    tblComp = super()._calcTblMetrics(data)
+    tblComp = super()._calcTblMetrics(data['DATA'])
 
     for item in hcResults['DATA']:
       rowComp['DATA'].append(item)
@@ -79,9 +79,6 @@ class QueryFae(Query):
         fae = faeList[rowIdx]
         if (fae in dbDict):
           data[rowIdx][colIdx] = dbDict[fae]
-        else:
-          #logging.warn('FAE missing from database: ' + fae[0] + ' ' + fae[1])
-          pass
         if (data[rowIdx][colIdx] == None):
           sDate = faeDict[fae][0]
           eDate = faeDict[fae][1]

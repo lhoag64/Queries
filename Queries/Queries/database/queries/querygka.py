@@ -20,7 +20,7 @@ class QueryGka(Query):
 
     colComp = super()._calcRowMetrics(data['DATA'])
     rowComp = super()._calcColMetrics(data['DATA'])
-    tblComp = super()._calcTblMetrics(data)
+    tblComp = super()._calcTblMetrics(data['DATA'])
 
     return {'TBL-DATA':data,'ROW-COMP':rowComp,'COL-COMP':colComp,'TBL-COMP':tblComp}
 
@@ -105,7 +105,6 @@ class QueryGka(Query):
     sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionList,'ts.region')
     sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?)'
     sqltxt += '    and (wbs.gl_tm_key_acct = 0)'
-    #sqltxt += '  GROUP BY wbs.code'
 
     return super()._runQuery(sqlopt,sqltxt)
 
