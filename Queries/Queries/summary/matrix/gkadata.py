@@ -7,27 +7,17 @@ from   summary.matrix.matrixdata    import MatrixData
 #----------------------------------------------------------------------
 class GkaData(MatrixData):
 
-  _titleDict =                              \
-    {                                       \
+  _titleDict =                                 \
+    {                                          \
       'GKA':('Global Key Accounts')   \
     }
 
-#----------------------------------------------------------------------
+  #--------------------------------------------------------------------
   def __init__(self,item):
 
     super().__init__(item)
-
-    funcTbl = OrderedDict()
-    funcTbl['TITLE'       ] = self._getTitleDict
-    funcTbl['ROW-DATA-HDR'] = self._getRowDataHdrDict
-    funcTbl['COL-DATA-HDR'] = self._getColDataHdrDict
-    funcTbl['TBL-DATA'    ] = self._getDataTblDict
-    funcTbl['ROW-COMP-HDR'] = self._getRowCompHdrDict
-    funcTbl['ROW-COMP-TBL'] = self._getRowCompTblDict
-    funcTbl['COL-COMP-HDR'] = self._getColCompHdrDict
-    funcTbl['COL-COMP-TBL'] = self._getColCompTblDict
-
-    self.regionList = super().calcRegionList(self.region)
+    super()._calcFuncTable()
+    super().calcRegionList(self.region)
 
     #------------------------------------------------------------------
     # Fetch data from database
@@ -35,10 +25,9 @@ class GkaData(MatrixData):
     self.weekDict = Db.QueryWeeks.GetData(self.regionList,self.period)
     self.dataDict = Db.QueryGka.GetData(self.regionList,self.weekDict)
 
-
     for tblItem in self.tbl:
-      if (tblItem in funcTbl):
-        self.tbl[tblItem] = funcTbl[tblItem](tblItem)
+      if (tblItem in self.funcTbl):
+        self.tbl[tblItem] = self.funcTbl[tblItem](tblItem)
 
     #------------------------------------------------------------------
     # Calculate overall size
@@ -48,82 +37,43 @@ class GkaData(MatrixData):
     #------------------------------------------------------------------
     # Add named ranges
     #------------------------------------------------------------------
-    self.rangeList = []
+    self._createNamedRanges()
 
   #--------------------------------------------------------------------
-  def _getTitleDict(self,tblItem):
-    result = super()._initTblItem(tblItem)
-    
+  def _createTitleDict(self,tblItem):
     title = self._titleDict[self.rptName]
-
-    result['DATA'] = [[super()._calcTitleText(title,self.regionList,self.period)]]
-    result['ROWS'] = 1
-    result['COLS'] = 1
-
-    return result
+    return super()._calcTitleDict(title,tblItem)
 
   #--------------------------------------------------------------------
-  def _getRowDataHdrDict(self,tblItem):
-    result = super()._initTblItem(tblItem)
-    result['DATA'] = self.dataDict['TBL-DATA']['RHDR']
-    result['ROWS'] = self.dataDict['TBL-DATA']['ROWS']
-    result['COLS'] = 1
-
-    return result
-
+  def _createRowDataHdrDict(self,tblItem):
+    return super()._calcRowDataHdrDict(tblItem)
 
   #--------------------------------------------------------------------
-  def _getColDataHdrDict(self,tblItem):
-    result = super()._initTblItem(tblItem)
-    result['DATA'] = self.dataDict['TBL-DATA']['CHDR']
-    result['ROWS'] = 1
-    result['COLS'] = self.dataDict['TBL-DATA']['COLS']
-
-    return result
-
+  def _createColDataHdrDict(self,tblItem):
+    return super()._calcColDataHdrDict(tblItem)
 
   #--------------------------------------------------------------------
-  def _getDataTblDict(self,tblItem):
-    result = super()._initTblItem(tblItem)
-    result['DATA'] = self.dataDict['TBL-DATA']['DATA']
-    result['ROWS'] = self.dataDict['TBL-DATA']['ROWS']
-    result['COLS'] = self.dataDict['TBL-DATA']['COLS']
-
-    return result
+  def _createDataTblDict(self,tblItem):
+    return super()._calcDataTblDict(tblItem)
 
   #--------------------------------------------------------------------
-  def _getRowCompHdrDict(self,tblItem):
-    result = super()._initTblItem(tblItem)
-    result['DATA'] = self.dataDict['ROW-COMP']['RHDR']
-    result['ROWS'] = self.dataDict['ROW-COMP']['ROWS']
-    result['COLS'] = 1
-
-    return result
+  def _createRowCompHdrDict(self,tblItem):
+    return super()._calcRowCompHdrDict(tblItem)
 
   #--------------------------------------------------------------------
-  def _getRowCompTblDict(self,tblItem):
-    result = super()._initTblItem(tblItem)
-    result['DATA'] = self.dataDict['ROW-COMP']['DATA']
-    result['ROWS'] = self.dataDict['ROW-COMP']['ROWS']
-    result['COLS'] = self.dataDict['ROW-COMP']['COLS']
-
-    return result
+  def _createRowCompTblDict(self,tblItem):
+    return super()._calcRowCompTblDict(tblItem)
 
   #--------------------------------------------------------------------
-  def _getColCompHdrDict(self,tblItem):
-    result = super()._initTblItem(tblItem)
-    result['DATA'] = self.dataDict['COL-COMP']['CHDR']
-    result['ROWS'] = 1
-    result['COLS'] = self.dataDict['COL-COMP']['COLS']
-
-    return result
+  def _createColCompHdrDict(self,tblItem):
+    return super()._calcColCompHdrDict(tblItem)
 
   #--------------------------------------------------------------------
-  def _getColCompTblDict(self,tblItem):
-    result = super()._initTblItem(tblItem)
-    result['DATA'] = self.dataDict['COL-COMP']['DATA']
-    result['ROWS'] = self.dataDict['COL-COMP']['ROWS']
-    result['COLS'] = self.dataDict['COL-COMP']['COLS']
+  def _createColCompTblDict(self,tblItem):
+    return super()._calcColCompTblDict(tblItem)
 
-    return result
+  #--------------------------------------------------------------------
+  def _createNamedRanges(self):
+    super()._calcNamedRanges()
+
 

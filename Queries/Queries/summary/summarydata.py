@@ -80,5 +80,3 @@ class SummaryData:
     for wsName in self.wsDict:
       logging.debug(wsName)
       self.wb.AddSheet(wsName,self.wsDict[wsName],self.wsDict)
-
-    logging.debug('')

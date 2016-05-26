@@ -130,15 +130,15 @@ class QueryActByLoc(Query):
       dbResult = self._queryRgnLoc(region)
 
       for item in dbResult:
-        text  = '|'
-        text += 'Code: '  + str(item[0]).rjust(3)  + '|'
-        text += 'Order: ' + str(item[1]).rjust(3)  + '|'
-        text += 'Group: ' + str(item[2]).rjust(3)  + '|'
-        text += 'Desc1: ' + str(item[3]).ljust(25) + '|'
-        text += 'Desc2: ' + str(item[4]).ljust(15) + '|'
-        text += 'Desc3: ' + str(item[5]).ljust(12) + '|'
-        text += 'Key  : ' + str(item[6]).rjust(1)  + '|'
-        logging.debug(text)
+        #text  = '|'
+        #text += 'Code: '  + str(item[0]).rjust(3)  + '|'
+        #text += 'Order: ' + str(item[1]).rjust(3)  + '|'
+        #text += 'Group: ' + str(item[2]).rjust(3)  + '|'
+        #text += 'Desc1: ' + str(item[3]).ljust(25) + '|'
+        #text += 'Desc2: ' + str(item[4]).ljust(15) + '|'
+        #text += 'Desc3: ' + str(item[5]).ljust(12) + '|'
+        #text += 'Key  : ' + str(item[6]).rjust(1)  + '|'
+        #logging.debug(text)
         if (item[6] == 1):
           result['KEY'][item[0]] = item[5]
         else:

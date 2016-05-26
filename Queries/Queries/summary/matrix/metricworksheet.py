@@ -55,8 +55,6 @@ class MetricWorkSheet:
       self.prevHgt = item.hgt
       self.prevWid = item.wid
 
-    logging.debug('')
-
 #----------------------------------------------------------------------
   def calcStartLoc(self,item):
     row = item.loc[0]
