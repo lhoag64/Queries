@@ -1,7 +1,7 @@
 import logging
 from   collections                  import OrderedDict
 from   database.database            import Database as Db
-from   summary.summaryitem          import SummaryItem
+#from   summary.summaryitem          import SummaryItem
 from   summary.matrix.matrixdata    import MatrixData
 
 #----------------------------------------------------------------------

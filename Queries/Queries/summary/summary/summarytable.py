@@ -1,5 +1,5 @@
 import logging
-from   summary.summaryitem               import SummaryItem
+#from   summary.summaryitem               import SummaryItem
 from   xlinterface.xlworkbook            import XlWorkBook
 from   xlinterface.xlworksheet           import XlWorkSheet
 from   summary.matrix.matrixdata         import MatrixData 

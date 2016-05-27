@@ -1,7 +1,7 @@
 import logging
 
 #----------------------------------------------------------------------
-class SummaryItem:
+class WsItem:
   def __init__(self,info):
     self.loc      = info[0]   # (0,0)
     self.wsName   = info[1]   # FAE YTD

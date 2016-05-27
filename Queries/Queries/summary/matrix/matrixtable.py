@@ -147,49 +147,18 @@ class MatrixTable:
       sCol = item.sCol + range.sCol
       eRow = sRow + range.rows - 1
       eCol = sCol + range.cols - 1
-      text  = '|'
-      text += 'sRow ' + str(sRow).rjust(3) + '|'
-      text += 'sCol ' + str(sCol).rjust(3) + '|'
-      text += 'eRow ' + str(eRow).rjust(3) + '|'
-      text += 'eCol ' + str(eCol).rjust(3) + '|'
-      text += name
-      logging.debug(text)
+      #text  = '|'
+      #text += 'sRow ' + str(sRow).rjust(3) + '|'
+      #text += 'sCol ' + str(sCol).rjust(3) + '|'
+      #text += 'eRow ' + str(eRow).rjust(3) + '|'
+      #text += 'eCol ' + str(eCol).rjust(3) + '|'
+      #text += name
+      #logging.debug(text)
       if (((eRow - sRow) < 0) or ((eCol - sCol) < 0)):
-        logging.debug('')
+        raise
       nRange = ws.AddNamedRange(name,sRow,sCol,eRow,eCol)
       self.names[name] = (nRange,range)
     else:
       logging.error('Duplicate named range: ' + name)
-
-
-    # Create named ranges
-#    pyws = ws.ws
-#    pywb = ws.wb
-#    name = self.name
-#
-#    self.rowCompRanges = []
-#    sRow = self.rowCompTbl.sRow
-#    sCol = self.rowCompTbl.sCol
-#    eRow = self.rowCompTbl.eRow
-#    eCol = self.rowCompTbl.eCol
-##    for row in range(self.rowCompHdr.rows):
-##      name = self.name + '_' + self.colCompHdr.data[row].upper()
-##      self.rowCompRanges.append(ws.AddNamedRange(name,sRow,sCol,eRow,eCol))
-##      sRow += 1
-##      eRow += 1
-#
-#    self.colCompRanges = []
-#    sRow = self.colCompTbl.sRow
-#    sCol = self.colCompTbl.sCol
-#    eRow = self.colCompTbl.eRow
-#    eCol = self.colCompTbl.eCol
-##    for col in range(self.colCompHdr.cols):
-##      name = self.name + '_' + self.colCompHdr.data[col].upper()
-##      self.colCompRanges.append(ws.AddNamedRange(name,sRow,sCol,eRow,eCol))
-##      sRow += 1
-##      eRow += 1
-#
-##    for item in self.matrixData.rangeList:
-##      logging.debug('')
 
 

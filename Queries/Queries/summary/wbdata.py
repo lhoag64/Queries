@@ -1,23 +1,14 @@
 import logging
 from   collections                       import OrderedDict
-from   summary.summaryitem               import SummaryItem
+from   summary.wsitem                    import WsItem
 from   summary.matrix.actvitivydata      import ActivityData
-#from   summary.matrix.actvitivyamdmrdata import ActivityAmDmrData
-#from   summary.matrix.actvitivyammidata  import ActivityAmMiData
 from   summary.matrix.ltsdata            import LtsData
 from   summary.matrix.ltypedata          import LTypeData
 from   summary.matrix.utldata            import UtlData
 from   summary.matrix.gkadata            import GkaData
-#from   summary.matrix.amrkadata          import AmRkaData
-#from   summary.matrix.amtmcardata        import AmTmCarData
-#from   summary.matrix.amtmsmcdata        import AmTmSmcData
-#from   summary.matrix.ammirkadata        import AmMiRkaData
 from   summary.matrix.actbylocdata       import ActByLocData
-#from   summary.matrix.actbyprdteamdata   import ActByPrdTeamData
 from   summary.matrix.faedata            import FaeData
-#from   summary.matrix.faeawhdata         import FaeAwhData
-#from   summary.matrix.faewhdata          import FaeWhData
-#from   summary.matrix.faeotdata          import FaeOtData
+from   summary.summary.summarydata       import SummaryData
 
 #----------------------------------------------------------------------
 FuncDict =                               \
@@ -34,48 +25,72 @@ FuncDict =                               \
     'MATRIX_UTL_PS'    : UtlData,        \
     'MATRIX_UTL_LS'    : UtlData,        \
     'MATRIX_UTL_OT'    : UtlData,        \
-    'MATRIX_ACT_BY_LOC': ActByLocData    \
+    'MATRIX_ACT_BY_LOC': ActByLocData,   \
+    'SUMMARY'          : SummaryData     \
   }
 
 #----------------------------------------------------------------------
-class SummaryData:
+class WbData:
   def __init__(self,workBook):
     self.wb       = workBook
     self.itemDict = OrderedDict()
+    self.itemDict['ALL'    ] = OrderedDict()
+    self.itemDict['MATRIX' ] = OrderedDict()
+    self.itemDict['SUMMARY'] = OrderedDict()
+    self.itemDict['CHART'  ] = OrderedDict()
     self.wsDict   = OrderedDict()
 
   #--------------------------------------------------------------------
   def AddList(self,infoList):
     for info in infoList:
-      item = SummaryItem(info)
-      if (item.fullName not in self.itemDict):
-        self.itemDict[item.fullName] = item
+      item = WsItem(info)
+
+      if (item.rptType == 'MATRIX'):
+        if (item.fullName not in self.itemDict['MATRIX']):
+          self.itemDict['MATRIX'][item.fullName] = item
+        else:
+          logging.error('Duplicate matix item in ItemList: ' + item.fullName)
+
+      if (item.rptType == 'SUMMARY'):
+        if (item.fullName not in self.itemDict['SUMMARY']):
+          self.itemDict['SUMMARY'][item.fullName] = item
+        else:
+          logging.error('Duplicate summary item in ItemList: ' + item.fullName)
+
+      if (item.rptType == 'CHART'):
+        if (item.fullName not in self.itemDict['CHART']):
+          self.itemDict['CHART'][item.fullName] = item
+        else:
+          logging.error('Duplicate chart item in ItemList: ' + item.fullName)
+
+      if (item.fullName not in self.itemDict['ALL']):
+        self.itemDict['ALL'][item.fullName] = item
       else:
         logging.error('Duplicate item in ItemList: ' + item.fullName)
 
   #--------------------------------------------------------------------
-  def _generateData(self):
-    for name in self.itemDict:
-      item = self.itemDict[name]
-      if (item.rptType == 'MATRIX'):
-        item.AddData(FuncDict[item.rptFunc](item))
+  def _generateMatixData(self):
+    for name in self.itemDict['MATRIX']:
+      item = self.itemDict['MATRIX'][name]
+      item.AddData(FuncDict[item.rptFunc](item))
 
   #--------------------------------------------------------------------
   def _generateWsDict(self):
-    for name in self.itemDict:
-      item = self.itemDict[name]
+    for name in self.itemDict['ALL']:
+      item = self.itemDict['ALL'][name]
       if (item.wsName not in self.wsDict):
         self.wsDict[item.wsName] = OrderedDict()
       if (item.fullName not in self.wsDict[item.wsName]):
         self.wsDict[item.wsName][item.fullName] = item
       else:
-        logging.error('Duplicate worksheet ItemList: ' + item.fullName)
+        logging.error('Duplicate item in worksheet list: ' + item.fullName)
      
   #--------------------------------------------------------------------
   def Process(self):
 
-    self._generateData()
+    self._generateMatixData()
     self._generateWsDict()
+#    self._generateSummaryData()
 
     for wsName in self.wsDict:
       logging.debug(wsName)

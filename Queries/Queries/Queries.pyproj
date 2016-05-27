@@ -289,13 +289,16 @@
     <Compile Include="summary\matrix\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="summary\summarydata.py">
+    <Compile Include="summary\summary\summarydata.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="summary\summaryitem.py">
+    <Compile Include="summary\wbdata.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="summary\summaryworkbook.py">
+    <Compile Include="summary\wsitem.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="summary\wbinfo.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="summary\summary\faesummarysheet.py" />

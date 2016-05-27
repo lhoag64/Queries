@@ -281,7 +281,7 @@ class XlWorkSheet:
   #-------------------------------------------------------------------
   def AddNamedRange(self,name,sRow,sCol,eRow,eCol):
 
-    logging.debug(name)
+    #logging.debug(name)
 
     name = self.cleanRangeName(name)
 

@@ -1,6 +1,6 @@
 import logging
 from   collections         import OrderedDict
-from   summary.summaryitem import SummaryItem
+#from   summary.summaryitem import SummaryItem
 
 #----------------------------------------------------------------------
 class MatrixData:

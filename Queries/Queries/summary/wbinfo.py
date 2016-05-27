@@ -9,7 +9,7 @@ from   summary.summary.faesummarysheet    import FaeSummarySheet
 from   summary.charts.faechartsheet       import FaeChartSheet
 
 #----------------------------------------------------------------------
-class SummaryWorkBook:
+class WbInfo:
   def __init__(self):
     self.wsDict = OrderedDict()
     self.wb = XlWorkBook()
