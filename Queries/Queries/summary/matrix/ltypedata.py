@@ -25,7 +25,7 @@ class LTypeData(MatrixData):
     self.weekDict = Db.QueryWeeks.GetData(self.regionList,self.period)
     self.dataDict = Db.QueryLType.GetData(self.regionList,self.weekDict)
 
-    self.faeDict = Db.QueryFae.GetFaeData(self.regionList)
+    #self.faeDict = Db.QueryFae.GetFaeData(self.regionList)
 
     for tblItem in self.tbl:
       if (tblItem in self.funcTbl):
@@ -48,7 +48,7 @@ class LTypeData(MatrixData):
 
   #--------------------------------------------------------------------
   def _createRowDataHdrDict(self,tblItem):
-    result =  super()._calcRowDataHdrDict(tblItem)
+    result = super()._calcRowDataHdrDict(tblItem)
 
     rows = result['ROWS']
     cols = result['COLS']
@@ -61,16 +61,12 @@ class LTypeData(MatrixData):
     for rowIdx in range(rows):
       for colIdx in range(cols):
         text = result['DATA'][rowIdx][colIdx]
-        if (text in self.faeDict['DATA']):
-          tup = self.faeDict['DATA'][text]
-          if (tup[2] == 'P'):
-            fmt[rowIdx][colIdx] = gfmt
-          elif (tup[2] == 'C'):
-            fmt[rowIdx][colIdx] = yfmt
-          else:
-            logging.error('Invalid labor type: ' + tup[2])
+        if (text == 'Internal Hours'):
+          fmt[rowIdx][colIdx] = gfmt
+        elif (text == 'Contracted Hours'):
+          fmt[rowIdx][colIdx] = yfmt
         else:
-          logging.error('FAE not found in FAE list: ' + text)
+          logging.error('Invalid labor type: ' + tup[2])
 
     result['FMT'] = fmt
 

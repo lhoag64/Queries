@@ -12,16 +12,20 @@ from openpyxl.formatting.rule     import ColorScaleRule,CellIsRule,FormulaRule,I
 #----------------------------------------------------------------------
 class TableItem:
   def __init__(self,sRow,sCol,data):
-    self.sRow = sRow
-    self.sCol = sCol
-    self.eRow = sRow + data['ROWS'] - 1
-    self.eCol = sCol + data['COLS'] - 1
-    self.rows = data['ROWS']
-    self.cols = data['COLS']
-    self.hgt  = data['HGT']
-    self.wid  = data['WID']
-    self.data = data['DATA']
-    self.fmt  = data['FMT']
+    self.sRow  = sRow
+    self.sCol  = sCol
+    self.eRow  = sRow + data['ROWS'] - 1
+    self.eCol  = sCol + data['COLS'] - 1
+    self.rows  = data['ROWS']
+    self.cols  = data['COLS']
+    self.hgt   = data['HGT']
+    self.wid   = data['WID']
+    self.data  = data['DATA']
+    self.fmt   = data['FMT']
+    if ('NAMED-RANGES' in data):
+      self.names = data['NAMED-RANGES']
+    else:
+      self.names = None
 
 #----------------------------------------------------------------------
 class MatrixTable:
@@ -32,10 +36,10 @@ class MatrixTable:
     dCols = data['TBL-DATA']['COLS']
 
     items = OrderedDict()
-    items['TITLE'       ] = TableItem(sRow+0        ,sCol+0        ,data['TITLE'])
+    items['TITLE'       ] = TableItem(sRow+0        ,sCol+0        ,data['TITLE'       ])
     items['ROW-DATA-HDR'] = TableItem(sRow+1        ,sCol+0        ,data['ROW-DATA-HDR'])
     items['COL-DATA-HDR'] = TableItem(sRow+0        ,sCol+1        ,data['COL-DATA-HDR'])
-    items['TBL-DATA'    ] = TableItem(sRow+1        ,sCol+1        ,data['TBL-DATA'])
+    items['TBL-DATA'    ] = TableItem(sRow+1        ,sCol+1        ,data['TBL-DATA'    ])
     items['ROW-COMP-HDR'] = TableItem(sRow+1+dRows+0,sCol+0        ,data['ROW-COMP-HDR'])
     items['ROW-COMP-TBL'] = TableItem(sRow+1+dRows+0,sCol+1        ,data['ROW-COMP-TBL'])
     items['COL-COMP-HDR'] = TableItem(sRow+0        ,sCol+1+dCols+0,data['COL-COMP-HDR'])
@@ -45,6 +49,7 @@ class MatrixTable:
     self.data  = data
     self.name  = data['NAME']
     self.ws    = ws
+    self.names = OrderedDict()
 
     title = ' '.join(data['TITLE']['DATA'][0][0].split('\r'))
     logging.debug('Creating ' + title.ljust(80) + ' ' + str(sRow).rjust(3) + ' ' + str(sCol).rjust(3))
@@ -126,9 +131,36 @@ class MatrixTable:
       item = items[name]
       ws.DrawBorder(item.sRow,item.sCol,item.eRow,item.eCol, 'medium')
 
+    for name in items:
+      item = items[name]
+      if (item.names != None):
+        for namedRange in item.names:
+          self._createNamedRange(namedRange,item)
 
   #--------------------------------------------------------------------
-#  for item in 
+  def _createNamedRange(self,name,item):
+    ws = self.ws
+
+    if (name not in self.names):
+      range = item.names[name]
+      sRow = item.sRow + range.sRow
+      sCol = item.sCol + range.sCol
+      eRow = sRow + range.rows - 1
+      eCol = sCol + range.cols - 1
+      text  = '|'
+      text += 'sRow ' + str(sRow).rjust(3) + '|'
+      text += 'sCol ' + str(sCol).rjust(3) + '|'
+      text += 'eRow ' + str(eRow).rjust(3) + '|'
+      text += 'eCol ' + str(eCol).rjust(3) + '|'
+      text += name
+      logging.debug(text)
+      if (((eRow - sRow) < 0) or ((eCol - sCol) < 0)):
+        logging.debug('')
+      nRange = ws.AddNamedRange(name,sRow,sCol,eRow,eCol)
+      self.names[name] = (nRange,range)
+    else:
+      logging.error('Duplicate named range: ' + name)
+
 
     # Create named ranges
 #    pyws = ws.ws

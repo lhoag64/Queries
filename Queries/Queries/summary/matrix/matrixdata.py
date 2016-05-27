@@ -5,6 +5,14 @@ from   summary.summaryitem import SummaryItem
 #----------------------------------------------------------------------
 class MatrixData:
 
+  class Range:
+    def __init__(self,rows,cols,sRow,sCol,data):
+      self.rows = rows
+      self.cols = cols
+      self.sRow = sRow
+      self.sCol = sCol
+      self.data = data
+
   titleFmt   = {'hAlign':'C','vAlign':'C','border':{'A':'thin'},'wrap':True,'font':{'emph':'B'}}
   rowHdrFmt  = {'hAlign':'L','vAlign':'C','border':{'A':'thin'}}
   colHdrFmt  = {'hAlign':'C','vAlign':'C','tAlign':90,'border':{'A':'thin'},'wrap':True}
@@ -258,7 +266,7 @@ class MatrixData:
     srow = 0
     scol = 0
     data = self.tbl['TITLE']['DATA']
-    names[name] = (rows,cols,srow,scol,data)
+    names[name] = MatrixData.Range(rows,cols,srow,scol,data)
     self.tbl['TITLE']['NAMED-RANGES'] = names
 
     #--------------------------------------------------------------------
@@ -269,7 +277,7 @@ class MatrixData:
     srow = 0
     scol = 0
     data = self.tbl['ROW-DATA-HDR']['DATA']
-    names[name] = (rows,cols,srow,scol,data)
+    names[name] = MatrixData.Range(rows,cols,srow,scol,data)
     self.tbl['ROW-DATA-HDR']['NAMED-RANGES'] = names
  
     #--------------------------------------------------------------------
@@ -280,7 +288,7 @@ class MatrixData:
     srow = 0
     scol = 0
     data = self.tbl['COL-DATA-HDR']['DATA']
-    names[name] = (rows,cols,srow,scol,data)
+    names[name] = MatrixData.Range(rows,cols,srow,scol,data)
     self.tbl['COL-DATA-HDR']['NAMED-RANGES'] = names
 
     #--------------------------------------------------------------------
@@ -291,7 +299,7 @@ class MatrixData:
     srow = 0
     scol = 0
     data = self.tbl['TBL-DATA']['DATA']
-    names[name] = (rows,cols,srow,scol,data)
+    names[name] = MatrixData.Range(rows,cols,srow,scol,data)
     self.tbl['TBL-DATA']['NAMED-RANGES'] = names
 
     #--------------------------------------------------------------------
@@ -302,7 +310,7 @@ class MatrixData:
     srow = 0
     scol = 0
     data = self.tbl['ROW-COMP-HDR']['DATA']
-    names[name] = (rows,cols,srow,scol,data)
+    names[name] = MatrixData.Range(rows,cols,srow,scol,data)
 
     for rowIdx in range(self.tbl['ROW-COMP-HDR']['ROWS']):
       name = self._calcRangeName(fname,'ROW-COMP-HDR',rowIdx,0,'ROW-COMP-HDR')
@@ -311,7 +319,7 @@ class MatrixData:
       srow = rowIdx
       scol = 0
       data = self.tbl['ROW-COMP-HDR']['DATA']
-      names[name] = (rows,cols,srow,scol,data)
+      names[name] = MatrixData.Range(rows,cols,srow,scol,data)
 
     self.tbl['ROW-COMP-HDR']['NAMED-RANGES'] = names
 
@@ -347,7 +355,7 @@ class MatrixData:
     srow = 0
     scol = 0
     data = self.tbl['ROW-COMP-TBL']['DATA']
-    names[name] = (rows,cols,srow,scol,data)
+    names[name] = MatrixData.Range(rows,cols,srow,scol,data)
 
     for rowIdx in range(self.tbl['ROW-COMP-TBL']['ROWS']):
       name = self._calcRangeName(fname,'ROW-COMP-TBL',rowIdx,0,'ROW-COMP-HDR')
@@ -356,7 +364,7 @@ class MatrixData:
       srow = rowIdx
       scol = 0
       data = self.tbl['ROW-COMP-HDR']['DATA']
-      names[name] = (rows,cols,srow,scol,data)
+      names[name] = MatrixData.Range(rows,cols,srow,scol,data)
 
     self.tbl['ROW-COMP-TBL']['NAMED-RANGES'] = names
 
@@ -392,7 +400,7 @@ class MatrixData:
     srow = 0
     scol = 0
     data = self.tbl['COL-COMP-HDR']['DATA']
-    names[name] = (rows,cols,srow,scol,data)
+    names[name] = MatrixData.Range(rows,cols,srow,scol,data)
 
     for colIdx in range(self.tbl['COL-COMP-HDR']['COLS']):
       name = self._calcRangeName(fname,'COL-COMP-HDR',0,colIdx,'COL-COMP-HDR')
@@ -401,7 +409,7 @@ class MatrixData:
       srow = 0
       scol = colIdx
       data = self.tbl['COL-COMP-HDR']['DATA']
-      names[name] = (rows,cols,srow,scol,data)
+      names[name] = MatrixData.Range(rows,cols,srow,scol,data)
 
     self.tbl['COL-COMP-HDR']['NAMED-RANGES'] = names
 
@@ -437,7 +445,7 @@ class MatrixData:
     srow = 0
     scol = 0
     data = self.tbl['COL-COMP-TBL']['DATA']
-    names[name] = (rows,cols,srow,scol,data)
+    names[name] = MatrixData.Range(rows,cols,srow,scol,data)
 
     for colIdx in range(self.tbl['COL-COMP-TBL']['COLS']):
       name = self._calcRangeName(fname,'COL-COMP-TBL',0,colIdx,'COL-COMP-HDR')
@@ -446,7 +454,7 @@ class MatrixData:
       srow = 0
       scol = colIdx
       data = self.tbl['COL-COMP-TBL']['DATA']
-      names[name] = (rows,cols,srow,scol,data)
+      names[name] = MatrixData.Range(rows,cols,srow,scol,data)
 
     self.tbl['COL-COMP-TBL']['NAMED-RANGES'] = names
 

@@ -50,7 +50,7 @@ class FaeData(MatrixData):
 
   #--------------------------------------------------------------------
   def _createRowDataHdrDict(self,tblItem):
-    result =  super()._calcRowDataHdrDict(tblItem)
+    result = super()._calcRowDataHdrDict(tblItem)
 
     rows = result['ROWS']
     cols = result['COLS']
