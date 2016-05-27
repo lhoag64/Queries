@@ -74,9 +74,15 @@ class Query:
     result['CHDR'] = [[None for col in range(cols)] for row in range(   1)]
     for rowIdx in range(rows):
       for colIdx in range(cols):
-        result['DATA'][rowIdx][0] = avgList[rowIdx]
-        result['DATA'][rowIdx][1] = sumList[rowIdx]
-        result['DATA'][rowIdx][2] = cntList[rowIdx]
+        avg = avgList[rowIdx]
+        sum = sumList[rowIdx]
+        cnt = cntList[rowIdx]
+        if (avg != None): avg = float(avg)
+        if (sum != None): sum = float(sum)
+        if (cnt != None): cnt = int(cnt)
+        result['DATA'][rowIdx][0] = avg
+        result['DATA'][rowIdx][1] = sum
+        result['DATA'][rowIdx][2] = cnt
         result['CHDR'][0][colIdx] = self.compList[colIdx]
 
     return result
@@ -116,9 +122,15 @@ class Query:
     for rowIdx in range(rows):
       result['RHDR'][rowIdx][0] = self.compList[rowIdx]
       for colIdx in range(cols):
-        result['DATA'][0][colIdx] = avgList[colIdx]
-        result['DATA'][1][colIdx] = sumList[colIdx]
-        result['DATA'][2][colIdx] = cntList[colIdx]
+        avg = avgList[colIdx]
+        sum = sumList[colIdx]
+        cnt = cntList[colIdx]
+        if (avg != None): avg = float(avg)
+        if (sum != None): sum = float(sum)
+        if (cnt != None): cnt = int(cnt)
+        result['DATA'][0][colIdx] = avg
+        result['DATA'][1][colIdx] = sum
+        result['DATA'][2][colIdx] = cnt
 
     return result
 

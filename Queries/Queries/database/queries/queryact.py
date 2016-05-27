@@ -49,14 +49,15 @@ class QueryAct(Query):
           except KeyError:
             raise
           hrs = float(item[1])
-          data[idx][colIdx] = hrs
+          data[idx][colIdx] = float(hrs)
 
-      data[actCnt-1][colIdx] = other
+      data[actCnt-1][colIdx] = float(other)
 
       for rowIdx in range(actCnt):
         if (data[rowIdx][colIdx] == None):
           data[rowIdx][colIdx] = 0.0
 
+    for colIdx in range(maxWeeks):
       colHdr[0][colIdx] = 'Week ' + str(weekDict['MAX'][colIdx][1])
 
     for (idx,item) in enumerate(actDict):

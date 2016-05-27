@@ -86,6 +86,7 @@ class QueryUtl(Query):
         logging.critical('Invalidat UTL query type: ' + queryType)
         raise
 
+    for colIdx in range(maxWeeks):
       colHdr[0][colIdx] = 'Week ' + str(weekDict['MAX'][colIdx][1])
 
     if (queryType in ['UTL-CF','UTL-PS','UTL-DT','UTL-LS']):

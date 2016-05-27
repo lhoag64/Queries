@@ -1,4 +1,5 @@
 import logging
+from   collections                import OrderedDict
 from   xlinterface.xlworkbook     import XlWorkBook
 from   xlinterface.xlworksheet    import XlWorkSheet
 from   summary.matrix.matrixdata  import MatrixData
@@ -26,78 +27,108 @@ class TableItem:
 class MatrixTable:
   #--------------------------------------------------------------------
   def __init__(self,ws,sRow,sCol,data):
-    self.ws = ws
 
     dRows = data['TBL-DATA']['ROWS']
     dCols = data['TBL-DATA']['COLS']
 
-    self.matrixData = data
-    self.name       = data['NAME']
-    self.title      = TableItem(sRow+0        ,sCol+0        ,data['TITLE'])
-    self.rowDataHdr = TableItem(sRow+1        ,sCol+0        ,data['ROW-DATA-HDR'])
-    self.colDataHdr = TableItem(sRow+0        ,sCol+1        ,data['COL-DATA-HDR'])
-    self.tblData    = TableItem(sRow+1        ,sCol+1        ,data['TBL-DATA'])
-    self.rowCompHdr = TableItem(sRow+1+dRows+0,sCol+0        ,data['ROW-COMP-HDR'])
-    self.rowCompTbl = TableItem(sRow+1+dRows+0,sCol+1        ,data['ROW-COMP-TBL'])
-    self.colCompHdr = TableItem(sRow+0        ,sCol+1+dCols+0,data['COL-COMP-HDR'])
-    self.colCompTbl = TableItem(sRow+1        ,sCol+1+dCols+0,data['COL-COMP-TBL'])
+    items = OrderedDict()
+    items['TITLE'       ] = TableItem(sRow+0        ,sCol+0        ,data['TITLE'])
+    items['ROW-DATA-HDR'] = TableItem(sRow+1        ,sCol+0        ,data['ROW-DATA-HDR'])
+    items['COL-DATA-HDR'] = TableItem(sRow+0        ,sCol+1        ,data['COL-DATA-HDR'])
+    items['TBL-DATA'    ] = TableItem(sRow+1        ,sCol+1        ,data['TBL-DATA'])
+    items['ROW-COMP-HDR'] = TableItem(sRow+1+dRows+0,sCol+0        ,data['ROW-COMP-HDR'])
+    items['ROW-COMP-TBL'] = TableItem(sRow+1+dRows+0,sCol+1        ,data['ROW-COMP-TBL'])
+    items['COL-COMP-HDR'] = TableItem(sRow+0        ,sCol+1+dCols+0,data['COL-COMP-HDR'])
+    items['COL-COMP-TBL'] = TableItem(sRow+1        ,sCol+1+dCols+0,data['COL-COMP-TBL'])
 
-    title = self.title.data[0][0].split('\r')
-    title = ' '.join(title)
+    self.items = items
+    self.data  = data
+    self.name  = data['NAME']
+    self.ws    = ws
+
+    title = ' '.join(data['TITLE']['DATA'][0][0].split('\r'))
     logging.debug('Creating ' + title.ljust(80) + ' ' + str(sRow).rjust(3) + ' ' + str(sCol).rjust(3))
 
+    rowDataHdrCols = data['COL-DATA-HDR']['COLS']
+    colDataHdrRows = data['COL-DATA-HDR']['ROWS']
+    rowCompHdrRows = data['ROW-COMP-HDR']['ROWS']
+    rowCompTblRows = data['ROW-COMP-TBL']['ROWS']
+    colCompTblCols = data['COL-COMP-TBL']['COLS']
+    tblDataRows    = data['TBL-DATA'    ]['ROWS']
+    tblDataCols    = data['TBL-DATA'    ]['COLS']
+
     self.topRow    = sRow
-    self.bottomRow = sRow + self.colDataHdr.rows + self.tblData.rows + self.rowCompTbl.rows
+    self.bottomRow = sRow + colDataHdrRows + tblDataRows + rowCompTblRows
     self.leftCol   = sCol
-    self.rightCol  = sCol + self.rowDataHdr.cols + self.tblData.cols + self.colCompTbl.cols
+    self.rightCol  = sCol + rowDataHdrCols + tblDataCols + colCompTblCols
 
     # Set column sizes
+    rowDataHdrWid  = data['ROW-DATA-HDR']['WID']
+    tblDataWid     = data['TBL-DATA'    ]['WID']
+    colCompTblWid  = data['COL-COMP-TBL']['WID']
+
     wsCol = sCol
-    ws.SetColWid(wsCol,self.rowDataHdr.wid)
+    ws.SetColWid(wsCol,rowDataHdrWid)
     wsCol += 1
-    for colIdx in range(self.tblData.cols):
-      ws.SetColWid(wsCol,self.tblData.wid)
+    for colIdx in range(tblDataCols):
+      ws.SetColWid(wsCol,tblDataWid)
       wsCol += 1
-    for colIdx in range(self.colCompTbl.cols):
-      ws.SetColWid(wsCol,self.colCompTbl.wid)
+    for colIdx in range(colCompTblCols):
+      ws.SetColWid(wsCol,colCompTblWid)
       wsCol += 1
 
     # Set row sizes
+    colDataHdrHgt  = data['COL-DATA-HDR']['HGT']
+    tblDataHgt     = data['TBL-DATA'    ]['HGT']
+    rowCompHdrHgt  = data['ROW-COMP-HDR']['HGT']
+
     wsRow = sRow
-    ws.SetRowHgt(wsRow,self.colDataHdr.hgt)
+    ws.SetRowHgt(wsRow,colDataHdrHgt)
     wsRow += 1
-    for rowIdx in range(self.tblData.rows):
-      ws.SetRowHgt(wsRow,self.tblData.hgt)
+    for rowIdx in range(tblDataRows):
+      ws.SetRowHgt(wsRow,tblDataHgt)
       wsRow += 1
-    for rowIdx in range(self.rowCompHdr.rows):
-      ws.SetRowHgt(wsRow,self.rowCompHdr.hgt)
+    for rowIdx in range(rowCompHdrRows):
+      ws.SetRowHgt(wsRow,rowCompHdrHgt)
       wsRow += 1
 
-    itemList =            \
-      [                   \
-        self.title     ,  \
-        self.rowDataHdr,  \
-        self.colDataHdr,  \
-        self.tblData   ,  \
-        self.rowCompHdr,  \
-        self.rowCompTbl,  \
-        self.colCompHdr,  \
-        self.colCompTbl   \
-      ]
 
-    for item in itemList:
+    for name in items:
+      item = items[name]
+
       wsRow = item.sRow
       wsCol = item.sCol
-      fmt   = item.fmt
       for rowIdx in range(item.rows):
         for colIdx in range(item.cols):
-          if (type(item.fmt) is list):
-            fmt = item.fmt[rowIdx]
-          if (item.data != None):
+          fmt   = item.fmt
+          if (item.data[rowIdx][colIdx] != None):
+            if (type(item.fmt) is list):
+              fmt = item.fmt[rowIdx][colIdx]
+            if (type(fmt) is dict):
+              if (type(item.data[rowIdx][colIdx]) is int):
+                if ('I' in fmt):
+                  fmt = fmt['I']
+              if (type(item.data[rowIdx][colIdx]) is float):
+                if ('F' in fmt):
+                  fmt = fmt['F']
+            ws.SetCell(wsRow+rowIdx,wsCol+colIdx,item.data[rowIdx][colIdx],fmt)
+          else:
+            if (type(item.fmt) is list):
+              fmt = item.fmt[rowIdx][colIdx]
+            if (type(fmt) is dict):
+              if ('I' in fmt):
+                fmt = fmt['I']
+              if ('F' in fmt):
+                fmt = fmt['F']
             ws.SetCell(wsRow+rowIdx,wsCol+colIdx,item.data[rowIdx][colIdx],fmt)
 
-    for item in itemList:
+    for name in items:
+      item = items[name]
       ws.DrawBorder(item.sRow,item.sCol,item.eRow,item.eCol, 'medium')
+
+
+  #--------------------------------------------------------------------
+#  for item in 
 
     # Create named ranges
 #    pyws = ws.ws

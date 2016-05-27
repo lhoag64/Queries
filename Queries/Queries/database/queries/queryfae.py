@@ -78,13 +78,15 @@ class QueryFae(Query):
       for rowIdx in range(faeCnt):
         fae = faeList[rowIdx]
         if (fae in dbDict):
-          data[rowIdx][colIdx] = dbDict[fae]
+          if (dbDict[fae] != None):
+            data[rowIdx][colIdx] = float(dbDict[fae])
         if (data[rowIdx][colIdx] == None):
           sDate = faeDict[fae][0]
           eDate = faeDict[fae][1]
           if (sDate < wcDate and eDate > weDate):
             data[rowIdx][colIdx] = 0.0
 
+    for colIdx in range(maxWeeks):
       colHdr[0][colIdx] = 'Week ' + str(weekDict['MAX'][colIdx][1])
 
     for rowIdx in range(faeCnt):
@@ -211,7 +213,7 @@ class QueryFae(Query):
 
       rgnIdx = 0
       for item in rgnList:
-        data[rgnIdx][colIdx] = self._queryHc(wcDate,weDate,rgnList[rgnIdx])
+        data[rgnIdx][colIdx] = int(self._queryHc(wcDate,weDate,rgnList[rgnIdx]))
         rgnIdx += 1
 
     rowIdx = 0
@@ -314,7 +316,7 @@ class QueryFae(Query):
           ot = wkHrs + lvHrs - nmHrs
         if (ot < 0.0):
           ot = 0.0
-        tup = (item[0],item[1],ot)
+        tup = (item[0],item[1],float(ot))
       else:
         tup = (item[0],item[1],None)
       result[idx] = tup
@@ -377,4 +379,26 @@ class QueryFae(Query):
     sqltxt += '  ORDER BY fae.region,fae.prd_team,fae.lname,fae.fname'
 
     return super()._runQuery(sqlopt,sqltxt)
+
+  #--------------------------------------------------------------------
+  def GetFaeData(self,regionList):
+
+    dbResult = self._queryFae(regionList)
+    faeDict = {}
+    for fae in dbResult:
+      tup = (fae[0] + ' ' + fae[1])
+      if (tup not in faeDict):
+        faeDict[tup] = (fae[2],fae[3],fae[4],fae[5],fae[6])
+      else:
+        logging.warn('Duplicate FAE in fae list: ' + fae[0] + ' ' + fae[1]);
+
+    result = OrderedDict()
+    result['ROWS'] = len(faeDict)     
+    result['COLS'] = 0
+    result['DATA'] = faeDict
+
+    return result
+
+
+
 

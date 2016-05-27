@@ -64,17 +64,18 @@ class QueryActByLoc(Query):
       for item in dbResult:
         if (item[0] in locDict['GRP']):
           idx = locDict['GRP'][item[0]]
-          data[idx][colIdx] = item[1]
+          data[idx][colIdx] = float(item[1])
         else:
           other += item[1]
 
       idx = locDict['GRP']['OTHER']
-      data[idx][colIdx] = other
+      data[idx][colIdx] = float(other)
 
       for rowIdx in range(locCnt):
         if (data[rowIdx][colIdx] == None):
           data[rowIdx][colIdx] = 0.0
 
+    for colIdx in range(maxWeeks):
       colHdr[0][colIdx] = 'Week ' + str(weekDict['MAX'][colIdx][1])
 
     for (idx,item) in enumerate(locDict['HDR']):

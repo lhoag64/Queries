@@ -30,9 +30,9 @@ class QueryGka(Query):
     gkaDict = self._getGkaDict()
     gkaCnt  = len(gkaDict)
 
-    data   = [[None for col in range(maxWeeks)] for row in range(gkaCnt)]
-    rowHdr = [[None for col in range(       1)] for row in range(gkaCnt)]
-    colHdr = [[None for col in range(maxWeeks)] for row in range(     1)]
+    data    = [[None for col in range(maxWeeks)] for row in range(gkaCnt)]
+    rowHdr  = [[None for col in range(       1)] for row in range(gkaCnt)]
+    colHdr  = [[None for col in range(maxWeeks)] for row in range(     1)]
     for colIdx in range(minWeeks):
 
       wcDate = weekDict['MIN'][colIdx][0]
@@ -53,19 +53,20 @@ class QueryGka(Query):
             aluSum += float(item[1])
         else:
           if (item[0] in gkaDict):
-            data[gkaDict[item[0]][0]][colIdx] = item[1]
+            data[gkaDict[item[0]][0]][colIdx] = float(item[1])
           else:
             logging.debug(item[0])
 
-      data[gkaDict['NOK'    ][0]][colIdx] = nokSum
-      data[gkaDict['ALU'    ][0]][colIdx] = aluSum
-      data[gkaDict['NOK-ALU'][0]][colIdx] = nokAluSum
-      data[gkaDict['Others' ][0]][colIdx] = othResult[0][0]
+      data[gkaDict['NOK'    ][0]][colIdx] = float(nokSum)
+      data[gkaDict['ALU'    ][0]][colIdx] = float(aluSum)
+      data[gkaDict['NOK-ALU'][0]][colIdx] = float(nokAluSum)
+      data[gkaDict['Others' ][0]][colIdx] = float(othResult[0][0])
 
       for rowIdx in range(gkaCnt):
         if (data[rowIdx][colIdx] == None):
           data[rowIdx][colIdx] = 0.0
 
+    for colIdx in range(maxWeeks):
       colHdr[0][colIdx] = 'Week ' + str(weekDict['MAX'][colIdx][1])
 
     idx = 0

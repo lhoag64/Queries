@@ -27,6 +27,8 @@ class FaeData(MatrixData):
     self.weekDict = Db.QueryWeeks.GetData(self.regionList,self.period)
     self.dataDict = Db.QueryFae.GetData(self.regionList,self.weekDict,qtype=self.rptName)
 
+    self.faeDict = Db.QueryFae.GetFaeData(self.regionList)
+
     for tblItem in self.tbl:
       if (tblItem in self.funcTbl):
         self.tbl[tblItem] = self.funcTbl[tblItem](tblItem)
@@ -48,7 +50,33 @@ class FaeData(MatrixData):
 
   #--------------------------------------------------------------------
   def _createRowDataHdrDict(self,tblItem):
-    return super()._calcRowDataHdrDict(tblItem)
+    result =  super()._calcRowDataHdrDict(tblItem)
+
+    rows = result['ROWS']
+    cols = result['COLS']
+    nfmt = result['FMT' ]
+    gfmt = nfmt.copy()
+    yfmt = nfmt.copy()
+    gfmt['fill'] = 'Green 1'
+    yfmt['fill'] = 'Yellow 1'
+    fmt  = [[nfmt for col in range(cols)] for row in range(rows)]
+    for rowIdx in range(rows):
+      for colIdx in range(cols):
+        text = result['DATA'][rowIdx][colIdx]
+        if (text in self.faeDict['DATA']):
+          tup = self.faeDict['DATA'][text]
+          if (tup[2] == 'P'):
+            fmt[rowIdx][colIdx] = gfmt
+          elif (tup[2] == 'C'):
+            fmt[rowIdx][colIdx] = yfmt
+          else:
+            logging.error('Invalid labor type: ' + tup[2])
+        else:
+          logging.error('FAE not found in FAE list: ' + text)
+
+    result['FMT'] = fmt
+
+    return result
 
   #--------------------------------------------------------------------
   def _createColDataHdrDict(self,tblItem):

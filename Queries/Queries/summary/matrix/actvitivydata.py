@@ -46,7 +46,32 @@ class ActivityData(MatrixData):
 
   #--------------------------------------------------------------------
   def _createRowDataHdrDict(self,tblItem):
-    return super()._calcRowDataHdrDict(tblItem)
+    result =  super()._calcRowDataHdrDict(tblItem)
+
+    rows = result['ROWS']
+    cols = result['COLS']
+    nfmt = result['FMT' ]
+    gfmt = nfmt.copy()
+    ofmt = nfmt.copy()
+    ofmt['fill'] = 'Orange 1'
+    gfmt['fill'] = 'Green 1'
+    fmt  = [[nfmt for col in range(cols)] for row in range(rows)]
+    for rowIdx in range(rows):
+      for colIdx in range(cols):
+        text = result['DATA'][rowIdx][colIdx]
+        if (text != None):
+          stxt = text.split()
+          if (stxt[-1] in ['10','11','14','15','16','17','18','23']):
+            fmt[rowIdx][colIdx] = gfmt
+          else:
+            fmt[rowIdx][colIdx] = ofmt
+        else:
+            result['DATA'][rowIdx][colIdx] = 'Other (overhead, leave, etc.)'
+            fmt[rowIdx][colIdx]  = nfmt
+
+    result['FMT'] = fmt
+
+    return result
 
   #--------------------------------------------------------------------
   def _createColDataHdrDict(self,tblItem):

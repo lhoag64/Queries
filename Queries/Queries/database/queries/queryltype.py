@@ -39,10 +39,8 @@ class QueryLType(Query):
 
       dbResult = self._query(wcDate,weDate,regionList)
 
-      #other = 0.0
       for item in dbResult:
         if (item[0] not in ltDict):
-          #other += float(item[1])
           pass
         else:
           try:
@@ -50,14 +48,13 @@ class QueryLType(Query):
           except KeyError:
             raise
           hrs = float(item[1])
-          data[idx][colIdx] = hrs
-
-      #data[ltCnt-1][colIdx] = other
+          data[idx][colIdx] = float(hrs)
 
       for rowIdx in range(ltCnt):
         if (data[rowIdx][colIdx] == None):
           data[rowIdx][colIdx] = 0.0
 
+    for colIdx in range(maxWeeks):
       colHdr[0][colIdx] = 'Week ' + str(weekDict['MAX'][colIdx][1])
 
     for (idx,item) in enumerate(ltDict):
