@@ -6,7 +6,7 @@ from   timesheet.calendar          import Calendar
 from   timesheet.faeteam           import FaeTeam
 from   timesheet.fldata            import FlData
 from   timesheet.tsdata            import TsData
-from   summary.wbinfo              import WbInfo
+#from   summary.wbinfo              import WbInfo
 from   summary.wbdata              import WbData
 #from   summary.summary.summarydata import SummaryData
 #from   summary.summaryworkbook     import SummaryWorkBook
@@ -68,8 +68,7 @@ if (__name__ == '__main__'):
     InitializeDatabaseTables()
     InitializeTimesheetTables()
 
-  wbInfo = WbInfo()
-  wbData = WbData(wbInfo)
+  wbData = WbData()
 
   amList =                                                                                          \
     [                                                                                               \
@@ -105,8 +104,8 @@ if (__name__ == '__main__'):
   wbData.AddList(amList)
   wbData.Process()
 
-  wbInfo.Order()
-  wbInfo.Save('FAE AM MATRIX.xlsx')
+  wbData.Order()
+  wbData.Save('FAE AM MATRIX.xlsx')
 
   logging.debug('End of Program')
 
