@@ -281,7 +281,7 @@
     <Compile Include="summary\matrix\matrixtable.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="summary\matrix\metricworksheet.py">
+    <Compile Include="summary\matrix\Archive\metricworksheet.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="summary\matrix\utldata.py" />
@@ -298,11 +298,11 @@
     <Compile Include="summary\wsitem.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="summary\wbinfo.py">
+    <Compile Include="summary\summary\Archive\wbinfo.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="summary\summary\faesummarysheet.py" />
-    <Compile Include="summary\summary\metricsummarysheet.py" />
+    <Compile Include="summary\summary\Archive\faesummarysheet.py" />
+    <Compile Include="summary\summary\Archive\metricsummarysheet.py" />
     <Compile Include="summary\summary\summarytable.py">
       <SubType>Code</SubType>
     </Compile>
@@ -351,6 +351,7 @@
     <Folder Include="summary\charts\" />
     <Folder Include="summary\matrix\Archive\" />
     <Folder Include="summary\summary\" />
+    <Folder Include="summary\summary\Archive\" />
     <Folder Include="timesheet\" />
     <Folder Include="xlinterface\" />
   </ItemGroup>
