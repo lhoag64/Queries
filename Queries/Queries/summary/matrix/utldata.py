@@ -27,7 +27,7 @@ class UtlData(MatrixData):
     # Fetch data from database
     #------------------------------------------------------------------
     self.weekDict = Db.QueryWeeks.GetData(self.regionList,self.period)
-    self.dataDict = Db.QueryUtl.GetData(self.regionList,self.weekDict,qtype=self.rptName)
+    self.dataDict = Db.QueryUtl.GetData(self.regionList,self.weekDict,qtype=self.objName)
 
     for tblItem in self.tbl:
       if (tblItem in self.funcTbl):
@@ -45,8 +45,8 @@ class UtlData(MatrixData):
 
   #--------------------------------------------------------------------
   def _createTitleDict(self,tblItem):
-    title  = self._titleDict[self.rptName][0]
-    fmt    = self._titleDict[self.rptName][1]
+    title  = self._titleDict[self.objName][0]
+    fmt    = self._titleDict[self.objName][1]
     result = super()._calcTitleDict(title,tblItem)
     if (fmt != None):
       result['FMT' ]['fill'] = fmt

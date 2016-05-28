@@ -2,6 +2,10 @@ import logging
 from   xlinterface.xlworkbook            import XlWorkBook
 from   xlinterface.xlworksheet           import XlWorkSheet
 from   summary.matrix.matrixdata         import MatrixData 
+from   openpyxl.chart                    import LineChart
+from   openpyxl.chart                    import PieChart
+from   openpyxl.chart.reference          import Reference 
+from   openpyxl.chart.series             import Series
 
 #----------------------------------------------------------------------
 class SummaryTable:
@@ -42,17 +46,17 @@ class SummaryTable:
     self.ws.SetCell( 6, 5,'As a % of Contracted',fmt2a)
 
     self.ws.SetCell( 7, 3,'Contracted number of hours',fmt3)
-    self.ws.SetCell( 7, 4,'=SUM(GS243:HE243)',fmt3b)
+    self.ws.SetCell( 7, 4,'=SUM(MATRIX_EMEA_YTD.MATRIX.EMEA.YTD.UTL_OT.TBL_DATA.CONTRACTED)',fmt3b)
 
     self.ws.SetCell( 7, 5,None,fmt3b)
 
     self.ws.SetCell( 8, 3,'Total Hours booked',fmt3)
-    self.ws.SetCell( 8, 4,'=SUM(GS223:HE223)',fmt3b)
+    self.ws.SetCell( 8, 4,'=SUM(MATRIX_EMEA_YTD.MATRIX.EMEA.YTD.UTL_CF.TBL_DATA.TOTAL_TIME)',fmt3b)
 
     self.ws.SetCell( 8, 5,None,fmt3b)
 
     self.ws.SetCell( 9, 3,'Additional hours worked over contracted',fmt3)
-    self.ws.SetCell( 9, 4,'=SUM(GS242:HE242)',fmt3b)
+    self.ws.SetCell( 9, 4,'=SUM(MATRIX_EMEA_YTD.MATRIX.EMEA.YTD.UTL_OT.TBL_DATA.ADDITIONAL)',fmt3b)
 
     self.ws.SetCell( 9, 5,None,fmt3b)
 
@@ -71,21 +75,21 @@ class SummaryTable:
     self.ws.SetCell(12, 4,'Percentage %',fmt2a)
 
     self.ws.SetCell(13, 3,'Utilisation (Customer Funded works)',fmt4)
-    self.ws.SetCell(13, 4,'=HF224',fmt4b)
+    self.ws.SetCell(13, 4,'=AVERAGE(MATRIX_EMEA_YTD.MATRIX.EMEA.YTD.UTL_CF.ROW_COMP_TBL.UTILISATION_AS_A_PCT)',fmt4b)
 
     self.ws.SetCell(13, 5,None,fmt4b)
 
     self.ws.SetCell(14, 3,'Utilisation (Pre Sales work)',fmt5)
-    self.ws.SetCell(14, 4,'=HF229',fmt5b)
+    self.ws.SetCell(14, 4,'=AVERAGE(MATRIX_EMEA_YTD.MATRIX.EMEA.YTD.UTL_PS.ROW_COMP_TBL.UTILISATION_AS_A_PCT)',fmt5b)
 
     self.ws.SetCell(14, 5,None,fmt5b)
     self.ws.SetCell(15, 3,'Utilisation (Downtime,Exc Leave and Sickness)',fmt6)
-    self.ws.SetCell(15, 4,'=HF234',fmt6b)
+    self.ws.SetCell(15, 4,'=AVERAGE(MATRIX_EMEA_YTD.MATRIX.EMEA.YTD.UTL_DT.ROW_COMP_TBL.UTILISATION_AS_A_PCT)',fmt6b)
 
     self.ws.SetCell(15, 5,None,fmt6b)
 
     self.ws.SetCell(16, 3,'Utilisation (Leave and Sickness)',fmt7)
-    self.ws.SetCell(16, 4,'=HF239',fmt7b)
+    self.ws.SetCell(16, 4,'=AVERAGE(MATRIX_EMEA_YTD.MATRIX.EMEA.YTD.UTL_LS.ROW_COMP_TBL.UTILISATION_AS_A_PCT)',fmt7b)
 
     self.ws.SetCell(16, 5,None,fmt7b)
 
@@ -94,59 +98,59 @@ class SummaryTable:
     self.ws.SetCell(19, 5,'As a % of Total',fmt2a)
 
     self.ws.SetCell(20, 3,'Support agreement (Software)',fmt4)
-    self.ws.SetCell(20, 4,'=SUM(GS201:HE201)',fmt4b)
+    self.ws.SetCell(20, 4,'=SUM(MATRIX_EMEA_YTD.MATRIX.EMEA.YTD.ACTIVITY.TBL_DATA.SUPPORT_AGREEMENT_SOFTWARE___10)',fmt4b)
     self.ws.SetCell(20, 5,'=D20/SUM(D20:D27)*100',fmt4b)
 
     self.ws.SetCell(21, 3,'Hardware agreement (Hardware)',fmt4)
-    self.ws.SetCell(21, 4,'=SUM(GS202:HE202)',fmt4b)
+    self.ws.SetCell(21, 4,'=SUM(MATRIX_EMEA_YTD.MATRIX.EMEA.YTD.ACTIVITY.TBL_DATA.SUPPORT_AGREEMENT_HARDWARE___11)',fmt4b)
     self.ws.SetCell(21, 5,'=D21/SUM(D20:D27)*100',fmt4b)
 
     self.ws.SetCell(22, 3,'Post Sales support (SW-Customer Funded)',fmt4)
-    self.ws.SetCell(22, 4,'=SUM(GS205:HE205)',fmt4b)
+    self.ws.SetCell(22, 4,'=SUM(MATRIX_EMEA_YTD.MATRIX.EMEA.YTD.ACTIVITY.TBL_DATA.POST_SALES_SUPPORT_SW_CUSTOMER_FUNDED___14)',fmt4b)
     self.ws.SetCell(22, 5,'=D22/SUM(D20:D27)*100',fmt4b)
 
     self.ws.SetCell(23, 3,'Post Sales support (HW-Customer Funded',fmt4)
-    self.ws.SetCell(23, 4,'=SUM(GS206:HE206)',fmt4b)
+    self.ws.SetCell(23, 4,'=SUM(MATRIX_EMEA_YTD.MATRIX.EMEA.YTD.ACTIVITY.TBL_DATA.POST_SALES_SUPPORT_HW_CUSTOMER_FUNDED___15)',fmt4b)
     self.ws.SetCell(23, 5,'=D23/SUM(D20:D27)*100',fmt4b)
 
     self.ws.SetCell(24, 3,'NRE (Customer funded)',fmt4)
-    self.ws.SetCell(24, 4,'=SUM(GS207:HE207)',fmt4b)
+    self.ws.SetCell(24, 4,'=SUM(MATRIX_EMEA_YTD.MATRIX.EMEA.YTD.ACTIVITY.TBL_DATA.POST_SALES_SUPPORT_HW_CUSTOMER_FUNDED___15)',fmt4b)
     self.ws.SetCell(24, 5,'=D24/SUM(D20:D27)*100',fmt4b)
 
     self.ws.SetCell(25, 3,'Training - Providing - Non Customer Specific',fmt4)
-    self.ws.SetCell(25, 4,'=SUM(GS208:HE208)',fmt4b)
+    self.ws.SetCell(25, 4,'=SUM(MATRIX_EMEA_YTD.MATRIX.EMEA.YTD.ACTIVITY.TBL_DATA.TRAINING___PROVIDING___NON_CUSTOMER_SPECIFIC___17)',fmt4b)
     self.ws.SetCell(25, 5,'=D25/SUM(D20:D27)*100',fmt4b)
 
     self.ws.SetCell(26, 3,'Training - Providing - Customer Specific',fmt4)
-    self.ws.SetCell(26, 4,'=SUM(GS209:HE209)',fmt4b)
+    self.ws.SetCell(26, 4,'=SUM(MATRIX_EMEA_YTD.MATRIX.EMEA.YTD.ACTIVITY.TBL_DATA.TRAINING___PROVIDING___CUSTOMER_SPECIFIC___18)',fmt4b)
     self.ws.SetCell(26, 5,'=D26/SUM(D20:D27)*100',fmt4b)
 
     self.ws.SetCell(27, 3,'Post Sales Support (Warranty Period)',fmt4)
-    self.ws.SetCell(27, 4,'=SUM(GS214:HE214)',fmt4b)
+    self.ws.SetCell(27, 4,'=SUM(MATRIX_EMEA_YTD.MATRIX.EMEA.YTD.ACTIVITY.TBL_DATA.POST_SALES_SUPPORT_WARRANTY_PERIOD___23)',fmt4b)
     self.ws.SetCell(27, 5,'=D27/SUM(D20:D27)*100',fmt4b)
 
     self.ws.SetCell(28, 3,'Pre Sales Support',fmt5)
-    self.ws.SetCell(28, 4,'=SUM(GS203:HE203)',fmt5b)
+    self.ws.SetCell(28, 4,'=SUM(MATRIX_EMEA_YTD.MATRIX.EMEA.YTD.ACTIVITY.TBL_DATA.PRE_SALES_SUPPORT___12)',fmt5b)
     self.ws.SetCell(28, 5,'=D28/SUM(D28:D33)*100',fmt5b)
 
     self.ws.SetCell(29, 3,'Post Sales Support (Non contract)',fmt5)
-    self.ws.SetCell(29, 4,'=SUM(GS204:HE204)',fmt5b)
+    self.ws.SetCell(29, 4,'=SUM(MATRIX_EMEA_YTD.MATRIX.EMEA.YTD.ACTIVITY.TBL_DATA.POST_SALES_SUPPORT_NON_CONTRACT___13)',fmt5b)
     self.ws.SetCell(29, 5,'=D29/SUM(D28:D33)*100',fmt5b)
 
     self.ws.SetCell(30, 3,'Training - Receiving - Non Customer Specific',fmt5)
-    self.ws.SetCell(30, 4,'=SUM(GS210:HE210)',fmt5b)
+    self.ws.SetCell(30, 4,'=SUM(MATRIX_EMEA_YTD.MATRIX.EMEA.YTD.ACTIVITY.TBL_DATA.TRAINING___RECEIVING___NON_CUSTOMER_SPECIFIC___19)',fmt5b)
     self.ws.SetCell(30, 5,'=D30/SUM(D28:D33)*100',fmt5b)
 
     self.ws.SetCell(31, 3,'Training - Receiving - Customer Specific',fmt5)
-    self.ws.SetCell(31, 4,'=SUM(GS211:HE211)',fmt5b)
+    self.ws.SetCell(31, 4,'=SUM(MATRIX_EMEA_YTD.MATRIX.EMEA.YTD.ACTIVITY.TBL_DATA.TRAINING___RECEIVING___CUSTOMER_SPECIFIC___20)',fmt5b)
     self.ws.SetCell(31, 5,'=D31/SUM(D28:D33)*100',fmt5b)
 
     self.ws.SetCell(32, 3,'Internal Business Meeting',fmt5)
-    self.ws.SetCell(32, 4,'=SUM(GS212:HE212)',fmt5b)
+    self.ws.SetCell(32, 4,'=SUM(MATRIX_EMEA_YTD.MATRIX.EMEA.YTD.ACTIVITY.TBL_DATA.INTERNAL_BUSINESS_MEETING___21)',fmt5b)
     self.ws.SetCell(32, 5,'=D32/SUM(D28:D33)*100',fmt5b)
 
     self.ws.SetCell(33, 3,'Professional Services',fmt5)
-    self.ws.SetCell(33, 4,'=SUM(GS213:HE213)',fmt5b)
+    self.ws.SetCell(33, 4,'=SUM(MATRIX_EMEA_YTD.MATRIX.EMEA.YTD.ACTIVITY.TBL_DATA.PROFESSIONAL_SERVICES___22)',fmt5b)
     self.ws.SetCell(33, 5,'=D33/SUM(D28:D33)*100',fmt5b)
 
     self.ws.SetCell(34, 3,'Downtime - Excluding Leave & Sickness',fmt6)
@@ -206,14 +210,30 @@ class SummaryTable:
     self.ws.DrawBorder(46, 3, 49, 5,'medium')
     self.ws.DrawBorder(46, 3, 46, 5,'medium')
 
+    range = None
+    for item in self.ws.wb._named_ranges:
+      if (item.name == 'MATRIX_EMEA_YTD.MATRIX.EMEA.YTD.UTL_CF.ROW_COMP_TBL.UTILISATION_AS_A__'):
+        dRange = item
+        break 
+    for item in self.ws.wb._named_ranges:
+      if (item.name == 'MATRIX_EMEA_YTD.MATRIX.EMEA.YTD.UTL_CF.COL_DATA_HDR.ALL'):
+        lRange = item
+        break 
 
-#    ltsChart = PieChart()
-#    data   = Reference(self.ws.ws,min_col=5,min_row=47,max_row=49)
-#    labels = Reference(self.ws.ws,min_col=3,min_row=47,max_row=49)
+    chart = LineChart()
+    chart.title = 'This is my chart'
+
+#    values = Reference(self.ws.ws,range_string=dRange.value)
+#    labels = Reference(self.ws.ws,range_string=lRange.value)
+#    chart.add_data(values)
+#    chart.set_categories(labels)
+
+#    self.ws.ws.add_chart(chart,'H46')
+
+#    labels = Reference(self.ws.ws,range_string=lRange.value)
 #    ltsChart.add_data(data)
 #    ltsChart.set_categories(labels)
 #    ltsChart.title = 'Labour Vs Travel'
-#    self.ws.ws.add_chart(ltsChart,'H46')
 
 
 

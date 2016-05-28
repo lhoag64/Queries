@@ -41,7 +41,7 @@ class GkaData(MatrixData):
 
   #--------------------------------------------------------------------
   def _createTitleDict(self,tblItem):
-    title = self._titleDict[self.rptName]
+    title = self._titleDict[self.objName]
     return super()._calcTitleDict(title,tblItem)
 
   #--------------------------------------------------------------------

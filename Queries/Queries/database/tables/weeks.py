@@ -116,7 +116,7 @@ class WeeksTable(Table):
     weekStart = '2016-01-04'
     weekEnd   = max
 
-    if (period != 'ALL'):
+    if (period != 'YTD'):
       if (period in weekTable):
         weekStart = weekTable[period][0]
         weekEnd   = weekTable[period][1]

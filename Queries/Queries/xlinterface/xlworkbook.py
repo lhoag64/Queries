@@ -1,10 +1,8 @@
 import logging
 import openpyxl
 from   openpyxl                import load_workbook
-#import openpyxl.workbook
 from   openpyxl.workbook       import Workbook
 from   xlinterface.xlworksheet import XlWorkSheet
-from   xlinterface.xlchrtsheet import XlChrtSheet
 
 #----------------------------------------------------------------------
 class XlWorkBook:

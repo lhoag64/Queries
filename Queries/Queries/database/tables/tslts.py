@@ -30,17 +30,3 @@ class TsLtsTable(Table):
 
     c.executemany('INSERT INTO ts_lts VALUES (?)',lts)
     db.commit()
-
-  #--------------------------------------------------------------------
-#  def GetLts(self,db,type):
-#
-#    c = db.cursor()
-#
-#    if (type == 'ALL'):
-#      pass
-#
-#    c.execute(' SELECT key FROM ts_lts')
-#
-#    ltslist = c.fetchall()
-#
-#    return ltslist

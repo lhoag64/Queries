@@ -25,7 +25,7 @@ class FaeData(MatrixData):
     # Fetch data from database
     #------------------------------------------------------------------
     self.weekDict = Db.QueryWeeks.GetData(self.regionList,self.period)
-    self.dataDict = Db.QueryFae.GetData(self.regionList,self.weekDict,qtype=self.rptName)
+    self.dataDict = Db.QueryFae.GetData(self.regionList,self.weekDict,qtype=self.objName)
 
     self.faeDict = Db.QueryFae.GetFaeData(self.regionList)
 
@@ -45,7 +45,7 @@ class FaeData(MatrixData):
 
   #--------------------------------------------------------------------
   def _createTitleDict(self,tblItem):
-    title = self._titleDict[self.rptName]
+    title = self._titleDict[self.objName]
     return super()._calcTitleDict(title,tblItem)
 
   #--------------------------------------------------------------------

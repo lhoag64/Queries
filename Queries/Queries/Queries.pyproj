@@ -25,26 +25,9 @@
     <Compile Include="database\database.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="database\queries\Archive\faedata.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="database\queries\queryltype.py" />
     <Compile Include="database\queries\queryfae.py" />
     <Compile Include="database\queries\queryactbyloc.py" />
-    <Compile Include="database\queries\Archive\getactbylocsum.py" />
-    <Compile Include="database\queries\Archive\getactbyprdteam.py" />
-    <Compile Include="database\queries\Archive\getactivityamdmrsum.py" />
-    <Compile Include="database\queries\Archive\getactivityammisum.py" />
-    <Compile Include="database\queries\Archive\getatmcarsum.py" />
-    <Compile Include="database\queries\Archive\getammirkasum.py" />
-    <Compile Include="database\queries\Archive\getamrkasum.py" />
-    <Compile Include="database\queries\Archive\getamtmsmcsum.py" />
-    <Compile Include="database\queries\Archive\getfaeawhsum.py" />
-    <Compile Include="database\queries\Archive\getfaehoursummary.py" />
-    <Compile Include="database\queries\Archive\getfaelist.py" />
-    <Compile Include="database\queries\Archive\getfaeltsum.py" />
-    <Compile Include="database\queries\Archive\getfaeotsum.py" />
-    <Compile Include="database\queries\Archive\getfaewhsum.py" />
     <Compile Include="database\queries\querygka.py" />
     <Compile Include="database\queries\querylts.py" />
     <Compile Include="database\queries\queryact.py" />
@@ -255,23 +238,10 @@
     <Compile Include="summary\charts\faechartsheet.py" />
     <Compile Include="summary\charts\metricchartsheet.py" />
     <Compile Include="summary\charts\__init__.py" />
-    <Compile Include="summary\matrix\Archive\actbyprdteamdata.py" />
-    <Compile Include="summary\matrix\Archive\actvitivyammidata.py" />
-    <Compile Include="summary\matrix\Archive\actvitivyamdmrdata.py" />
     <Compile Include="summary\matrix\actvitivydata.py" />
-    <Compile Include="summary\matrix\Archive\ammirkadata.py" />
-    <Compile Include="summary\matrix\Archive\amtmsmcdata.py" />
-    <Compile Include="summary\matrix\Archive\amtmcardata.py" />
     <Compile Include="summary\matrix\ltypedata.py" />
-    <Compile Include="summary\matrix\Archive\faeotdata.py" />
-    <Compile Include="summary\matrix\Archive\faeltdata.py" />
-    <Compile Include="summary\matrix\Archive\faewhdata.py" />
-    <Compile Include="summary\matrix\Archive\faeworksheet.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="summary\matrix\actbylocdata.py" />
     <Compile Include="summary\matrix\faedata.py" />
-    <Compile Include="summary\matrix\Archive\amrkadata.py" />
     <Compile Include="summary\matrix\ltsdata.py">
       <SubType>Code</SubType>
     </Compile>
@@ -281,7 +251,7 @@
     <Compile Include="summary\matrix\matrixtable.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="summary\matrix\Archive\metricworksheet.py">
+    <Compile Include="summary\matrix\nameddata.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="summary\matrix\utldata.py" />
@@ -295,14 +265,9 @@
     <Compile Include="summary\wbdata.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="summary\wsitem.py">
+    <Compile Include="summary\wbitem.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="summary\summary\Archive\wbinfo.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="summary\summary\Archive\faesummarysheet.py" />
-    <Compile Include="summary\summary\Archive\metricsummarysheet.py" />
     <Compile Include="summary\summary\summarytable.py">
       <SubType>Code</SubType>
     </Compile>
@@ -318,14 +283,15 @@
     <Compile Include="timesheet\__init__.py" />
     <Compile Include="xlinterface\xlcolortable.py" />
     <Compile Include="xlinterface\xlworkbook.py" />
-    <Compile Include="xlinterface\xlchrtsheet.py" />
     <Compile Include="xlinterface\xlworksheet.py" />
+    <Compile Include="xlinterface\xlwsrange.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="xlinterface\__init__.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="database\" />
     <Folder Include="database\queries\" />
-    <Folder Include="database\queries\Archive\" />
     <Folder Include="database\tables\" />
     <Folder Include="summary\" />
     <Folder Include="openpyxl\" />
@@ -349,9 +315,7 @@
     <Folder Include="openpyxl\xml\" />
     <Folder Include="summary\matrix\" />
     <Folder Include="summary\charts\" />
-    <Folder Include="summary\matrix\Archive\" />
     <Folder Include="summary\summary\" />
-    <Folder Include="summary\summary\Archive\" />
     <Folder Include="timesheet\" />
     <Folder Include="xlinterface\" />
   </ItemGroup>

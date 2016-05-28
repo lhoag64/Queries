@@ -1,17 +1,17 @@
 import logging
-from   collections         import OrderedDict
-#from   summary.summaryitem import SummaryItem
+from   collections              import OrderedDict
+from   summary.matrix.nameddata import NamedData
 
 #----------------------------------------------------------------------
 class MatrixData:
 
-  class Range:
-    def __init__(self,rows,cols,sRow,sCol,data):
-      self.rows = rows
-      self.cols = cols
-      self.sRow = sRow
-      self.sCol = sCol
-      self.data = data
+#  class Range:
+#    def __init__(self,rows,cols,sRow,sCol,data):
+#      self.rows = rows
+#      self.cols = cols
+#      self.sRow = sRow
+#      self.sCol = sCol
+#      self.data = data
 
   titleFmt   = {'hAlign':'C','vAlign':'C','border':{'A':'thin'},'wrap':True,'font':{'emph':'B'}}
   rowHdrFmt  = {'hAlign':'L','vAlign':'C','border':{'A':'thin'}}
@@ -55,21 +55,12 @@ class MatrixData:
 
     self.item        = item
     self.region      = item.region
-    self.rptType     = item.rptType  # MATRIX
-    self.rptName     = item.rptName  # UTL-CF
+    self.objType     = item.objType  # MATRIX
+    self.objName     = item.objName  # UTL-CF
     self.period      = item.period
     self.funcTbl     = None
     self.regionList  = None
     self.namedRanges = None
-
-    #name = ''
-    #if (type(self.region) is list):
-    #  for rgn in self.region:
-    #    name += self.region + '_'
-    #else:
-    #  name += self.region + '_'
-    #name += self.rptName + '_'
-    #name += self.period
 
     self.tbl = OrderedDict()
     self.tbl['NAME'] = item.fullName
@@ -220,268 +211,222 @@ class MatrixData:
     return result
 
   #--------------------------------------------------------------------
-  def _calcRangeName(self,fname,baseName,rowIdx,colIdx,tblKey):
+  def _calcDataName(self,tblName,baseName,rType,row,col,key):
     #logging.debug('---------------------------------------------')
-    #logging.debug(fname)
-    #logging.debug(baseName)
-    #logging.debug(str(rowIdx))
-    #logging.debug(tblKey)
+    #logging.debug('tblName : ' + tblName)
+    #logging.debug('baseName: ' + baseName)
+    #logging.debug('rType   : ' + rType)
+    #logging.debug('key     : ' + key)
 
-    tbl = self.tbl[tblKey]
+    name  = baseName + '.'
+    name += self.tbl[key]['DATA'][row][col].upper() + '.'
+    name += rType
 
-    name = '.'
-    for ch in baseName:
-      if (ch in ['-',' ']):
-        ch = '_'
-      name += ch
-
-    name += '.'
-
-    text = tbl['DATA'][rowIdx][colIdx].upper()
-    #logging.debug(text)
-    for ch in text:
-      if (ch == '%'):
-        ch = 'PCT'
-      elif (ch in ['-',' ']):
-        ch = '_'
-      name += ch
-
-    #logging.debug('---------------------------------------------')
-    #logging.debug(fname + name)
+    #logging.debug('name    : ' + name)
     #logging.debug('---------------------------------------------')
 
-    return fname + name
+    return name
 
   #--------------------------------------------------------------------
   def _calcNamedRanges(self):
 
-
-    fname = self.item.fullName
-
-    #--------------------------------------------------------------------
-    names = OrderedDict()
-    name = fname + '.TITLE'
-    rows = self.tbl['TITLE']['ROWS']
-    cols = self.tbl['TITLE']['COLS']
-    srow = 0
-    scol = 0
-    data = self.tbl['TITLE']['DATA']
-    names[name] = MatrixData.Range(rows,cols,srow,scol,data)
-    self.tbl['TITLE']['NAMED-RANGES'] = names
+    tblName = self.item.fullName
+    tbl     = self.tbl
 
     #--------------------------------------------------------------------
     names = OrderedDict()
-    name = fname + '.ROW_DATA_HDR'
-    rows = self.tbl['ROW-DATA-HDR']['ROWS']
-    cols = self.tbl['ROW-DATA-HDR']['COLS']
+
+    key  = 'TITLE'
+    rows = tbl[key]['ROWS']
+    cols = tbl[key]['COLS']
     srow = 0
     scol = 0
-    data = self.tbl['ROW-DATA-HDR']['DATA']
-    names[name] = MatrixData.Range(rows,cols,srow,scol,data)
-    self.tbl['ROW-DATA-HDR']['NAMED-RANGES'] = names
- 
-    #--------------------------------------------------------------------
-    names = OrderedDict()
-    name = fname + '.COL_DATA_HDR'
-    rows = self.tbl['COL-DATA-HDR']['ROWS']
-    cols = self.tbl['COL-DATA-HDR']['COLS']
-    srow = 0
-    scol = 0
-    data = self.tbl['COL-DATA-HDR']['DATA']
-    names[name] = MatrixData.Range(rows,cols,srow,scol,data)
-    self.tbl['COL-DATA-HDR']['NAMED-RANGES'] = names
+    data = tbl[key]['DATA']
+    keys = [key,'DATA']
+    name = key + '.CELL'
+
+    namedData = NamedData(tblName,name,rows,cols,srow,scol,data,tbl,keys)
+    names[namedData.name] = namedData
+
+    tbl[key]['NAMED-RANGES'] = names
 
     #--------------------------------------------------------------------
     names = OrderedDict()
-    name = fname + '.TBL_DATA'
-    rows = self.tbl['TBL-DATA']['ROWS']
-    cols = self.tbl['TBL-DATA']['COLS']
+
+    key  = 'ROW-DATA-HDR'
+    rows = tbl[key]['ROWS']
+    cols = tbl[key]['COLS']
     srow = 0
     scol = 0
-    data = self.tbl['TBL-DATA']['DATA']
-    names[name] = MatrixData.Range(rows,cols,srow,scol,data)
-    self.tbl['TBL-DATA']['NAMED-RANGES'] = names
+    data = tbl[key]['DATA']
+    keys = [key,'DATA']
+    name = key + '.RANGE'
+
+    namedData = NamedData(tblName,name,rows,cols,srow,scol,data,tbl,keys)
+    names[namedData.name] = namedData
+
+    tbl[key]['NAMED-RANGES'] = names
 
     #--------------------------------------------------------------------
     names = OrderedDict()
-    name = fname + '.ROW_COMP_HDR'
-    rows = self.tbl['ROW-COMP-HDR']['ROWS']
-    cols = self.tbl['ROW-COMP-HDR']['COLS']
+
+    key  = 'COL-DATA-HDR'
+    rows = tbl[key]['ROWS']
+    cols = tbl[key]['COLS']
     srow = 0
     scol = 0
-    data = self.tbl['ROW-COMP-HDR']['DATA']
-    names[name] = MatrixData.Range(rows,cols,srow,scol,data)
+    data = tbl[key]['DATA']
+    keys = [key,'DATA']
+    name = key + '.RANGE'
 
-    for rowIdx in range(self.tbl['ROW-COMP-HDR']['ROWS']):
-      name = self._calcRangeName(fname,'ROW-COMP-HDR',rowIdx,0,'ROW-COMP-HDR')
+    namedData = NamedData(tblName,name,rows,cols,srow,scol,data,tbl,keys)
+    names[namedData.name] = namedData
+
+    tbl[key]['NAMED-RANGES'] = names
+
+    #--------------------------------------------------------------------
+    names = OrderedDict()
+
+    key  = 'TBL-DATA'
+    rows = tbl[key]['ROWS']
+    cols = tbl[key]['COLS']
+    srow = 0
+    scol = 0
+    data = tbl[key]['DATA']
+    keys = [key,'DATA']
+    name = key + '.RANGE'
+
+    namedData = NamedData(tblName,name,rows,cols,srow,scol,data,tbl,keys)
+    names[namedData.name] = namedData
+
+    for rowIdx in range(rows):
+      rows = 1
+      cols = tbl[key]['COLS']
+      srow = rowIdx
+      scol = 0
+      data = self.tbl[key]['DATA']
+      keys = [key,'DATA']
+
+      name = self._calcDataName(tblName,key,'RANGE',rowIdx,0,'ROW-DATA-HDR')
+      namedData = NamedData(tblName,name,rows,cols,srow,scol,data,tbl,keys)
+      names[namedData.name] = namedData
+
+    self.tbl[key]['NAMED-RANGES'] = names
+
+    #--------------------------------------------------------------------
+    names = OrderedDict()
+
+    key  = 'ROW-COMP-HDR'
+    rows = self.tbl[key]['ROWS']
+    cols = self.tbl[key]['COLS']
+    srow = 0
+    scol = 0
+    data = self.tbl[key]['DATA']
+    keys = [key,'DATA']
+    name = key + '.RANGE'
+
+    namedData = NamedData(tblName,name,rows,cols,srow,scol,data,tbl,keys)
+    names[namedData.name] = namedData
+
+    for rowIdx in range(self.tbl[key]['ROWS']):
       rows = 1
       cols = 1
       srow = rowIdx
       scol = 0
-      data = self.tbl['ROW-COMP-HDR']['DATA']
-      names[name] = MatrixData.Range(rows,cols,srow,scol,data)
+      data = self.tbl[key]['DATA']
+      keys = [key,'DATA']
 
-    self.tbl['ROW-COMP-HDR']['NAMED-RANGES'] = names
+      name = self._calcDataName(tblName,key,'CELL',rowIdx,0,key)
+      namedData = NamedData(tblName,name,rows,cols,srow,scol,data,tbl,keys)
+      names[namedData.name] = namedData
 
-#    name = fname + '.ROW_COMP_HDR_AVG'
-#    rows = 1
-#    cols = 1
-#    srow = 0
-#    scol = 0
-#    data = self.tbl['ROW-COMP-HDR']['DATA']
-#    names[name] = (rows,cols,srow,scol,data)
-#
-#    name = fname + '.ROW_COMP_HDR_SUM'
-#    rows = 1
-#    cols = 1
-#    srow = 1
-#    scol = 0
-#    data = self.tbl['ROW-COMP-HDR']['DATA']
-#    names[name] = (rows,cols,srow,scol,data)
-#
-#    name = fname + '.ROW_COMP_HDR_CNT'
-#    rows = 1
-#    cols = 1
-#    srow = 2
-#    scol = 0
-#    data = self.tbl['ROW-COMP-HDR']['DATA']
-#    names[name] = (rows,cols,srow,scol,data)
+    self.tbl[key]['NAMED-RANGES'] = names
 
     #--------------------------------------------------------------------
     names = OrderedDict()
-    name = fname + '.ROW_COMP_TBL'
-    rows = self.tbl['ROW-COMP-TBL']['ROWS']
-    cols = self.tbl['ROW-COMP-TBL']['COLS']
+
+    key  = 'ROW-COMP-TBL'
+    rows = self.tbl[key]['ROWS']
+    cols = self.tbl[key]['COLS']
     srow = 0
     scol = 0
-    data = self.tbl['ROW-COMP-TBL']['DATA']
-    names[name] = MatrixData.Range(rows,cols,srow,scol,data)
+    data = self.tbl[key]['DATA']
+    keys = [key,'DATA']
+    name = key + '.RANGE'
 
-    for rowIdx in range(self.tbl['ROW-COMP-TBL']['ROWS']):
-      name = self._calcRangeName(fname,'ROW-COMP-TBL',rowIdx,0,'ROW-COMP-HDR')
+    namedData = NamedData(tblName,name,rows,cols,srow,scol,data,tbl,keys)
+    names[namedData.name] = namedData
+
+    for rowIdx in range(self.tbl[key]['ROWS']):
       rows = 1
-      cols = self.tbl['ROW-COMP-TBL']['COLS']
+      cols = self.tbl[key]['COLS']
       srow = rowIdx
       scol = 0
-      data = self.tbl['ROW-COMP-HDR']['DATA']
-      names[name] = MatrixData.Range(rows,cols,srow,scol,data)
+      data = self.tbl[key]['DATA']
+      keys = [key,'DATA']
 
-    self.tbl['ROW-COMP-TBL']['NAMED-RANGES'] = names
+      name = self._calcDataName(tblName,key,'RANGE',rowIdx,0,'ROW-COMP-HDR')
+      namedData = NamedData(tblName,name,rows,cols,srow,scol,data,tbl,keys)
+      names[namedData.name] = namedData
 
-#    name = fname + '.ROW_COMP_TBL_AVG'
-#    rows = 1
-#    cols = self.tbl['ROW-COMP-TBL']['COLS']
-#    srow = 0
-#    scol = 0
-#    data = self.tbl['ROW-COMP-TBL']['DATA']
-#    names[name] = (rows,cols,srow,scol,data)
-#
-#    name = fname + '.ROW_COMP_TBL_SUM'
-#    rows = 1
-#    cols = self.tbl['ROW-COMP-TBL']['COLS']
-#    srow = 1
-#    scol = 0
-#    data = self.tbl['ROW-COMP-TBL']['DATA']
-#    names[name] = (rows,cols,srow,scol,data)
-#
-#    name = fname + '.ROW_COMP_TBL_CNT'
-#    rows = 1
-#    cols = self.tbl['ROW-COMP-TBL']['COLS']
-#    srow = 2
-#    scol = 0
-#    data = self.tbl['ROW-COMP-TBL']['DATA']
-#    names[name] = (rows,cols,srow,scol,data)
+    self.tbl[key]['NAMED-RANGES'] = names
 
     #--------------------------------------------------------------------
     names = OrderedDict()
-    name = fname + '.COL_COMP_HDR'
-    rows = self.tbl['COL-COMP-HDR']['ROWS']
-    cols = self.tbl['COL-COMP-HDR']['COLS']
+
+    key  = 'COL-COMP-HDR'
+    rows = self.tbl[key]['ROWS']
+    cols = self.tbl[key]['COLS']
     srow = 0
     scol = 0
-    data = self.tbl['COL-COMP-HDR']['DATA']
-    names[name] = MatrixData.Range(rows,cols,srow,scol,data)
+    data = self.tbl[key]['DATA']
+    keys = [key,'DATA']
+    name = key + '.RANGE'
 
-    for colIdx in range(self.tbl['COL-COMP-HDR']['COLS']):
-      name = self._calcRangeName(fname,'COL-COMP-HDR',0,colIdx,'COL-COMP-HDR')
+    namedData = NamedData(tblName,name,rows,cols,srow,scol,data,tbl,keys)
+    names[namedData.name] = namedData
+
+    for colIdx in range(self.tbl[key]['COLS']):
       rows = 1
       cols = 1
       srow = 0
       scol = colIdx
-      data = self.tbl['COL-COMP-HDR']['DATA']
-      names[name] = MatrixData.Range(rows,cols,srow,scol,data)
+      data = self.tbl[key]['DATA']
+      keys = [key,'DATA']
 
-    self.tbl['COL-COMP-HDR']['NAMED-RANGES'] = names
+      name = self._calcDataName(tblName,key,'CELL',0,colIdx,key)
+      namedData = NamedData(tblName,name,rows,cols,srow,scol,data,tbl,keys)
+      names[namedData.name] = namedData
 
-#    name = fname + '.COL_COMP_HDR_AVG'
-#    rows = 1
-#    cols = 1
-#    srow = 0
-#    scol = 0
-#    data = self.tbl['COL-COMP-HDR']['DATA'][0][0]
-#    names[name] = (rows,cols,srow,scol,data)
-#
-#    name = fname + '.COL_COMP_HDR_SUM'
-#    rows = 1
-#    cols = 1
-#    srow = 0
-#    scol = 1
-#    data = self.tbl['COL-COMP-HDR']['DATA'][0][1]
-#    names[name] = (rows,cols,srow,scol,data)
-#
-#    name = fname + '.COL_COMP_HDR_CNT'
-#    rows = 1
-#    cols = 1
-#    srow = 0
-#    scol = 2
-#    data = self.tbl['COL-COMP-HDR']['DATA'][0][2]
-#    names[name] = (rows,cols,srow,scol,data)
+    self.tbl[key]['NAMED-RANGES'] = names
 
     #--------------------------------------------------------------------
     names = OrderedDict()
-    name = fname + '.COL_COMP_TBL'
-    rows = self.tbl['COL-COMP-TBL']['ROWS']
-    cols = self.tbl['COL-COMP-TBL']['COLS']
+
+    key  = 'COL-COMP-TBL'
+    rows = self.tbl[key]['ROWS']
+    cols = self.tbl[key]['COLS']
     srow = 0
     scol = 0
-    data = self.tbl['COL-COMP-TBL']['DATA']
-    names[name] = MatrixData.Range(rows,cols,srow,scol,data)
+    data = self.tbl[key]['DATA']
+    keys = [key,'DATA']
+    name = key + '.RANGE'
 
-    for colIdx in range(self.tbl['COL-COMP-TBL']['COLS']):
-      name = self._calcRangeName(fname,'COL-COMP-TBL',0,colIdx,'COL-COMP-HDR')
-      rows = self.tbl['COL-COMP-TBL']['ROWS']
+    namedData = NamedData(tblName,name,rows,cols,srow,scol,data,tbl,keys)
+    names[namedData.name] = namedData
+
+    for colIdx in range(self.tbl[key]['COLS']):
+      rows = self.tbl[key]['ROWS']
       cols = 1
       srow = 0
       scol = colIdx
-      data = self.tbl['COL-COMP-TBL']['DATA']
-      names[name] = MatrixData.Range(rows,cols,srow,scol,data)
+      data = self.tbl[key]['DATA']
+      keys = [key,'DATA']
 
-    self.tbl['COL-COMP-TBL']['NAMED-RANGES'] = names
+      name = self._calcDataName(tblName,key,'RANGE',0,colIdx,'COL-COMP-HDR')
+      namedData = NamedData(tblName,name,rows,cols,srow,scol,data,tbl,keys)
+      names[namedData.name] = namedData
 
-#    name = fname + '.COL_COMP_TBL_AVG'
-#    rows = self.tbl['COL-COMP-TBL']['ROWS']
-#    cols = 1
-#    srow = 0
-#    scol = 0
-#    data = self.tbl['COL-COMP-TBL']['DATA'][0]
-#    names[name] = (rows,cols,srow,scol,data)
-#
-#    name = fname + '.COL_COMP_TBL_SUM'
-#    rows = self.tbl['COL-COMP-TBL']['ROWS']
-#    cols = 1
-#    srow = 0
-#    scol = 1
-#    data = self.tbl['COL-COMP-TBL']['DATA'][0]
-#    names[name] = (rows,cols,srow,scol,data)
-#
-#    name = fname + '.COL_COMP_TBL_CNT'
-#    rows = self.tbl['COL-COMP-TBL']['ROWS']
-#    cols = 1
-#    srow = 0
-#    scol = 2
-#    data = self.tbl['COL-COMP-TBL']['DATA'][0]
-#    names[name] = (rows,cols,srow,scol,data)
-
-#    self.tbl['NAMED-RANGES'] = names
+    self.tbl[key]['NAMED-RANGES'] = names
 
 

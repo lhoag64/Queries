@@ -46,7 +46,7 @@ class QueryWeeks(Query):
       weekStart = '2016-01-04'
       weekEnd   = max
   
-      if (period != 'ALL'):
+      if (period != 'YTD'):
         if (period in WeekTable):
           weekStart = WeekTable[period][0]
           weekEnd   = WeekTable[period][1]

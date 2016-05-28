@@ -6,10 +6,7 @@ from   timesheet.calendar          import Calendar
 from   timesheet.faeteam           import FaeTeam
 from   timesheet.fldata            import FlData
 from   timesheet.tsdata            import TsData
-#from   summary.wbinfo              import WbInfo
 from   summary.wbdata              import WbData
-#from   summary.summary.summarydata import SummaryData
-#from   summary.summaryworkbook     import SummaryWorkBook
 
 #----------------------------------------------------------------------
 def InitializeDatabaseTables():
@@ -72,32 +69,32 @@ if (__name__ == '__main__'):
 
   amList =                                                                                          \
     [                                                                                               \
-      ((' 0',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','ALL','ACTIVITY'     ,None,None)        ,  \
-      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','ALL','LTS'          ,None,None)        ,  \
-      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','ALL','UTL-CF'       ,None,None)        ,  \
-      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','ALL','UTL-PS'       ,None,None)        ,  \
-      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','ALL','UTL-DT'       ,None,None)        ,  \
-      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','ALL','UTL-LS'       ,None,None)        ,  \
-      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','ALL','LTYPE'        ,None,None)        ,  \
-      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','ALL','GKA'          ,None,None)        ,  \
-      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC'   ,'10',{'ACT':10})  ,  \
-      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC'   ,'11',{'ACT':11})  ,  \
-      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC'   ,'12',{'ACT':12})  ,  \
-      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC'   ,'13',{'ACT':13})  ,  \
-      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC'   ,'14',{'ACT':14})  ,  \
-      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC'   ,'15',{'ACT':15})  ,  \
-      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC'   ,'16',{'ACT':16})  ,  \
-      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC'   ,'17',{'ACT':17})  ,  \
-      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC'   ,'18',{'ACT':18})  ,  \
-      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC'   ,'19',{'ACT':19})  ,  \
-      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC'   ,'20',{'ACT':20})  ,  \
-      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC'   ,'21',{'ACT':21})  ,  \
-      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC'   ,'22',{'ACT':22})  ,  \
-      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC'   ,'23',{'ACT':23})  ,  \
-      ((' 0',' 0'),'MATRIX EMEA FAE YTD','MATRIX' ,'EMEA','ALL','FAE-AWH'      ,None,None)        ,  \
-      (('+1',' 0'),'MATRIX EMEA FAE YTD','MATRIX' ,'EMEA','ALL','FAE-WH'       ,None,None)        ,  \
-      (('+1',' 0'),'MATRIX EMEA FAE YTD','MATRIX' ,'EMEA','ALL','FAE-OT'       ,None,None)        ,  \
-      (('+1',' 0'),'MATRIX EMEA FAE YTD','MATRIX' ,'EMEA','ALL','LTYPE'        ,None,None)        ,  \
+      ((' 0',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','YTD','ACTIVITY'     ,None,None)        ,  \
+      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','YTD','LTS'          ,None,None)        ,  \
+      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','YTD','UTL-CF'       ,None,None)        ,  \
+      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','YTD','UTL-PS'       ,None,None)        ,  \
+      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','YTD','UTL-DT'       ,None,None)        ,  \
+      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','YTD','UTL-LS'       ,None,None)        ,  \
+      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','YTD','UTL-OT'       ,None,None)        ,  \
+      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','YTD','GKA'          ,None,None)        ,  \
+      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','YTD','ACT-BY-LOC'   ,'10',{'ACT':10})  ,  \
+      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','YTD','ACT-BY-LOC'   ,'11',{'ACT':11})  ,  \
+      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','YTD','ACT-BY-LOC'   ,'12',{'ACT':12})  ,  \
+      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','YTD','ACT-BY-LOC'   ,'13',{'ACT':13})  ,  \
+      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','YTD','ACT-BY-LOC'   ,'14',{'ACT':14})  ,  \
+      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','YTD','ACT-BY-LOC'   ,'15',{'ACT':15})  ,  \
+      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','YTD','ACT-BY-LOC'   ,'16',{'ACT':16})  ,  \
+      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','YTD','ACT-BY-LOC'   ,'17',{'ACT':17})  ,  \
+      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','YTD','ACT-BY-LOC'   ,'18',{'ACT':18})  ,  \
+      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','YTD','ACT-BY-LOC'   ,'19',{'ACT':19})  ,  \
+      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','YTD','ACT-BY-LOC'   ,'20',{'ACT':20})  ,  \
+      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','YTD','ACT-BY-LOC'   ,'21',{'ACT':21})  ,  \
+      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','YTD','ACT-BY-LOC'   ,'22',{'ACT':22})  ,  \
+      (('+1',' 0'),'MATRIX EMEA YTD'    ,'MATRIX' ,'EMEA','YTD','ACT-BY-LOC'   ,'23',{'ACT':23})  ,  \
+      ((' 0',' 0'),'MATRIX EMEA FAE YTD','MATRIX' ,'EMEA','YTD','FAE-AWH'      ,None,None)        ,  \
+      (('+1',' 0'),'MATRIX EMEA FAE YTD','MATRIX' ,'EMEA','YTD','FAE-WH'       ,None,None)        ,  \
+      (('+1',' 0'),'MATRIX EMEA FAE YTD','MATRIX' ,'EMEA','YTD','FAE-OT'       ,None,None)        ,  \
+      (('+1',' 0'),'MATRIX EMEA FAE YTD','MATRIX' ,'EMEA','YTD','LTYPE'        ,None,None)        ,  \
       ((' 0',' 0'),'SUMMARY EMEA YTD'   ,'SUMMARY','AM'  ,'YTD','STD'          ,None,None)         \
     ]                                                                                     \
 
@@ -108,98 +105,5 @@ if (__name__ == '__main__'):
   wbData.Save('FAE AM MATRIX.xlsx')
 
   logging.debug('End of Program')
-
-#      ((' 0',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','LTYPE'     ,None,None)      ,  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','FAE-OT'    ,None,None)      ,  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','FAE-WH'    ,None,None)      ,  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','FAE-AWH'   ,None,None)      ,  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','10',{'ACT':10}),  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC','10',{'ACT':10}),  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC','11',{'ACT':11}),  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC','12',{'ACT':12}),  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC','13',{'ACT':13}),  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','ACT-BY-LOC','14',{'ACT':14}),  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','GKA'       ,None,None)      ,  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACTIVITY'  ,None,None)      ,  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','LTS'       ,None,None)      ,  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','UTL-CF'    ,None,None)      ,  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','UTL-PS'    ,None,None)      ,  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','UTL-DT'    ,None,None)      ,  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','UTL-LS'    ,None,None)      ,  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','UTL-CF'    ,None,None)      ,  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','UTL-PS'    ,None,None)      ,  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','UTL-DT'    ,None,None)      ,  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'EMEA','ALL','UTL-LS'    ,None,None)      ,  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','UTL-OT'    ,None,None)      ,  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','10',{'ACT':10}),  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','11',{'ACT':11}),  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','12',{'ACT':12}),  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','13',{'ACT':13}),  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','14',{'ACT':14}),  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','15',{'ACT':15}),  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','16',{'ACT':16}),  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','17',{'ACT':17}),  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','18',{'ACT':18}),  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','19',{'ACT':19}),  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','20',{'ACT':20}),  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','21',{'ACT':21}),  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','22',{'ACT':22}),  \
-#      (('+1',' 0'),'ALL YTD'      ,'MATRIX' ,'ALL' ,'ALL','ACT-BY-LOC','23',{'ACT':23}),  \
-#      ((' 0',' 0'),'ALL FAE YTD'  ,'MATRIX' ,'ALL' ,'ALL','FAE-WH'    ,None,None)      ,  \
-#      (('+1',' 0'),'ALL FAE YTD'  ,'MATRIX' ,'ALL' ,'ALL','FAE-AWH'   ,None,None)      ,  \
-#      (('+1',' 0'),'ALL FAE YTD'  ,'MATRIX' ,'ALL' ,'ALL','FAE-LT'    ,None,None)      ,  \
-#      (('+1',' 0'),'ALL FAE YTD'  ,'MATRIX' ,'ALL' ,'ALL','FAE-OT'    ,None,None)      ,  \
-#      ((' 0',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACTIVITY'  ,None,None)      ,  \
-#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','LTS'       ,None,None)      ,  \
-#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','UTL-CF'    ,None,None)      ,  \
-#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','UTL-PS'    ,None,None)      ,  \
-#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','UTL-DT'    ,None,None)      ,  \
-#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','UTL-LS'    ,None,None)      ,  \
-#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','OVERTIME'  ,None,None)      ,  \
-#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','GKA'       ,None,None)      ,  \
-#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','10',{'ACT':10}),  \
-#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','11',{'ACT':11}),  \
-#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','12',{'ACT':12}),  \
-#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','13',{'ACT':13}),  \
-#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','14',{'ACT':14}),  \
-#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','15',{'ACT':15}),  \
-#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','16',{'ACT':16}),  \
-#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','17',{'ACT':17}),  \
-#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','18',{'ACT':18}),  \
-#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','19',{'ACT':19}),  \
-#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','20',{'ACT':20}),  \
-#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','21',{'ACT':21}),  \
-#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','22',{'ACT':22}),  \
-#      (('+1',' 0'),'AM YTD'       ,'MATRIX' ,'AM'  ,'ALL','ACT-BY-LOC','23',{'ACT':23}),  \
-#      ((' 0',' 0'),'AM FAE YTD'   ,'MATRIX' ,'AM'  ,'ALL','FAE-WH'    ,None,None)      ,  \
-#      (('+1',' 0'),'AM FAE YTD'   ,'MATRIX' ,'AM'  ,'ALL','FAE-AWH'   ,None,None)      ,  \
-#      (('+1',' 0'),'AM FAE YTD'   ,'MATRIX' ,'AM'  ,'ALL','FAE-LT'    ,None,None)      ,  \
-#      (('+1',' 0'),'AM FAE YTD'   ,'MATRIX' ,'AM'  ,'ALL','FAE-OT'    ,None,None)      ,  \
-#      ((' 0',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACTIVITY'  ,None,None)      ,  \
-#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','LTS'       ,None,None)      ,  \
-#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','UTL-CF'    ,None,None)      ,  \
-#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','UTL-PS'    ,None,None)      ,  \
-#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','UTL-DT'    ,None,None)      ,  \
-#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','UTL-LS'    ,None,None)      ,  \
-#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','10',{'ACT':10}),  \
-#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','11',{'ACT':11}),  \
-#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','12',{'ACT':12}),  \
-#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','13',{'ACT':13}),  \
-#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','14',{'ACT':14}),  \
-#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','15',{'ACT':15}),  \
-#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','16',{'ACT':16}),  \
-#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','17',{'ACT':17}),  \
-#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','18',{'ACT':18}),  \
-#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','19',{'ACT':19}),  \
-#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','20',{'ACT':20}),  \
-#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','21',{'ACT':21}),  \
-#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','22',{'ACT':22}),  \
-#      (('+1',' 0'),'AM APR'       ,'MATRIX' ,'AM'  ,'APR','ACT-BY-LOC','23',{'ACT':23}),  \
-#      ((' 0',' 0'),'AM FAE APR'   ,'MATRIX' ,'AM'  ,'APR','FAE-WH'    ,None,None)      ,  \
-#      (('+1',' 0'),'AM FAE APR'   ,'MATRIX' ,'AM'  ,'APR','FAE-AWH'   ,None,None)      ,  \
-#      (('+1',' 0'),'AM FAE APR'   ,'MATRIX' ,'AM'  ,'APR','FAE-LT'    ,None,None)      ,  \
-#      (('+1',' 0'),'AM FAE APR'   ,'MATRIX' ,'AM'  ,'APR','FAE-OT'    ,None,None)      ,  \
-#      ((' 0',' 0'),'AM SUMMRY YTD','SUMMARY','AM'  ,'YTD','STD'       ,None,None)         \
-#    ]
 
   

@@ -2,7 +2,7 @@ import logging
 from   collections                       import OrderedDict
 from   xlinterface.xlworkbook            import XlWorkBook
 from   xlinterface.xlworksheet           import XlWorkSheet
-from   summary.wsitem                    import WsItem
+from   summary.wbitem                    import WbItem
 from   summary.matrix.actvitivydata      import ActivityData
 from   summary.matrix.ltsdata            import LtsData
 from   summary.matrix.ltypedata          import LTypeData
@@ -12,6 +12,7 @@ from   summary.matrix.actbylocdata       import ActByLocData
 from   summary.matrix.faedata            import FaeData
 from   summary.matrix.matrixtable        import MatrixTable
 from   summary.summary.summarydata       import SummaryData
+from   summary.summary.summarytable      import SummaryTable
 
 #----------------------------------------------------------------------
 FuncDict =                               \
@@ -29,7 +30,7 @@ FuncDict =                               \
     'MATRIX_UTL_LS'    : UtlData,        \
     'MATRIX_UTL_OT'    : UtlData,        \
     'MATRIX_ACT_BY_LOC': ActByLocData,   \
-    'SUMMARY'          : SummaryData     \
+    'SUMMARY_STD'      : SummaryData     \
   }
 
 #----------------------------------------------------------------------
@@ -76,10 +77,10 @@ class WbData:
       for name in itemDict:
         item = itemDict[name]
         row,col = self.calcStartLoc(item)
-        if (item.rptType == 'MATRIX'):
-          item.AddWsRpt(MatrixTable(ws,row,col,item.data))
-#        if (item.rptType == 'SUMMARY'):
-#          item.AddWsRpt(SummaryTable(ws,row,col,item,fullDict))
+        if (item.objType == 'MATRIX'):
+          item.AddWsObj(ws,MatrixTable(ws,row,col,item.data))
+        if (item.objType == 'SUMMARY'):
+          item.AddWsObj(ws,SummaryTable(ws,row,col,item,fullDict))
         self.prevRow = row
         self.prevCol = col
         self.prevHgt = item.hgt
@@ -113,12 +114,7 @@ class WbData:
       return (row,col)
 
   #--------------------------------------------------------------------
-  def Order(self):
-    self.wb.Order()
-  #--------------------------------------------------------------------
-  def Save(self,filename):
-    self.wb.Save(filename)
-
+  # Start of WbData
   #--------------------------------------------------------------------
   def __init__(self):
     self.wb       = WbData.Wb()
@@ -127,26 +123,27 @@ class WbData:
     self.itemDict['MATRIX' ] = OrderedDict()
     self.itemDict['SUMMARY'] = OrderedDict()
     self.itemDict['CHART'  ] = OrderedDict()
+    self.nameDict = OrderedDict()
     self.wsDict   = OrderedDict()
 
   #--------------------------------------------------------------------
   def AddList(self,infoList):
     for info in infoList:
-      item = WsItem(info)
+      item = WbItem(info)
 
-      if (item.rptType == 'MATRIX'):
+      if (item.objType == 'MATRIX'):
         if (item.fullName not in self.itemDict['MATRIX']):
           self.itemDict['MATRIX'][item.fullName] = item
         else:
           logging.error('Duplicate matix item in ItemList: ' + item.fullName)
 
-      if (item.rptType == 'SUMMARY'):
+      if (item.objType == 'SUMMARY'):
         if (item.fullName not in self.itemDict['SUMMARY']):
           self.itemDict['SUMMARY'][item.fullName] = item
         else:
           logging.error('Duplicate summary item in ItemList: ' + item.fullName)
 
-      if (item.rptType == 'CHART'):
+      if (item.objType == 'CHART'):
         if (item.fullName not in self.itemDict['CHART']):
           self.itemDict['CHART'][item.fullName] = item
         else:
@@ -161,7 +158,23 @@ class WbData:
   def _generateMatixData(self):
     for name in self.itemDict['MATRIX']:
       item = self.itemDict['MATRIX'][name]
-      item.AddData(FuncDict[item.rptFunc](item))
+      item.CreateMatrixData(FuncDict[item.objFunc],item)
+      for section in item.data:
+        if (type(item.data[section]) is OrderedDict):
+          sectionDict = item.data[section]
+          if ('NAMED-RANGES' in sectionDict):
+            for range in item.data[section]['NAMED-RANGES']:
+              rangeData = item.data[section]['NAMED-RANGES'][range]
+              self.nameDict[range] = rangeData
+
+      logging.debug('')
+    logging.debug('')
+
+  #--------------------------------------------------------------------
+  def _generateSummaryData(self):
+    for name in self.itemDict['SUMMARY']:
+      item = self.itemDict['SUMMARY'][name]
+      item.CreateSummaryData(FuncDict[item.objFunc],self.itemDict['MATRIX'],self.nameDict)
 
   #--------------------------------------------------------------------
   def _generateWsDict(self):
@@ -179,8 +192,17 @@ class WbData:
 
     self._generateMatixData()
     self._generateWsDict()
-#    self._generateSummaryData()
+    self._generateSummaryData()
 
     for wsName in self.wsDict:
       logging.debug(wsName)
       self.wb.AddSheet(wsName,self.wsDict[wsName],self.wsDict)
+
+  #--------------------------------------------------------------------
+  def Order(self):
+    self.wb.Order()
+
+  #--------------------------------------------------------------------
+  def Save(self,filename):
+    self.wb.Save(filename)
+
