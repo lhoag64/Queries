@@ -28,13 +28,10 @@ from   database.queries.queryfae        import QueryFae
 
 #----------------------------------------------------------------------
 class Database:
-  def __init__(self,root,filename):
+  def __init__(self,filename):
 
-    Database.root     = root
     Database.filename = filename
-
-    pathname = os.path.join(root,filename)
-    Database.db = sqlite3.connect(pathname)
+    Database.db       = sqlite3.connect(filename)
 
     Database.masterts    = None
 

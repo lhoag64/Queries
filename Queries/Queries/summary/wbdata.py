@@ -92,17 +92,17 @@ class WbData:
 
     #--------------------------------------------------------------------
     def calcStartLoc(self,item):
-      row = item.loc[0]
-      col = item.loc[1]
+      row = item.loc[0].strip()
+      col = item.loc[1].strip()
 
       rowRelative = False
       if (row[:1] == '+'):
         rowRelative = True
-      row = row[1:]
+      #row = row[1:]
       colRelative = False
       if (col[:1] == '+'):
         colRelative = True
-      col = col[1:]
+      #col = col[1:]
 
       row = int(row)
       col = int(col)

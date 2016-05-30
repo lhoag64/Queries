@@ -41,8 +41,8 @@ class ActByLocData(MatrixData):
   #--------------------------------------------------------------------
   def _createTitleDict(self,tblItem):
     actDict = Db.QueryActList.GetData()
-    act     = self.item.options['ACT']
-    title   = actDict[act] + ' - ' + str(act) 
+    act     = int(self.item.options['ACT'])
+    title   = actDict[act] + ' - ' + str(act)
     return super()._calcTitleDict(title,tblItem)
 
   #--------------------------------------------------------------------

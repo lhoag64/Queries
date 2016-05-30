@@ -12,6 +12,9 @@
     <OutputPath>.</OutputPath>
     <Name>Queries</Name>
     <RootNamespace>Queries</RootNamespace>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <CommandLineArguments>config.txt</CommandLineArguments>
+    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -77,7 +80,8 @@
     </Compile>
     <Compile Include="database\tables\__init__.py" />
     <Compile Include="database\__init__.py" />
-    <Compile Include="logconfig.py" />
+    <Compile Include="utilities\args.py" />
+    <Compile Include="utilities\logconfig.py" />
     <Compile Include="openpyxl\cell\cell.py" />
     <Compile Include="openpyxl\cell\interface.py" />
     <Compile Include="openpyxl\cell\read_only.py" />
@@ -287,6 +291,10 @@
     <Compile Include="timesheet\timesheet.py" />
     <Compile Include="timesheet\tsdata.py" />
     <Compile Include="timesheet\__init__.py" />
+    <Compile Include="utilities\readconfig.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="utilities\__init__.py" />
     <Compile Include="xlinterface\xlcolortable.py" />
     <Compile Include="xlinterface\xlworkbook.py" />
     <Compile Include="xlinterface\xlworksheet.py" />
@@ -323,6 +331,7 @@
     <Folder Include="summary\charts\" />
     <Folder Include="summary\summary\" />
     <Folder Include="timesheet\" />
+    <Folder Include="utilities\" />
     <Folder Include="xlinterface\" />
   </ItemGroup>
   <PropertyGroup>

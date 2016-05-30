@@ -3,14 +3,17 @@ import logging
 #----------------------------------------------------------------------
 class WbItem:
   def __init__(self,info):
+    stxt = info[1].split('.')
+    
     self.loc      = info[0]   # (0,0)
-    self.wsName   = info[1]   # FAE YTD
+    self.wsName   = stxt[0]   # FAE YTD
     self.objType  = info[2]   # MATRIX
     self.region   = info[3]   # EMEA
     self.period   = info[4]   # ALL
     self.objName  = info[5]   # UTL-CF
     self.optName  = info[6]   # varies
     self.options  = info[7]   # varies
+    self.wsTitle  = info[8]   # Pretty Title
     self.objFunc  = self._getFuncName()
     self.fullName = self._getFullName()
     self.data     = None

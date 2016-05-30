@@ -1,0 +1,64 @@
+#---------------------------------------------------------
+# Define working directory - where log file is placed
+# and base directory of timesheets spreadsheets.
+#---------------------------------------------------------
+WORKDIR, X:\Reporting\Timesheets
+
+#---------------------------------------------------------
+# Define location and name of database file to use
+#---------------------------------------------------------
+DATABASE, X:\Reporting\Timesheets\timesheets.db
+
+#---------------------------------------------------------
+# Define a workbook.  Anything that follows will go in
+# that workbook.  A new WORKBOOK line will start a new
+# workbook.  The first parameter is a KEYWORD and needs
+# to be different for each workbook.
+#---------------------------------------------------------
+WORKBOOK, EMEA, X:\Reporting\Timesheets\Test.xlsx
+
+#---------------------------------------------------------
+# Define a worksheet.  Anything that follows will go in
+# that worksheet.  A new WORKSHEET line will start a new
+# worksheet.  The first parameter is a KEYWORD and needs
+# to be different for each worksheet.
+#---------------------------------------------------------
+WORKSHEET, MATRIX-EMEA-YTD,'Matrix EMEA YTD'
+
+#---------------------------------------------------------
+# Objects in the worksheet
+# Type, relative location, region, period, type, args
+#---------------------------------------------------------
+MATRIX   , ( 0 0), EMEA, YTD, ACTIVITY   ,None, None
+MATRIX   , (+1 0), EMEA, YTD, LTS        ,None, None
+MATRIX   , (+1 0), EMEA, YTD, UTL-CF     ,None, None
+MATRIX   , (+1 0), EMEA, YTD, UTL-PS     ,None, None
+MATRIX   , (+1 0), EMEA, YTD, UTL-DT     ,None, None
+MATRIX   , (+1 0), EMEA, YTD, UTL-LS     ,None, None
+MATRIX   , (+1 0), EMEA, YTD, UTL-OT     ,None, None
+MATRIX   , (+1 0), EMEA, YTD, GKA        ,None, None
+MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,10  , {'ACT':10}
+MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,11  , {'ACT':11}
+MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,12  , {'ACT':12}
+MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,13  , {'ACT':13}
+MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,14  , {'ACT':14}
+MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,15  , {'ACT':15}
+MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,16  , {'ACT':16}
+MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,17  , {'ACT':17}
+MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,18  , {'ACT':18}
+MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,19  , {'ACT':19}
+MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,20  , {'ACT':20}
+MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,21  , {'ACT':21}
+MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,22  , {'ACT':22}
+MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,23  , {'ACT':23}
+
+#---------------------------------------------------------
+WORKSHEET, MATRIX-EMEA-FAE-YTD, 'Matrix EMEA FAE YTD'
+MATRIX   , ( 0 0), EMEA, YTD, FAE-AWH     ,None, None
+MATRIX   , (+1 0), EMEA, YTD, FAE-WH      ,None, None
+MATRIX   , (+1 0), EMEA, YTD, FAE-OT      ,None, None
+MATRIX   , (+1 0), EMEA, YTD, LTYPE       ,None, None
+
+#---------------------------------------------------------
+WORKSHEET, SUMMARY-EMEA-YTD, 'Summary EMEA YTD'
+SUMMARY  , ( 0 0), EMEA, YTD, STD         ,None, None
