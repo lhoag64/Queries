@@ -1,17 +1,10 @@
 import logging
 from   collections              import OrderedDict
+from   summary.objdata          import ObjData
 from   summary.matrix.nameddata import NamedData
 
 #----------------------------------------------------------------------
-class MatrixData:
-
-#  class Range:
-#    def __init__(self,rows,cols,sRow,sCol,data):
-#      self.rows = rows
-#      self.cols = cols
-#      self.sRow = sRow
-#      self.sCol = sCol
-#      self.data = data
+class MatrixData(ObjData):
 
   titleFmt   = {'hAlign':'C','vAlign':'C','border':{'A':'thin'},'wrap':True,'font':{'emph':'B'}}
   rowHdrFmt  = {'hAlign':'L','vAlign':'C','border':{'A':'thin'}}
@@ -53,13 +46,9 @@ class MatrixData:
 
   def __init__(self,item):
 
-    self.item        = item
-    self.region      = item.region
-    self.objType     = item.objType  # MATRIX
-    self.objName     = item.objName  # UTL-CF
-    self.period      = item.period
+    super().__init__(item)
+
     self.funcTbl     = None
-    self.regionList  = None
     self.namedRanges = None
 
     self.tbl = OrderedDict()
@@ -90,39 +79,6 @@ class MatrixData:
 
     self.tbl['ROWS'] = titleRows + rowDataHdrRows + rowCompHdrRows
     self.tbl['COLS'] = titleCols + colDataHdrCols + colCompHdrCols
-
-  #--------------------------------------------------------------------
-  def calcRegionList(self,region):
-
-    if (type(region) is list):
-      if ('ALL' in region):
-        regionList = ['EMEA','AM','GC']
-      else:
-        regionList = region
-    else:
-      if (region == 'ALL'):
-        regionList = ['EMEA','AM','GC']
-      else:
-        regionList = [region]
-
-    self.regionList = regionList
-
-    return regionList
-
-  #--------------------------------------------------------------------
-  def _calcTitleText(self,text,regionList,period):
-    if (period == 'ALL'): period = 'YTD'
-    title = text
-    title += '\r'
-    if (len(regionList) == 1):
-       title += 'Region: '
-    else:
-       title += 'Regions: '
-    title += ','.join(regionList)
-    title += '\r'
-    title += 'Period: ' + period
-
-    return title
 
   #--------------------------------------------------------------------
   #--------------------------------------------------------------------

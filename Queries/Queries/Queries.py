@@ -95,7 +95,7 @@ if (__name__ == '__main__'):
       (('+1',' 0'),'MATRIX EMEA FAE YTD','MATRIX' ,'EMEA','YTD','FAE-WH'       ,None,None)        ,  \
       (('+1',' 0'),'MATRIX EMEA FAE YTD','MATRIX' ,'EMEA','YTD','FAE-OT'       ,None,None)        ,  \
       (('+1',' 0'),'MATRIX EMEA FAE YTD','MATRIX' ,'EMEA','YTD','LTYPE'        ,None,None)        ,  \
-      ((' 0',' 0'),'SUMMARY EMEA YTD'   ,'SUMMARY','AM'  ,'YTD','STD'          ,None,None)         \
+      ((' 0',' 0'),'SUMMARY EMEA YTD'   ,'SUMMARY','EMEA','YTD','STD'          ,None,None)         \
     ]                                                                                     \
 
   wbData.AddList(amList)

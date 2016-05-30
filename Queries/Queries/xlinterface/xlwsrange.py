@@ -2,5 +2,6 @@ import logging
 
 #----------------------------------------------------------------------
 class XlRange:
-  def __init__(self):
-    pass
+  def __init__(self,ws,nr):
+    self.ws = ws
+    self.nr = nr

@@ -18,6 +18,7 @@ class WbItem:
     self.hgt      = None
     self.wid      = None
     self.ws       = None
+    self.sheet    = None
 
   #--------------------------------------------------------------------
   def _cleanName(self,name):
@@ -42,8 +43,8 @@ class WbItem:
     self.wid  = data.tbl['COLS']
 
   #--------------------------------------------------------------------
-  def CreateSummaryData(self,func,itemDict,nameDict):
-    data = func(itemDict,nameDict)
+  def CreateSummaryData(self,func,item,itemDict,nameDict,objNameDict):
+    data = func(item,itemDict,nameDict,objNameDict)
 
     self.data = data.tbl
     self.hgt  = data.tbl['ROWS']
@@ -58,7 +59,8 @@ class WbItem:
     self.wid  = data.tbl['COLS']
 
   #--------------------------------------------------------------------
-  def AddWsObj(self,ws,wsObj):
+  def AddWsObj(self,sheet,ws,wsObj):
+    self.sheet = sheet
     self.ws    = ws
     self.wsObj = wsObj
   

@@ -17,15 +17,12 @@ class LTypeData(MatrixData):
 
     super().__init__(item)
     super()._calcFuncTable()
-    super().calcRegionList(self.region)
 
     #------------------------------------------------------------------
     # Fetch data from database
     #------------------------------------------------------------------
     self.weekDict = Db.QueryWeeks.GetData(self.regionList,self.period)
     self.dataDict = Db.QueryLType.GetData(self.regionList,self.weekDict)
-
-    #self.faeDict = Db.QueryFae.GetFaeData(self.regionList)
 
     for tblItem in self.tbl:
       if (tblItem in self.funcTbl):

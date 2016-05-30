@@ -17,7 +17,6 @@ class ActByLocData(MatrixData):
 
     super().__init__(item)
     super()._calcFuncTable()
-    super().calcRegionList(self.region)
 
     #------------------------------------------------------------------
     # Fetch data from database

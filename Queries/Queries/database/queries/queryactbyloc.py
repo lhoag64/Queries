@@ -126,7 +126,7 @@ class QueryActByLoc(Query):
 
     grpDict = {}
 
-    logging.debug('---------------------------------------')
+    #logging.debug('---------------------------------------')
     for region in regionList:
       dbResult = self._queryRgnLoc(region)
 
@@ -147,7 +147,7 @@ class QueryActByLoc(Query):
         if (item[2] not in grpDict):
           grpDict[item[2]] = NameLookup[item[2]]
 
-      logging.debug('---------------------------------------')
+      #logging.debug('---------------------------------------')
 
     idx = 0
     grpList = sorted(grpDict)

@@ -1,7 +1,6 @@
 import logging
 from   collections                  import OrderedDict
 from   database.database            import Database as Db
-#from   summary.summaryitem          import SummaryItem
 from   summary.matrix.matrixdata    import MatrixData
 
 #----------------------------------------------------------------------
@@ -17,7 +16,6 @@ class LtsData(MatrixData):
 
     super().__init__(item)
     super()._calcFuncTable()
-    super().calcRegionList(self.region)
 
     #------------------------------------------------------------------
     # Fetch data from database

@@ -11,9 +11,89 @@ class NamedData:
     self.data    = data
     self.tbl     = tbl
     self.keys    = keys
-    self.name    = self.CreateName(tblName,name)
+    self.name    = NamedData.CreateName(tblName,name)
 
-  def CreateName(self,tblName,dataName):
+  #--------------------------------------------------------------------
+  class NamePath:
+    def __init__(self,name):
+      self.wsName   = None
+      self.type     = None
+      self.region   = None
+      self.period   = None
+      self.objName  = None
+      self.itemList = None
+      self.itemType = None
+
+      foundDash = False
+      itemList = []
+      while (len(name) > 0):
+        cIdx = 0
+        for ch in name:
+          if (ch == '.'):
+            break
+          if ((cIdx > 0) and (cIdx < len(name))):
+            p = name[cIdx-1]
+            c = name[cIdx+0]
+            n = name[cIdx+1]
+            if (p == '.' and c == 'X' and n == '.'):
+              foundDash = True
+              break
+          cIdx += 1
+        if (len(name[:cIdx]) > 0):
+          itemList.append(name[:cIdx])
+        cIdx += 1
+        name = name[cIdx:]
+        if (foundDash):
+          break
+
+      self.wsName  = itemList[0]
+      self.type    = itemList[1]
+      self.region  = itemList[2]
+      self.period  = itemList[3]
+      itemList = itemList[4:]
+      self.objName = '.'.join(itemList)
+
+      if (foundDash):
+        name = name[cIdx:]
+        itemList = []
+        while (len(name) > 0):
+          cIdx = 0
+          for ch in name:
+            if (ch == '.'):
+              break
+            cIdx += 1
+          if (len(name[:cIdx]) > 0):
+            itemList.append(name[:cIdx])
+          cIdx += 1
+          name = name[cIdx:]
+
+      self.itemType = itemList[-1]
+      self.itemList = itemList[:-1]
+
+  #--------------------------------------------------------------------
+  def DecomposeName(name):
+    return NamedData.NamePath(name)
+
+  def GetWsName(name):
+    cIdx = 0
+    for ch in name:
+      if (ch == '.'):
+        break
+      cIdx += 1
+    name = name[:cIdx]
+    return name
+
+  def StripWsName(name):
+    cIdx = 0
+    for ch in name:
+      if (ch == '.'):
+        break
+      cIdx += 1
+    name = name[cIdx+1:]
+    return name
+
+  #--------------------------------------------------------------------
+  def CreateName(tblName,dataName):
 
     #logging.debug('---------------------------------------------')
     #logging.debug(tblName)
@@ -80,7 +160,7 @@ class NamedData:
         prev = ch
       name += ch
 
-    fullName = fullName + '.-.' + name
+    fullName = fullName + '.X.' + name
 
     #logging.debug('---------------------------------------------')
     #cnt = len(fullName)

@@ -259,6 +259,12 @@
     <Compile Include="summary\matrix\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="summary\objdata.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="summary\summary\stddata.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="summary\summary\summarydata.py">
       <SubType>Code</SubType>
     </Compile>

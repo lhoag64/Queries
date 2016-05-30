@@ -4,15 +4,16 @@ from   openpyxl.styles                     import Font,Border,Alignment,Color,St
 from   openpyxl.styles.borders             import Side
 from   openpyxl.styles.fills               import FILL_SOLID
 from   xlinterface.xlcolortable            import XlColorTable as ColorTable
+from   xlinterface.xlwsrange               import XlRange
 from   openpyxl.workbook.names.named_range import NamedRange
 
 alignType = {'C':'center','L':'left','R':'right'}
 colorType = {'Black':0,'Red':2,'Green':3,'Orange':19}
 
 class XlWorkSheet:
-  def __init__(self,wb,ws,name):
-    self.wb   = wb
-    self.ws   = ws
+  def __init__(self,pywb,pyws,name):
+    self.pywb   = pywb
+    self.pyws   = pyws
     self.name = name
 
   #-------------------------------------------------------------------
@@ -25,15 +26,29 @@ class XlWorkSheet:
 
   #-------------------------------------------------------------------
   def SetColWid(self,col,wid):
-    self.ws.column_dimensions[self.GetColumnLetter(col)].width = wid
+    self.pyws.column_dimensions[self.GetColumnLetter(col)].width = wid
   
   #-------------------------------------------------------------------
   def SetRowHgt(self,col,hgt):
-    self.ws.row_dimensions[col].height = hgt
+    self.pyws.row_dimensions[col].height = hgt
 
   #-------------------------------------------------------------------
+  def MergeCells(self,row,col,rows,cols):
+    start = self.GetColumnLetter(col)
+    start += str(row)
+
+    eRow = row + rows - 1
+    eCol = col + cols - 1
+
+    end = self.GetColumnLetter(eCol)
+    end += str(eRow)
+
+    self.pyws.merge_cells(start + ':' + end)
+  
+  # TODO: Make (topRow,row,sRow;botRow,rows,eRow; etc consistent   
+  #-------------------------------------------------------------------
   def DrawRegion(self,tRow,lCol,bRow,rCol,bType=None,color=None):
-    ws = self.ws
+    pyws = self.pyws
     if (color):
       cFmt = {'fill':color}
       for i in range(lCol,rCol+1):
@@ -53,7 +68,7 @@ class XlWorkSheet:
 
   #-------------------------------------------------------------------
   def DrawBorder(self,tRow,lCol,bRow,rCol,type):
-    ws = self.ws
+    pyws = self.pyws
     for i in range(lCol,rCol+1):
       tFmt = {'border':{'T':type}}
       self.SetFormat(tRow,i,tFmt)
@@ -73,7 +88,7 @@ class XlWorkSheet:
 
   #-------------------------------------------------------------------
   def SetFormat(self,row,col,fmt):
-    ws     = self.ws
+    pyws   = self.pyws
     font   = None
     color  = None
     align  = None
@@ -81,7 +96,7 @@ class XlWorkSheet:
     numFmt = None
     border = None
 
-    c = ws.cell(row=row,column=col)
+    c = pyws.cell(row=row,column=col)
 
     #-------------------------------------------------------------------------
     for i in fmt:
@@ -184,12 +199,12 @@ class XlWorkSheet:
 
   #-------------------------------------------------------------------
   def SetCell(self,row,col,val,fmt=None):
-    ws = self.ws
+    pyws = self.pyws
 
     if (fmt):
       self.SetFormat(row,col,fmt)
 
-    c = ws.cell(row=row,column=col)
+    c = pyws.cell(row=row,column=col)
     c.value = val
 
   #-------------------------------------------------------------------
@@ -215,26 +230,26 @@ class XlWorkSheet:
 
   #-------------------------------------------------------------------
   def GetValue(self,wsRow,wsCol):
-    ws = self.ws
-    c = ws.cell(row=wsRow,column=wsCol)
+    pyws = self.pyws
+    c = pyws.cell(row=wsRow,column=wsCol)
     return c.value
 
   #-------------------------------------------------------------------
   def GetCell(self,wsRow,wsCol):
-    ws = self.ws
-    c = ws.cell(row=wsRow,column=wsCol)
+    pyws = self.pyws
+    c = pyws.cell(row=wsRow,column=wsCol)
     return c.value
 
   #-------------------------------------------------------------------
   def Cell(self,wsRow,wsCol):
-    ws = self.ws
-    c = ws.cell(row=wsRow,column=wsCol)
+    pyws = self.pyws
+    c = pyws.cell(row=wsRow,column=wsCol)
     return c
 
   #-------------------------------------------------------------------
   def FlgCell(self,wsRow,wsCol):
-    ws = self.ws
-    c = ws.cell(row=wsRow,column=wsCol)
+    pyws = self.pyws
+    c = pyws.cell(row=wsRow,column=wsCol)
 
     red = openpyxl.styles.colors.RED
     side   = Side(style='medium',color=red)
@@ -243,11 +258,11 @@ class XlWorkSheet:
 
   #-------------------------------------------------------------------
   def WsCell(self,wsRow,wsCol,val=None):
-    ws = self.ws
+    pyws = self.pyws
     if val is not None:
-      return ws.cell(row=wsRow,column=wsCol,value=value)
+      return pyws.cell(row=wsRow,column=wsCol,value=value)
     else:
-      return ws.cell(row=wsRow,column=wsCol)
+      return pyws.cell(row=wsRow,column=wsCol)
 
 
   #-------------------------------------------------------------------
@@ -285,8 +300,8 @@ class XlWorkSheet:
 
     name = self.cleanRangeName(name)
 
-    pyWs = self.ws
-    pyWb = self.wb
+    pyWs = self.pyws
+    pyWb = self.pywb
 
     sCol = self.GetColumnLetter(sCol)
     eCol = self.GetColumnLetter(eCol)
@@ -299,4 +314,6 @@ class XlWorkSheet:
 
     pyWb.add_named_range(nr)
 
-    return nr
+    result = XlRange(self,nr)
+
+    return result

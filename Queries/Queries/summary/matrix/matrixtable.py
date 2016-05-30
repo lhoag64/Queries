@@ -30,7 +30,18 @@ class TableItem:
 #----------------------------------------------------------------------
 class MatrixTable:
   #--------------------------------------------------------------------
-  def __init__(self,ws,sRow,sCol,data):
+  def __init__(self,ws,sheet,sRow,sCol,item):
+
+    self.sheet    = sheet
+    self.ws       = ws
+    self.item     = item
+    self.data     = item.data
+    self.name     = item.data['NAME']
+    self.items    = None
+    self.startRow = sRow
+    self.startCol = sCol
+
+    data = item.data
 
     dRows = data['TBL-DATA']['ROWS']
     dCols = data['TBL-DATA']['COLS']
@@ -46,9 +57,6 @@ class MatrixTable:
     items['COL-COMP-TBL'] = TableItem(sRow+1        ,sCol+1+dCols+0,data['COL-COMP-TBL'])
 
     self.items = items
-    self.data  = data
-    self.name  = data['NAME']
-    self.ws    = ws
     self.names = OrderedDict()
 
     title = ' '.join(data['TITLE']['DATA'][0][0].split('\r'))
@@ -136,6 +144,8 @@ class MatrixTable:
       if (item.names != None):
         for namedRange in item.names:
           self._createNamedRange(namedRange,item)
+
+    pass
 
   #--------------------------------------------------------------------
   def _createNamedRange(self,name,item):

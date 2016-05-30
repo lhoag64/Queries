@@ -1,4 +1,5 @@
 import logging
+from   collections                       import OrderedDict
 from   xlinterface.xlworkbook            import XlWorkBook
 from   xlinterface.xlworksheet           import XlWorkSheet
 from   summary.matrix.matrixdata         import MatrixData 
@@ -9,8 +10,114 @@ from   openpyxl.chart.series             import Series
 
 #----------------------------------------------------------------------
 class SummaryTable:
-  def __init__(self,ws,row,col,item,itemDict):
+  def __init__(self,ws,sheet,sRow,sCol,item,nameDict):
 
+    self.sheet    = sheet
+    self.ws       = ws
+    self.item     = item
+    self.data     = item.data
+    #self.name     = item.data['NAME']
+    self.startRow = sRow
+    self.startCol = sCol
+
+    data = item.data
+
+    items = OrderedDict()
+    items['HDR'] = data['HDR']
+    for item in data['TBL']:
+     items[item] = data['TBL'][item]
+
+    for item in items:
+      logging.debug(item)
+
+    cRow = self.startRow
+    cCol = self.startCol
+
+    colIdx = sCol
+    for item in data['COL-WID']:
+      ws.SetColWid(colIdx,item)
+      colIdx += 1
+
+    rows = data['ROWS']
+    cols = data['COLS']
+    tRow = cRow
+    bRow = cRow + rows - 1
+    lCol = cRow
+    rCol = cCol + cols - 1
+    ws.DrawRegion(tRow,lCol,bRow,rCol,'thick','Blue 1')
+
+    cRow += 1
+    cCol += 1
+    for item in items:
+      self._drawTbl(cRow,cCol,items[item])
+      cRow += items[item]['ROWS'] + 1
+
+  #--------------------------------------------------------------------
+  def _drawTbl(self,sRow,sCol,tblData):
+    cRow = sRow
+    cCol = sCol
+    for name in ['TITLE','DATA']:
+      if (name in tblData):
+        self._drawTblItem(cRow,cCol,tblData[name])
+        if ('BORDER' in tblData[name]):
+          for border in tblData[name]['BORDER']:
+            tRow = cRow + border[0]
+            bRow = cRow + border[2] - 1
+            lCol = cCol + border[1]
+            rCol = cCol + border[3] - 1
+            self.ws.DrawBorder(tRow,lCol,bRow,rCol,border[4])
+        logging.debug(name.ljust(5) + '|' + str(cRow).rjust(2) + '|')
+        cRow += tblData[name]['ROWS']
+
+  #--------------------------------------------------------------------
+  def _drawTblItem(self,sRow,sCol,item):
+    cRow = sRow
+    cCol = sCol
+    if ('MERGED' in item):
+      for merge in item['MERGED']:
+        row  = cRow + merge[0]
+        col  = cCol + merge[1]
+        rows = merge[2]
+        cols = merge[3]
+        self.ws.MergeCells(row,cols,rows,cols)
+    if ('HGT' in item):
+      for hgt in item['HGT']:
+        row  = cRow + hgt[0]
+        self.ws.SetRowHgt(row,hgt[1])
+
+    for rowIdx in range(item['ROWS']):
+      for colIdx in range(item['COLS']):
+        fmt = item['FMT']
+        if (item['DATA'][rowIdx][colIdx] != None):
+          if (type(fmt) is list):
+            fmt = item['FMT'][rowIdx][colIdx]
+            if (type(fmt) is dict):
+              if (type(item['DATA'][rowIdx][colIdx]) is int):
+                if ('I' in fmt):
+                  fmt = fmt['I']
+              if (type(item['DATA'][rowIdx][colIdx]) is float):
+                if ('F' in fmt):
+                  fmt = fmt['I']
+              if ('G' in fmt):
+                fmt = fmt['G']
+              self.ws.SetCell(cRow+rowIdx,cCol+colIdx,item['DATA'][rowIdx][colIdx],fmt)
+          else:
+            if (type(item['FMT']) is list):
+              fmt = item['FMT'][rowIdx][colIdx]
+            if (type(fmt) is dict):
+              if ('I' in fmt):
+                fmt = fmt['I']
+              if ('F' in fmt):
+                fmt = fmt['F']
+              if ('G' in fmt):
+                fmt = fmt['G']
+            self.ws.SetCell(cRow+rowIdx,cCol+colIdx,item['DATA'][rowIdx][colIdx],fmt)
+
+
+
+#    ws.ws.merge_cells('C3:E3')
+
+  def noteused(self):
     self.ws = ws
 
     self.ws.SetColWid(2,10)
