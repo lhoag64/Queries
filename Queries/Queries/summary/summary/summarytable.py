@@ -27,8 +27,8 @@ class SummaryTable:
     for item in data['TBL']:
      items[item] = data['TBL'][item]
 
-    for item in items:
-      logging.debug(item)
+    #for item in items:
+    #  logging.debug(item)
 
     cRow = self.startRow
     cCol = self.startCol

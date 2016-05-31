@@ -3,17 +3,17 @@ import logging
 #----------------------------------------------------------------------
 class WbItem:
   def __init__(self,info):
-    stxt = info[1].split('.')
+    #stxt = info[1].split('.')
     
     self.loc      = info[0]   # (0,0)
-    self.wsName   = stxt[0]   # FAE YTD
+    self.wsName   = info[1]   # FAE YTD
     self.objType  = info[2]   # MATRIX
     self.region   = info[3]   # EMEA
     self.period   = info[4]   # ALL
     self.objName  = info[5]   # UTL-CF
     self.optName  = info[6]   # varies
     self.options  = info[7]   # varies
-    self.wsTitle  = info[8]   # Pretty Title
+    self.wsTitle  = info[9]   # Pretty Title
     self.objFunc  = self._getFuncName()
     self.fullName = self._getFullName()
     self.data     = None
@@ -39,27 +39,27 @@ class WbItem:
 
   #--------------------------------------------------------------------
   def CreateMatrixData(self,func,item):
-    data = func(item)
+    obj = func(item)
 
-    self.data = data.tbl
-    self.hgt  = data.tbl['ROWS']
-    self.wid  = data.tbl['COLS']
+    self.data = obj.tbl
+    self.hgt  = obj.tbl['ROWS']
+    self.wid  = obj.tbl['COLS']
 
   #--------------------------------------------------------------------
   def CreateSummaryData(self,func,item,itemDict,nameDict,objNameDict):
-    data = func(item,itemDict,nameDict,objNameDict)
+    obj = func(item,itemDict,nameDict,objNameDict)
 
-    self.data = data.tbl
-    self.hgt  = data.tbl['ROWS']
-    self.wid  = data.tbl['COLS']
+    self.data = obj.tbl
+    self.hgt  = obj.tbl['ROWS']
+    self.wid  = obj.tbl['COLS']
 
   #--------------------------------------------------------------------
-  def CreateChartData(self,func,itemDict,nameDict):
-    data = func(itemDict,nameDict)
+  def CreateChartData(self,func,item,itemDict,nameDict,objNameDict):
+    obj = func(item,itemDict,nameDict,objNameDict)
 
-    self.data = data.tbl
-    self.hgt  = data.tbl['ROWS']
-    self.wid  = data.tbl['COLS']
+    self.data = obj.tbl
+    self.hgt  = obj.tbl['ROWS']
+    self.wid  = obj.tbl['COLS']
 
   #--------------------------------------------------------------------
   def AddWsObj(self,sheet,ws,wsObj):

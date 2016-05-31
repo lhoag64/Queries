@@ -80,6 +80,16 @@
     </Compile>
     <Compile Include="database\tables\__init__.py" />
     <Compile Include="database\__init__.py" />
+    <Compile Include="summary\charts\chartdata.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="summary\charts\charttable.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="summary\charts\utllinedata.py" />
+    <Compile Include="summary\charts\utlpiedata.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="utilities\args.py" />
     <Compile Include="utilities\logconfig.py" />
     <Compile Include="openpyxl\cell\cell.py" />

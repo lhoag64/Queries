@@ -15,7 +15,7 @@ DATABASE, X:\Reporting\Timesheets\timesheets.db
 # workbook.  The first parameter is a KEYWORD and needs
 # to be different for each workbook.
 #---------------------------------------------------------
-WORKBOOK, EMEA, X:\Reporting\Timesheets\Test.xlsx
+WORKBOOK, EMEA, X:\Reporting\Timesheets\EMEA-Test.xlsx
 
 #---------------------------------------------------------
 # Define a worksheet.  Anything that follows will go in
@@ -29,36 +29,95 @@ WORKSHEET, MATRIX-EMEA-YTD,'Matrix EMEA YTD'
 # Objects in the worksheet
 # Type, relative location, region, period, type, args
 #---------------------------------------------------------
-MATRIX   , ( 0 0), EMEA, YTD, ACTIVITY   ,None, None
-MATRIX   , (+1 0), EMEA, YTD, LTS        ,None, None
-MATRIX   , (+1 0), EMEA, YTD, UTL-CF     ,None, None
-MATRIX   , (+1 0), EMEA, YTD, UTL-PS     ,None, None
-MATRIX   , (+1 0), EMEA, YTD, UTL-DT     ,None, None
-MATRIX   , (+1 0), EMEA, YTD, UTL-LS     ,None, None
-MATRIX   , (+1 0), EMEA, YTD, UTL-OT     ,None, None
-MATRIX   , (+1 0), EMEA, YTD, GKA        ,None, None
-MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,10  , {'ACT':10}
-MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,11  , {'ACT':11}
-MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,12  , {'ACT':12}
-MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,13  , {'ACT':13}
-MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,14  , {'ACT':14}
-MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,15  , {'ACT':15}
-MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,16  , {'ACT':16}
-MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,17  , {'ACT':17}
-MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,18  , {'ACT':18}
-MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,19  , {'ACT':19}
-MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,20  , {'ACT':20}
-MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,21  , {'ACT':21}
-MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,22  , {'ACT':22}
-MATRIX   , (+1 0), EMEA, YTD, ACT-BY-LOC ,23  , {'ACT':23}
+MATRIX   , ( 0  0), EMEA, YTD, ACTIVITY   ,None, None
+MATRIX   , (+1  0), EMEA, YTD, LTS        ,None, None
+MATRIX   , (+1  0), EMEA, YTD, UTL-CF     ,None, None
+MATRIX   , (+1  0), EMEA, YTD, UTL-PS     ,None, None
+MATRIX   , (+1  0), EMEA, YTD, UTL-DT     ,None, None
+MATRIX   , (+1  0), EMEA, YTD, UTL-LS     ,None, None
+MATRIX   , (+1  0), EMEA, YTD, UTL-OT     ,None, None
+MATRIX   , (+1  0), EMEA, YTD, GKA        ,None, None
+MATRIX   , (+1  0), EMEA, YTD, ACT-BY-LOC ,10  , {'ACT':10}
+MATRIX   , (+1  0), EMEA, YTD, ACT-BY-LOC ,11  , {'ACT':11}
+MATRIX   , (+1  0), EMEA, YTD, ACT-BY-LOC ,12  , {'ACT':12}
+MATRIX   , (+1  0), EMEA, YTD, ACT-BY-LOC ,13  , {'ACT':13}
+MATRIX   , (+1  0), EMEA, YTD, ACT-BY-LOC ,14  , {'ACT':14}
+MATRIX   , (+1  0), EMEA, YTD, ACT-BY-LOC ,15  , {'ACT':15}
+MATRIX   , (+1  0), EMEA, YTD, ACT-BY-LOC ,16  , {'ACT':16}
+MATRIX   , (+1  0), EMEA, YTD, ACT-BY-LOC ,17  , {'ACT':17}
+MATRIX   , (+1  0), EMEA, YTD, ACT-BY-LOC ,18  , {'ACT':18}
+MATRIX   , (+1  0), EMEA, YTD, ACT-BY-LOC ,19  , {'ACT':19}
+MATRIX   , (+1  0), EMEA, YTD, ACT-BY-LOC ,20  , {'ACT':20}
+MATRIX   , (+1  0), EMEA, YTD, ACT-BY-LOC ,21  , {'ACT':21}
+MATRIX   , (+1  0), EMEA, YTD, ACT-BY-LOC ,22  , {'ACT':22}
+MATRIX   , (+1  0), EMEA, YTD, ACT-BY-LOC ,23  , {'ACT':23}
 
 #---------------------------------------------------------
 WORKSHEET, MATRIX-EMEA-FAE-YTD, 'Matrix EMEA FAE YTD'
-MATRIX   , ( 0 0), EMEA, YTD, FAE-AWH     ,None, None
-MATRIX   , (+1 0), EMEA, YTD, FAE-WH      ,None, None
-MATRIX   , (+1 0), EMEA, YTD, FAE-OT      ,None, None
-MATRIX   , (+1 0), EMEA, YTD, LTYPE       ,None, None
+MATRIX   , ( 0  0), EMEA, YTD, FAE-AWH     ,None, None
+MATRIX   , (+1  0), EMEA, YTD, FAE-WH      ,None, None
+MATRIX   , (+1  0), EMEA, YTD, FAE-OT      ,None, None
+MATRIX   , (+1  0), EMEA, YTD, LTYPE       ,None, None
+
+#---------------------------------------------------------
+WORKSHEET, MATRIX-EMEA-FAE-JAN, 'Matrix EMEA JAN YTD'
+MATRIX   , ( 0  0), EMEA, JAN, FAE-AWH     ,None, None
+MATRIX   , (+1  0), EMEA, JAN, FAE-WH      ,None, None
+MATRIX   , (+1  0), EMEA, JAN, FAE-OT      ,None, None
+MATRIX   , (+1  0), EMEA, JAN, LTYPE       ,None, None
 
 #---------------------------------------------------------
 WORKSHEET, SUMMARY-EMEA-YTD, 'Summary EMEA YTD'
-SUMMARY  , ( 0 0), EMEA, YTD, STD         ,None, None
+SUMMARY  , ( 0  0), EMEA, YTD, STD         ,None, None
+CHART    , ( 0  0), EMEA, YTD, UTL-PIE     ,None, None
+CHART    , (+1  0), EMEA, YTD, UTL-LINE    ,None, None
+
+#---------------------------------------------------------
+WORKBOOK, GLOBAL, X:\Reporting\Timesheets\GLOBAL-Test.xlsx
+
+#---------------------------------------------------------
+WORKSHEET, MATRIX-GLOBAL-YTD,'Matrix GLOBAL YTD'
+
+#---------------------------------------------------------
+MATRIX   , ( 0  0), GLOBAL, YTD, ACTIVITY   ,None, None
+MATRIX   , (+1  0), GLOBAL, YTD, LTS        ,None, None
+MATRIX   , (+1  0), GLOBAL, YTD, UTL-CF     ,None, None
+MATRIX   , (+1  0), GLOBAL, YTD, UTL-PS     ,None, None
+MATRIX   , (+1  0), GLOBAL, YTD, UTL-DT     ,None, None
+MATRIX   , (+1  0), GLOBAL, YTD, UTL-LS     ,None, None
+MATRIX   , (+1  0), GLOBAL, YTD, UTL-OT     ,None, None
+MATRIX   , (+1  0), GLOBAL, YTD, GKA        ,None, None
+MATRIX   , (+1  0), GLOBAL, YTD, ACT-BY-LOC ,10  , {'ACT':10}
+MATRIX   , (+1  0), GLOBAL, YTD, ACT-BY-LOC ,11  , {'ACT':11}
+MATRIX   , (+1  0), GLOBAL, YTD, ACT-BY-LOC ,12  , {'ACT':12}
+MATRIX   , (+1  0), GLOBAL, YTD, ACT-BY-LOC ,13  , {'ACT':13}
+MATRIX   , (+1  0), GLOBAL, YTD, ACT-BY-LOC ,14  , {'ACT':14}
+MATRIX   , (+1  0), GLOBAL, YTD, ACT-BY-LOC ,15  , {'ACT':15}
+MATRIX   , (+1  0), GLOBAL, YTD, ACT-BY-LOC ,16  , {'ACT':16}
+MATRIX   , (+1  0), GLOBAL, YTD, ACT-BY-LOC ,17  , {'ACT':17}
+MATRIX   , (+1  0), GLOBAL, YTD, ACT-BY-LOC ,18  , {'ACT':18}
+MATRIX   , (+1  0), GLOBAL, YTD, ACT-BY-LOC ,19  , {'ACT':19}
+MATRIX   , (+1  0), GLOBAL, YTD, ACT-BY-LOC ,20  , {'ACT':20}
+MATRIX   , (+1  0), GLOBAL, YTD, ACT-BY-LOC ,21  , {'ACT':21}
+MATRIX   , (+1  0), GLOBAL, YTD, ACT-BY-LOC ,22  , {'ACT':22}
+MATRIX   , (+1  0), GLOBAL, YTD, ACT-BY-LOC ,23  , {'ACT':23}
+
+#---------------------------------------------------------
+WORKSHEET, MATRIX-GLOBAL-FAE-YTD, 'Matrix GLOBAL FAE YTD'
+MATRIX   , ( 0  0), GLOBAL, YTD, FAE-AWH     ,None, None
+MATRIX   , (+1  0), GLOBAL, YTD, FAE-WH      ,None, None
+MATRIX   , (+1  0), GLOBAL, YTD, FAE-OT      ,None, None
+MATRIX   , (+1  0), GLOBAL, YTD, LTYPE       ,None, None
+
+#---------------------------------------------------------
+WORKSHEET, MATRIX-GLOBAL-JAN-YTD, 'Matrix GLOBAL JAN YTD'
+MATRIX   , ( 0  0), GLOBAL, JAN, FAE-AWH     ,None, None
+MATRIX   , (+1  0), GLOBAL, JAN, FAE-WH      ,None, None
+MATRIX   , (+1  0), GLOBAL, JAN, FAE-OT      ,None, None
+MATRIX   , (+1  0), GLOBAL, JAN, LTYPE       ,None, None
+
+#---------------------------------------------------------
+WORKSHEET, SUMMARY-GLOBAL-YTD, 'Summary GLOBAL YTD'
+SUMMARY  , ( 0  0), GLOBAL, YTD, STD         ,None, None
+#CHART    , ( 0  0), GLOBAL, YTD, UTL-PIE     ,None, None
+#CHART    , (+1  0), GLOBAL, YTD, UTL-LINE    ,None, None

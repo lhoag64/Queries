@@ -201,7 +201,7 @@ class QueryFae(Query):
         raise
     if (len(regionList) > 1):
         rgnList.append(regionList)
-        hcList.append('Total Headcount')
+        hcList.append('Global Headcount')
         hcCnt += 1
 
     data     = [[None for col in range(maxWeeks)] for row in range(hcCnt)]

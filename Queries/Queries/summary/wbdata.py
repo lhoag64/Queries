@@ -14,6 +14,9 @@ from   summary.matrix.matrixtable        import MatrixTable
 from   summary.matrix.nameddata          import NamedData
 from   summary.summary.stddata           import StdData
 from   summary.summary.summarytable      import SummaryTable
+from   summary.charts.utlpiedata         import UtlPieData
+from   summary.charts.utllinedata        import UtlLineData
+from   summary.charts.charttable         import ChartTable
 
 #----------------------------------------------------------------------
 FuncDict =                               \
@@ -31,6 +34,8 @@ FuncDict =                               \
     'MATRIX_UTL_LS'    : UtlData,        \
     'MATRIX_UTL_OT'    : UtlData,        \
     'MATRIX_ACT_BY_LOC': ActByLocData,   \
+    'CHART_UTL_PIE'    : UtlPieData,     \
+    'CHART_UTL_LINE'   : UtlLineData,    \
     'SUMMARY_STD'      : StdData         \
   }
 
@@ -39,6 +44,8 @@ class WbData:
 
   #--------------------------------------------------------------------
   class Wb:
+
+    #------------------------------------------------------------------
     def __init__(self):
       self.wbWsDict = OrderedDict()
       self.wb = XlWorkBook()
@@ -47,16 +54,12 @@ class WbData:
       self.wbWsDict['Summary'] = ws
 
     #------------------------------------------------------------------
-#    def AddSheet(self,wsName,itemDict,fullDict):
-#      ws = self.wb.CreateXlWorkSheet(wsName)
-#      sheet = WbData.Ws(ws,itemDict,fullDict)
-#      self.wsDict[wsName] = (sheet,ws,wsName)
-#      return ws
     def AddSheet(self,wsName):
       ws = self.wb.CreateXlWorkSheet(wsName)
       sheet = WbData.Ws(ws)
       self.wbWsDict[wsName] = (ws,sheet,wsName)
 
+    #------------------------------------------------------------------
     def GetSheet(self,wsName):
       if (wsName in self.wbWsDict):
         return self.wbWsDict[wsName][1]
@@ -75,20 +78,26 @@ class WbData:
   #--------------------------------------------------------------------
   class Ws:
 
-    #def __init__(self,ws,itemDict,fullDict):
     def __init__(self,ws):
       self.ws       = ws
       self.itemDict = OrderedDict()
       self.objDict  = OrderedDict()
 
-      self.startRow  = 2
-      self.startCol = 2
+      self.sRow = 2
+      self.sCol = 2
 
-      self.prevRow = self.startRow
-      self.prevCol = self.startCol
+      self.prevRow = self.sRow
+      self.prevCol = self.sCol
       self.prevHgt = 0
       self.prevWid = 0
 
+      self.chSRow = 200
+      self.chSCol = 200
+
+      self.prevChRow = self.chSRow
+      self.prevChCol = self.chSCol
+      self.prevChHgt = 0
+      self.prevChWid = 0
 
     #--------------------------------------------------------------------
     def calcStartLoc(self,item):
@@ -98,22 +107,28 @@ class WbData:
       rowRelative = False
       if (row[:1] == '+'):
         rowRelative = True
-      #row = row[1:]
       colRelative = False
       if (col[:1] == '+'):
         colRelative = True
-      #col = col[1:]
 
       row = int(row)
       col = int(col)
   
-      if (row == 0): row = self.startRow
-      if (col == 0): col = self.startCol
+      if (row == 0): row = self.sRow
+      if (col == 0): col = self.sCol
 
       if (rowRelative == True):
         row = self.prevRow + self.prevHgt + 2
       if (colRelative == True):
         col = self.prevCol + self.prevWid + 2
+
+      return (row,col)
+
+    #--------------------------------------------------------------------
+    def calcStartChLoc(self,item):
+  
+      row = self.prevChRow + self.prevChHgt + 2
+      col = self.prevChCol
 
       return (row,col)
 
@@ -139,17 +154,16 @@ class WbData:
       self.prevHgt = item.hgt
       self.prevWid = item.wid
 
-#      for name in itemDict:
-#        item = itemDict[name]
-#        row,col = self.calcStartLoc(item)
-#        if (item.objType == 'MATRIX'):
-#          item.AddWsObj(ws,MatrixTable(ws,row,col,item.data))
-#        if (item.objType == 'SUMMARY'):
-#          item.AddWsObj(ws,SummaryTable(ws,row,col,item.data))
-#        self.prevRow = row
-#        self.prevCol = col
-#        self.prevHgt = item.hgt
-#        self.prevWid = item.wid
+    #------------------------------------------------------------------
+    def AddChart(self,item,nameDict):
+      row,col = self.calcStartChLoc(item)
+      tbl = ChartTable(self.ws,self,row,col,item,nameDict)
+      item.AddWsObj(self,self.ws,tbl)
+
+      self.prevChRow = row
+      self.prevChCol = col
+      self.prevChHgt = item.hgt
+      self.prevChWid = item.wid
 
   #--------------------------------------------------------------------
   # Start of WbData
@@ -237,14 +251,6 @@ class WbData:
         else:
           logging.error('Named Range not in names: ' + name)
 
-#      for section in item.data:
-#        if (type(item.data[section]) is OrderedDict):
-#          sectionDict = item.data[section]
-#          if ('NAMED-RANGES' in sectionDict):
-#            for range in item.data[section]['NAMED-RANGES']:
-#              rangeData = item.data[section]['NAMED-RANGES'][range]
-#              self.nameDict[range] = rangeData
-
   #--------------------------------------------------------------------
   def _generateSummaryData(self):
     for name in self.itemDict['SUMMARY']:
@@ -255,22 +261,20 @@ class WbData:
       item.CreateSummaryData(FuncDict[item.objFunc],item,itemDict,nameDict,objNameDict)
 
   #--------------------------------------------------------------------
-#  def _generateWsDict(self):
-#    for name in self.itemDict['ALL']:
-#      item = self.itemDict['ALL'][name]
-#      if (item.wsName not in self.wsDict):
-#        self.wsDict[item.wsName] = OrderedDict()
-#      if (item.fullName not in self.wsDict[item.wsName]):
-#        self.wsDict[item.wsName][item.fullName] = item
-#      else:
-#        logging.error('Duplicate item in worksheet list: ' + item.fullName)
+  def _generateChartData(self):
+    for name in self.itemDict['CHART']:
+      item     = self.itemDict['CHART'][name]
+      itemDict = self.itemDict['MATRIX']
+      nameDict = self.nameDict
+      objNameDict = self.objNameDict
+      item.CreateChartData(FuncDict[item.objFunc],item,itemDict,nameDict,objNameDict)
      
   #--------------------------------------------------------------------
   def Process(self):
 
     self._generateMatixData()
-#    self._generateWsDict()
     self._generateSummaryData()
+    self._generateChartData()
 
     wsList = []
     wsSet  = set()
@@ -299,6 +303,13 @@ class WbData:
       sheet  = self.wb.GetSheet(wsName)
       sheet.AddSummary(summary,self.nameDict)
       self.wsDict[wsName][summary.fullName] = summary
+
+    for name in self.itemDict['CHART']:
+      chart = self.itemDict['CHART'][name]
+      wsName = chart.wsName
+      sheet  = self.wb.GetSheet(wsName)
+      sheet.AddChart(chart,self.nameDict)
+      self.wsDict[wsName][chart.fullName] = chart
 
   #--------------------------------------------------------------------
   def Order(self):

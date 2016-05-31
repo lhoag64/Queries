@@ -28,8 +28,9 @@ from   database.queries.queryfae        import QueryFae
 
 #----------------------------------------------------------------------
 class Database:
-  def __init__(self,filename):
+  def __init__(self,workdir,filename):
 
+    Database.workdir  = workdir
     Database.filename = filename
     Database.db       = sqlite3.connect(filename)
 
@@ -107,22 +108,22 @@ class Database:
 
   #--------------------------------------------------------------------
   def createTsCodeTbl():
-    if (not Database.masterts): Database.masterts = Master(Database.root)
+    if (not Database.masterts): Database.masterts = Master(Database.workdir)
     Database.TsCodeTbl.Create(Database.db,Database.masterts.data['CODES'])
 
   #--------------------------------------------------------------------
   def createTsLocTbl():
-    if (not Database.masterts): Database.masterts = Master(Database.root)
+    if (not Database.masterts): Database.masterts = Master(Database.workdir)
     Database.TsLocTbl.Create(Database.db,Database.masterts.data['LOCATIONS'])
 
   #--------------------------------------------------------------------
   def createTsActTbl():
-    if (not Database.masterts): Database.masterts = Master(Database.root)
+    if (not Database.masterts): Database.masterts = Master(Database.workdir)
     Database.TsActTbl.Create(Database.db,Database.masterts.data['ACTIVITIES'])
 
   #--------------------------------------------------------------------
   def createTsPrdTbl():
-    if (not Database.masterts): Database.masterts = Master(Database.root)
+    if (not Database.masterts): Database.masterts = Master(Database.workdir)
     Database.TsPrdTbl.Create(Database.db,Database.masterts.data['PRODUCTS'])
 
   #--------------------------------------------------------------------

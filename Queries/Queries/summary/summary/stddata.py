@@ -18,10 +18,14 @@ class StdData(SummaryData):
     #for name in nameDict:
     #  logging.debug(name)
 
+    # TODO: RegionList Hack
     title      = 'Summary Statement'
     regionList = self.regionList
     period     = self.period
-    region     = self.regionList[0]
+    if (len(regionList) == 1):
+      region = self.regionList[0]
+    else:
+      region = 'GLOBAL'
     prefix     = 'MATRIX.' + region + '.' + period + '.'
 
     #------------------------------------------------------------------
@@ -68,17 +72,22 @@ class StdData(SummaryData):
     conHrs = prefix + 'UTL_OT.X.TBL_DATA.CONTRACTED.RANGE'
     totHrs = prefix + 'UTL_CF.X.TBL_DATA.TOTAL_TIME.RANGE'
     addHrs = prefix + 'UTL_OT.X.TBL_DATA.ADDITIONAL.RANGE'
-    hc     = prefix + 'FAE_WH.X.ROW_COMP_TBL.' + region + '_HEADCOUNT.RANGE'
+
+    # TODO: Fix this hack
+    if (region != 'GLOBAL'):
+      hc     = prefix + 'FAE_WH.X.ROW_COMP_TBL.' + region + '_HEADCOUNT.RANGE'
+      hcRange  = self.objNameDict[hc    ]
+      hc     = '=AVERAGE(' + hcRange[1]  + '.' + hc + ')'
+    else:
+      hc = None
 
     conRange = self.objNameDict[conHrs]
     totRange = self.objNameDict[totHrs]
     addRange = self.objNameDict[addHrs]
-    hcRange  = self.objNameDict[hc    ]
 
     conHrs = '=SUM(' + conRange[1] + '.' + conHrs + ')'
     totHrs = '=SUM(' + totRange[1] + '.' + totHrs + ')'
     addHrs = '=SUM(' + addRange[1] + '.' + addHrs + ')'
-    hc     = '=AVERAGE(' + hcRange[1]  + '.' + hc + ')'
 
     hrsDict['DATA'] = OrderedDict()
     rows = 4

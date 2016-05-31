@@ -63,7 +63,7 @@ def CreateWsList(wkSheets):
     objects = wkSheets[wkSheet]['OBJS']
     for object in objects:
       obj = objects[object]
-      tup = (obj[0],object,obj[1],obj[2],obj[3],obj[4],obj[5],obj[6],name)
+      tup = (obj[0],obj[7],obj[1],obj[2],obj[3],obj[4],obj[5],obj[6],object,name)
       wsList.append(tup)
 
   return wsList
@@ -79,9 +79,9 @@ if (__name__ == '__main__'):
   LogConfig('queries.log')
   logging.debug('Start of Program')
 
-  Db(cfgDict['DATABASE'])
+  Db(cfgDict['WORKDIR'],cfgDict['DATABASE'])
 
-  if (False):
+  if (True):
     InitializeDatabaseTables()
     InitializeTimesheetTables()
 
@@ -96,7 +96,7 @@ if (__name__ == '__main__'):
     wbData.Process()
 
     wbData.Order()
-    wbData.Save('FAE AM MATRIX.xlsx')
+    wbData.Save(wbFilename)
 
   logging.debug('End of Program')
 

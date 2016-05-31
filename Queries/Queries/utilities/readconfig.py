@@ -11,7 +11,7 @@ def parseWorkDir(fileline,cfgDict,row):
     exit(0)
 
   if (os.path.isdir(row[1]) != True):
-    logging.error('Can\'t locate WORKDIR: ' + row[1] + 'at line: ' + str(fileline))
+    logging.error('Can\'t locate WORKDIR: ' + row[1] + ' at line: ' + str(fileline))
     exit(0)
 
   cfgDict['WORKDIR'] = row[1]
@@ -24,7 +24,7 @@ def parseDatabase(fileline,cfgDict,row):
     exit(0)
 
   if (os.path.isfile(row[1]) != True):
-    logging.error('Can\'t locate DATABASE: ' + row[1] + 'at line: ' + str(fileline))
+    logging.error('Can\'t locate DATABASE: ' + row[1] + ' at line: ' + str(fileline))
     exit(0)
 
   cfgDict['DATABASE'] = row[1]
@@ -45,7 +45,7 @@ def parseWorkbook(fileline,cfgDict,row):
     cfgDict['WKBOOKS'][row1]['FILENAME'] = row[2]
     cfgDict['WKBOOKS'][row1]['WKSHEETS'] = OrderedDict()
   else:
-    logging.error('Duplicate workbook: ' + row[1] + 'at line: ' + str(fileline))
+    logging.error('Duplicate workbook: ' + row[1] + ' at line: ' + str(fileline))
     exit(0)
 
   return row1
@@ -64,7 +64,7 @@ def parseWorksheet(fileline,cfgDict,row,curWb):
     cfgDict['WKBOOKS'][curWb]['WKSHEETS'][row1]['NAME'] = row[2]
     cfgDict['WKBOOKS'][curWb]['WKSHEETS'][row1]['OBJS'] = OrderedDict()
   else:
-    logging.error('Duplicate worksheet: ' + row[1] + 'at line: ' + str(fileline))
+    logging.error('Duplicate worksheet: ' + row[1] + ' at line: ' + str(fileline))
     exit(0)
 
   return row1
@@ -78,7 +78,13 @@ def parseObj(fileline,cfgDict,row,curWb,curWs):
       if (ch not in ['(',')']):
         stxt += ch
     stxt = stxt.strip().split(' ')
-    return (stxt[0].strip(),stxt[1].strip())
+    result = []
+    for item in stxt:
+      if (len(item) > 0):
+        result.append(item)
+    if (len(result) != 2):
+      logging.error('Error parsing location: ' + text) 
+    return (result[0].strip(),result[1].strip())
 
   #--------------------------------------------------------------------
   def parseDict(tgt,text):
@@ -105,7 +111,7 @@ def parseObj(fileline,cfgDict,row,curWb,curWs):
   if (row5 == 'NONE'): row5 = None
   if (row6 == 'NONE'): row6 = None
 
-  name = row0 + '-' + row2 + '-' + row3 + '.' + row4
+  name = curWs + '.' + row0 + '-' + row2 + '-' + row3 + '.' + row4
   if (row5 != None):
     name += '.' + row5
 
@@ -113,10 +119,10 @@ def parseObj(fileline,cfgDict,row,curWb,curWs):
     if (row6 != None):
       row6 = {}
       parseDict(row6,row[6])
-    tup = (row1,row0,row2,row3,row4,row5,row6,name)
+    tup = (row1,row0,row2,row3,row4,row5,row6,curWs,name)
     cfgDict['WKBOOKS'][curWb]['WKSHEETS'][curWs]['OBJS'][name] = tup
   else:
-    logging.error('Duplicate object: ' + row[0] + 'at line: ' + str(fileline))
+    logging.error('Duplicate object: ' + row[0] + ' at line: ' + str(fileline))
     exit(0)
 
 #----------------------------------------------------------------------
@@ -130,6 +136,7 @@ def ReadConfig(filename):
     reader = csv.reader(fp)
     for inprow in reader:
       if ((len(inprow) == 0) or (inprow[0][:1] == '#')):
+        fileline += 1
         continue
       row = []
       for item in inprow:
