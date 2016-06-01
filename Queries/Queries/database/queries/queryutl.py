@@ -19,14 +19,14 @@ class QueryUtl(Query):
       }
 
   #--------------------------------------------------------------------
-  def GetData(self,regionList,weekDict,**kwargs):
+  def GetData(self,regionDict,weekDict,**kwargs):
     super()._getWeeks(weekDict)
     minWeeks = self.minWeekCnt
     maxWeeks = self.maxWeekCnt
 
     queryType = kwargs['qtype']
 
-    data = self._getData(regionList,weekDict,maxWeeks,minWeeks,kwargs)
+    data = self._getData(regionDict,weekDict,maxWeeks,minWeeks,kwargs)
 
     colComp = super()._calcRowMetrics(data['DATA'])
     rowComp = super()._calcColMetrics(data['DATA'])
@@ -53,7 +53,7 @@ class QueryUtl(Query):
     return {'TBL-DATA':data,'ROW-COMP':rowComp,'COL-COMP':colComp,'TBL-COMP':tblComp}
 
   #--------------------------------------------------------------------
-  def _getData(self,regionList,weekDict,maxWeeks,minWeeks,kwargs):
+  def _getData(self,regionDict,weekDict,maxWeeks,minWeeks,kwargs):
 
     queryType = kwargs['qtype']
 
@@ -65,11 +65,15 @@ class QueryUtl(Query):
       wcDate = weekDict['MIN'][colIdx][0]
       weDate = super()._getWeDate(wcDate)
 
-      tgtResult = self._funcDict[queryType](wcDate,weDate,regionList)
-      totResult = self._queryTotal(wcDate,weDate,regionList)
+      tgtResult = self._funcDict[queryType](wcDate,weDate,regionDict)
+      totResult = self._queryTotal(wcDate,weDate,regionDict)
 
       tgt = tgtResult[0][0]
       tot = totResult[0][0]
+
+      if (tgt == None and tot == None):
+        continue
+
       if (tgt == None): tgt = 0.0
       if (tot == None): tot = 0.0
 
@@ -96,7 +100,7 @@ class QueryUtl(Query):
       rowHdr[0][0] = 'Additional'
       rowHdr[1][0] = 'Contracted'
     else:
-      logging.critical('Invalidat UTL query type: ' + queryType)
+      logging.critical('Invalid UTL query type: ' + queryType)
       raise
 
     result = {}
@@ -109,74 +113,74 @@ class QueryUtl(Query):
     return result
 
   #--------------------------------------------------------------------
-  def _queryTotal(self,wcDate,weDate,regionList):
+  def _queryTotal(self,wcDate,weDate,regionDict):
 
     sqlopt  = [wcDate,weDate]
     sqltxt  = 'SELECT sum(ts.hours)'
     sqltxt += '  FROM ts_entry AS ts'
-    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionList,'ts.region')
+    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionDict,'ts.region')
     sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?)'
 
     return super()._runQuery(sqlopt,sqltxt)
 
   #--------------------------------------------------------------------
-  def _queryCf(self,wcDate,weDate,regionList):
+  def _queryCf(self,wcDate,weDate,regionDict):
 
     sqlopt  = [wcDate,weDate]
     sqltxt  = 'SELECT sum(ts.hours)'
     sqltxt += '  FROM ts_entry AS ts'
     sqltxt += '  INNER JOIN ts_act AS act ON ts.activity = act.act'
-    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionList,'ts.region')
+    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionDict,'ts.region')
     sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?)'
     sqltxt += '    and act.billable = 1'
 
     return super()._runQuery(sqlopt,sqltxt)
 
   #--------------------------------------------------------------------
-  def _queryPs(self,wcDate,weDate,regionList):
+  def _queryPs(self,wcDate,weDate,regionDict):
 
     sqlopt  = [wcDate,weDate]
     sqltxt  = 'SELECT sum(ts.hours)'
     sqltxt += '  FROM ts_entry AS ts'
     sqltxt += '  INNER JOIN ts_act AS act ON ts.activity = act.act'
-    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionList,'ts.region')
+    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionDict,'ts.region')
     sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?)'
     sqltxt += '    and act.pre_sales = 1'
 
     return super()._runQuery(sqlopt,sqltxt)
 
   #--------------------------------------------------------------------
-  def _queryDt(self,wcDate,weDate,regionList):
+  def _queryDt(self,wcDate,weDate,regionDict):
 
     sqlopt  = [wcDate,weDate]
     sqltxt  = 'SELECT sum(ts.hours)'
     sqltxt += '  FROM ts_entry AS ts'
     sqltxt += '  INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code'
-    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionList,'ts.region')
+    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionDict,'ts.region')
     sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?)'
     sqltxt += '    and wbs.downtime = 1'
 
     return super()._runQuery(sqlopt,sqltxt)
 
   #--------------------------------------------------------------------
-  def _queryLs(self,wcDate,weDate,regionList):
+  def _queryLs(self,wcDate,weDate,regionDict):
 
     sqlopt  = [wcDate,weDate]
     sqltxt  = 'SELECT sum(ts.hours)'
     sqltxt += '  FROM ts_entry AS ts'
     sqltxt += '  INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code'
-    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionList,'ts.region')
+    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionDict,'ts.region')
     sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?)'
     sqltxt += '    and wbs.leave = 1'
 
     return super()._runQuery(sqlopt,sqltxt)
   #--------------------------------------------------------------------
-  def _queryOt(self,wcDate,weDate,regionList):
+  def _queryOt(self,wcDate,weDate,regionDict):
 
     sqlopt  = [wcDate,weDate]
     sqltxt  = 'SELECT SUM(fae.norm_hours)'
     sqltxt += '  FROM fae_team AS fae'
-    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionList,'fae.region')
+    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionDict,'fae.region')
     sqltxt += '    and (fae.start_date <= ? and fae.end_date >= ?)'
 
     return super()._runQuery(sqlopt,sqltxt)

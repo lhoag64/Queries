@@ -3,8 +3,8 @@ import re
 import sqlite3
 from   database.tables.table import Table
 
-LocDict =                                                                                        \
-  {                                                                                              \
+LocDict =                                                                                                    \
+  {                                                                                                          \
     113: [113, 1, 1,'EMEA'  ,'UK'                      ,'UK'      ,'UK'            ,'UK'         ,1,0,0,0],  \
     112: [112, 2, 2,'EMEA'  ,'Sweden'                  ,'SE'      ,'Sweden'        ,'SE'         ,1,0,0,0],  \
     101: [101, 3, 3,'EMEA'  ,'Finland'                 ,'FI'      ,'Finland'       ,'FI'         ,1,0,0,0],  \
@@ -31,11 +31,11 @@ LocDict =                                                                       
     126: [126,12,13,'AM'    ,'AM-Latin America'        ,'LS'      ,'LA'            ,'LA'         ,0,0,0,0],  \
     127: [127,13,13,'AM'    ,'AM-South America'        ,'SA'      ,'SA'            ,'SA'         ,0,0,0,0],  \
     114: [114,14,13,'AM'    ,'US'                      ,'US'      ,'US'            ,'US-REGIONAL',0,0,0,0],  \
-    104: [104, 1,15,'ROAPAC','India'                   ,'IN'      ,'India'         ,'IN'         ,0,0,0,1],  \
-    106: [106, 2,15,'ROAPAC','Japan'                   ,'JP'      ,'Japan'         ,'JP'         ,0,0,0,1],  \
-    107: [107, 3,15,'ROAPAC','Korea'                   ,'KO'      ,'Korea'         ,'KO'         ,0,0,0,1],  \
-    129: [129, 4,16,'ROAPAC','Malaysia'                ,'MA'      ,'Malaysia'      ,'MA'         ,0,0,0,0],  \
-    108: [108, 5,16,'ROAPAC','Singapore'               ,'SI'      ,'Singapore'     ,'SI'         ,0,0,0,0],  \
+    106: [106, 1,14,'ROAPAC','Japan'                   ,'JP'      ,'Japan'         ,'JP'         ,0,0,0,1],  \
+    107: [107, 2,15,'ROAPAC','Korea'                   ,'KO'      ,'Korea'         ,'KO'         ,0,0,0,1],  \
+    104: [104, 3,16,'ROAPAC','India'                   ,'IN'      ,'India'         ,'IN'         ,0,0,0,1],  \
+    129: [129, 4,17,'ROAPAC','Singapore'               ,'SI'      ,'Singapore'     ,'SI'         ,0,0,0,0],  \
+    108: [108, 5,17,'ROAPAC','Malaysia'                ,'MA'      ,'Malaysia'      ,'MA'         ,0,0,0,0],  \
     128: [128, 1, 1,'GLOBAL','Other'                   ,'OTH'     ,'OTH'           ,'OTH'        ,0,0,0,0]   \
   }
 
@@ -69,7 +69,7 @@ class TsLocTable(Table):
                emea_key     INTEGER,
                am_key       INTEGER,
                gc_key       INTEGER,
-               apac_key     INTEGER
+               roapac_key   INTEGER
              )
         '''
       )

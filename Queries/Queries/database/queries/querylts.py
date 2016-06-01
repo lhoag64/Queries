@@ -10,12 +10,12 @@ class QueryLts(Query):
     super().__init__(db)
 
   #--------------------------------------------------------------------
-  def GetData(self,regionList,weekDict,**kwargs):
+  def GetData(self,regionDict,weekDict,**kwargs):
     super()._getWeeks(weekDict)
     minWeeks = self.minWeekCnt
     maxWeeks = self.maxWeekCnt
 
-    data = self._getData(regionList,weekDict,maxWeeks,minWeeks,kwargs)
+    data = self._getData(regionDict,weekDict,maxWeeks,minWeeks,kwargs)
 
     colComp = super()._calcRowMetrics(data['DATA'])
     rowComp = super()._calcColMetrics(data['DATA'])
@@ -24,7 +24,7 @@ class QueryLts(Query):
     return {'TBL-DATA':data,'ROW-COMP':rowComp,'COL-COMP':colComp,'TBL-COMP':tblComp}
 
   #--------------------------------------------------------------------
-  def _getData(self,regionList,weekDict,maxWeeks,minWeeks,kwargs):
+  def _getData(self,regionDict,weekDict,maxWeeks,minWeeks,kwargs):
 
     ltsDict = self._getLtsDict()
     ltsCnt  = len(ltsDict)
@@ -37,7 +37,10 @@ class QueryLts(Query):
       wcDate = weekDict['MIN'][colIdx][0]
       weDate = super()._getWeDate(wcDate)
 
-      dbResult = self._query(wcDate,weDate,regionList)
+      dbResult = self._query(wcDate,weDate,regionDict)
+
+      if (len(dbResult) == 0):
+       continue
 
       other = 0.0
       for item in dbResult:
@@ -73,12 +76,12 @@ class QueryLts(Query):
     return result
 
   #--------------------------------------------------------------------
-  def _query(self,wcDate,weDate,regionList):
+  def _query(self,wcDate,weDate,regionDict):
 
     sqlopt  = [wcDate,weDate]
     sqltxt  = 'SELECT work_type,SUM(hours)'
     sqltxt += '  FROM ts_entry AS ts'
-    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionList,'ts.region')
+    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionDict,'ts.region')
     sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?)'
     sqltxt += '  GROUP BY work_type'
 

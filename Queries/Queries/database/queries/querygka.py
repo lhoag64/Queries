@@ -11,12 +11,12 @@ class QueryGka(Query):
     super().__init__(db)
 
   #--------------------------------------------------------------------
-  def GetData(self,regionList,weekDict,**kwargs):
+  def GetData(self,regionDict,weekDict,**kwargs):
     super()._getWeeks(weekDict)
     minWeeks = self.minWeekCnt
     maxWeeks = self.maxWeekCnt
 
-    data = self._getData(regionList,weekDict,maxWeeks,minWeeks)
+    data = self._getData(regionDict,weekDict,maxWeeks,minWeeks)
 
     colComp = super()._calcRowMetrics(data['DATA'])
     rowComp = super()._calcColMetrics(data['DATA'])
@@ -25,7 +25,7 @@ class QueryGka(Query):
     return {'TBL-DATA':data,'ROW-COMP':rowComp,'COL-COMP':colComp,'TBL-COMP':tblComp}
 
   #--------------------------------------------------------------------
-  def _getData(self,regionList,weekDict,maxWeeks,minWeeks):
+  def _getData(self,regionDict,weekDict,maxWeeks,minWeeks):
 
     gkaDict = self._getGkaDict()
     gkaCnt  = len(gkaDict)
@@ -38,8 +38,11 @@ class QueryGka(Query):
       wcDate = weekDict['MIN'][colIdx][0]
       weDate = super()._getWeDate(wcDate)
 
-      gkaResult = self._queryGka(wcDate,weDate,regionList)
-      othResult = self._queryOth(wcDate,weDate,regionList)
+      gkaResult = self._queryGka(wcDate,weDate,regionDict)
+      othResult = self._queryOth(wcDate,weDate,regionDict)
+
+      if (len(gkaResult) == 0 and othResult[0][0] == None):
+        continue
 
       nokSum    = 0.0
       aluSum    = 0.0
@@ -84,26 +87,26 @@ class QueryGka(Query):
     return result
 
   #--------------------------------------------------------------------
-  def _queryGka(self,wcDate,weDate,regionList):
+  def _queryGka(self,wcDate,weDate,regionDict):
 
     sqlopt  = [wcDate,weDate]
     sqltxt  = 'SELECT wbs.code,SUM(ts.hours)'
     sqltxt += '  FROM ts_entry AS ts'
     sqltxt += '  INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code'
-    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionList,'ts.region')
+    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionDict,'ts.region')
     sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?)'
     sqltxt += '    and (wbs.gl_tm_key_acct = 1)'
     sqltxt += '  GROUP BY wbs.gl_tm_key_acct_order,wbs.code'
 
     return super()._runQuery(sqlopt,sqltxt)
 
-  def _queryOth(self,wcDate,weDate,regionList):
+  def _queryOth(self,wcDate,weDate,regionDict):
 
     sqlopt  = [wcDate,weDate]
     sqltxt  = 'SELECT SUM(ts.hours)'
     sqltxt += '  FROM ts_entry AS ts'
     sqltxt += '  INNER JOIN ts_code AS wbs ON ts.wbs_code = wbs.code'
-    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionList,'ts.region')
+    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionDict,'ts.region')
     sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?)'
     sqltxt += '    and (wbs.gl_tm_key_acct = 0)'
 

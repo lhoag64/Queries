@@ -26,9 +26,23 @@ class Query:
     return weDate
 
   #--------------------------------------------------------------------
-  def _getRegionWhereClause(self,regionList,field='region'):
+  def _getRegionWhereClause(self,regions,field='region'):
+
+    rgnList = None
+    if (type(regions) is dict):
+      if ('LIST' in regions):
+        rgnList = regions['LIST']
+        if (type(rgnList) is not list):
+          rgnList = [rgnList]
+      else:
+        raise
+    elif (type(regions) is list):
+      rgnList = regions
+    elif (type(regions) is str):
+      rgnList = [regions]
+
     where = ''
-    for region in regionList:
+    for region in rgnList:
       where += '(' + field + ' = \'' + region + '\') or '
     where = where[0:-4]
     return '(' + where + ')'

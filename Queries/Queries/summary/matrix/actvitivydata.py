@@ -21,8 +21,8 @@ class ActivityData(MatrixData):
     #------------------------------------------------------------------
     # Fetch data from database
     #------------------------------------------------------------------
-    self.weekDict = Db.QueryWeeks.GetData(self.regionList,self.period)
-    self.dataDict = Db.QueryAct.GetData(self.regionList,self.weekDict)
+    self.weekDict = Db.QueryWeeks.GetData(self.regionDict,self.period)
+    self.dataDict = Db.QueryAct.GetData(self.regionDict,self.weekDict)
 
     for tblItem in self.tbl:
       if (tblItem in self.funcTbl):

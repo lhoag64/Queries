@@ -35,7 +35,12 @@ class WeeksTable(Table):
                fi_days    TEXT,
                se_days    TEXT,
                gc_days    TEXT,
-               gc_week    TEXT
+               gc_week    TEXT,
+               jp_days    TEXT,
+               ko_days    TEXT,
+               in_days    TEXT,
+               sg_days    TEXT,
+               au_days    TEXT
              )
         '''
       )
@@ -43,6 +48,7 @@ class WeeksTable(Table):
     db.commit()
 
     wb = XlWorkBook()
+    # TODO: Remove hardcoded path
     wb.Read(r'X:\Reporting\Timesheets\Global-Working-Days-2016.xlsx')
 
     ws = wb.GetSheetByName('Weeks')
@@ -79,13 +85,18 @@ class WeeksTable(Table):
       se_days   = ws.GetValue(wsRow,wsCol+ 8)
       gc_days   = ws.GetValue(wsRow,wsCol+ 9)
       gc_week   = ws.GetValue(wsRow,wsCol+10)
+      jp_days   = ws.GetValue(wsRow,wsCol+11)
+      ko_days   = ws.GetValue(wsRow,wsCol+12)
+      in_days   = ws.GetValue(wsRow,wsCol+13)
+      sg_days   = ws.GetValue(wsRow,wsCol+14)
+      au_days   = ws.GetValue(wsRow,wsCol+15)
 
-      week = (index,wc_date,we_date,am_days,uk_days,fr_days,de_days,fi_days,se_days,gc_days,gc_week)
+      week = (index,wc_date,we_date,am_days,uk_days,fr_days,de_days,fi_days,se_days,gc_days,gc_week,jp_days,ko_days,in_days,sg_days,au_days)
       weekList.append(week)
       wsRow += 1
       index += 1
 
-    c.executemany('INSERT INTO weeks VALUES (?,?,?,?,?,?,?,?,?,?,?)',weekList)
+    c.executemany('INSERT INTO weeks VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',weekList)
 
     db.commit()
 
@@ -102,8 +113,9 @@ class WeeksTable(Table):
         'MAY'     : ('2016-05-02','2016-05-29'), \
         'JUN'     : ('2016-05-30','2016-07-03'), \
         'JUL'     : ('2016-07-04','2016-05-32'), \
-        'Q1FY2016': ('2016-01-04','2016-04-03'), \
-        'H1FY2016': ('2016-01-04','2016-07-03')  \
+        'Q1FY16'  : ('2016-01-04','2016-04-03'), \
+        'Q2FY16'  : ('2016-04-04','2016-07-03'), \
+        'H1FY16'  : ('2016-01-04','2016-07-03')  \
       }
      
     c = db.cursor()

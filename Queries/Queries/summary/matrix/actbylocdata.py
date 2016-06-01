@@ -21,8 +21,8 @@ class ActByLocData(MatrixData):
     #------------------------------------------------------------------
     # Fetch data from database
     #------------------------------------------------------------------
-    self.weekDict = Db.QueryWeeks.GetData(self.regionList,self.period)
-    self.dataDict = Db.QueryActByLoc.GetData(self.regionList,self.weekDict,act=item.options)
+    self.weekDict = Db.QueryWeeks.GetData(self.regionDict,self.period)
+    self.dataDict = Db.QueryActByLoc.GetData(self.regionDict,self.weekDict,act=item.options)
 
     for tblItem in self.tbl:
       if (tblItem in self.funcTbl):

@@ -17,15 +17,15 @@ class QueryFae(Query):
       }
 
   #--------------------------------------------------------------------
-  def GetData(self,regionList,weekDict,**kwargs):
+  def GetData(self,regionDict,weekDict,**kwargs):
     super()._getWeeks(weekDict)
     minWeeks = self.minWeekCnt
     maxWeeks = self.maxWeekCnt
 
-    wdResults = self._getWd(regionList,weekDict,maxWeeks,minWeeks)
-    hcResults = self._getHc(regionList,weekDict,maxWeeks,minWeeks)
+    wdResults = self._getWd(regionDict,weekDict,maxWeeks,minWeeks)
+    hcResults = self._getHc(regionDict,weekDict,maxWeeks,minWeeks)
 
-    data = self._getData(regionList,weekDict,maxWeeks,minWeeks,kwargs)
+    data = self._getData(regionDict,weekDict,maxWeeks,minWeeks,kwargs)
 
     colComp = super()._calcRowMetrics(data['DATA'])
     rowComp = super()._calcColMetrics(data['DATA'])
@@ -46,11 +46,11 @@ class QueryFae(Query):
     return {'TBL-DATA':data,'ROW-COMP':rowComp,'COL-COMP':colComp,'TBL-COMP':tblComp}
 
   #--------------------------------------------------------------------
-  def _getData(self,regionList,weekDict,maxWeeks,minWeeks,kwargs):
+  def _getData(self,regionDict,weekDict,maxWeeks,minWeeks,kwargs):
 
     queryType = kwargs['qtype']
 
-    dbResult = self._queryFae(regionList)
+    dbResult = self._queryFae(regionDict)
     faeCnt  = len(dbResult)
     faeList = []
     faeDict = {}
@@ -70,7 +70,11 @@ class QueryFae(Query):
       wcDate = weekDict['MIN'][colIdx][0]
       weDate = super()._getWeDate(wcDate)
 
-      dbResult = self._funcDict[queryType](wcDate,weDate,regionList)
+      dbResult = self._funcDict[queryType](wcDate,weDate,regionDict)
+
+      if (len(dbResult) == 0):
+        continue
+
       dbDict = {}
       for item in dbResult:
         dbDict[(item[0],item[1])] = item[2]
@@ -103,23 +107,23 @@ class QueryFae(Query):
     return result
 
   #--------------------------------------------------------------------
-  def _queryFae(self,regionList):
+  def _queryFae(self,regionDict):
 
     sqlopt = []
     sqltxt  = 'SELECT fae.fname,fae.lname,fae.norm_hours,fae.max_hours,lbr_type,start_date,end_date,region'
     sqltxt += '  FROM fae_team AS fae'
-    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionList,'fae.region')
+    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionDict,'fae.region')
     sqltxt += '  ORDER BY fae.region,fae.prd_team,fae.lname,fae.fname'
 
     return super()._runQuery(sqlopt,sqltxt)
 
   #--------------------------------------------------------------------
-  def _getWd(self,regionList,weekDict,maxWeeks,minWeeks):
+  def _getWd(self,regionDict,weekDict,maxWeeks,minWeeks):
 
     wdSelectText = ''
     wdList       = []
     wdCnt        = 0
-    for region in regionList:
+    for region in regionDict['LIST']:
       if (region == 'EMEA'):
         wdSelectText += 'uk_days,se_days,fi_days,fr_days,de_days'
         wdList.append('UK Days')
@@ -136,6 +140,14 @@ class QueryFae(Query):
         wdSelectText += 'gc_days'
         wdList.append('GC Days')
         wdCnt += 1
+      elif (region == 'ROAPAC'):
+        wdSelectText += 'jp_days,ko_days,in_days,sg_days,au_days'
+        wdList.append('JP Days')
+        wdList.append('KO Days')
+        wdList.append('IN Days')
+        wdList.append('SG Days')
+        wdList.append('AU Days')
+        wdCnt += 5
       else:
         raise
       wdSelectText += ','
@@ -179,28 +191,35 @@ class QueryFae(Query):
     return super()._runQuery(sqlopt,sqltxt)
 
   #--------------------------------------------------------------------
-  def _getHc(self,regionList,weekDict,maxWeeks,minWeeks):
+  def _getHc(self,regionDict,weekDict,maxWeeks,minWeeks):
 
-    rgnList = []
+    rgnDict = {}
+    rgnDict['TYPE'] = regionDict['TYPE']
+    rgnDict['LIST'] = []
+
     hcList  = []
     hcCnt   = 0
-    for region in regionList:
+    for region in regionDict['LIST']:
       if (region == 'EMEA'):
-        rgnList.append(['EMEA'])
+        rgnDict['LIST'].append('EMEA')
         hcList.append('EMEA Headcount')
         hcCnt += 1
       elif (region == 'AM'):
-        rgnList.append(['AM'])
+        rgnDict['LIST'].append('AM')
         hcList.append('AM Headcount')
         hcCnt += 1
       elif (region == 'GC'):
-        rgnList.append(['GC'])
+        rgnDict['LIST'].append('GC')
         hcList.append('GC Headcount')
+        hcCnt += 1
+      elif (region == 'ROAPAC'):
+        rgnDict['LIST'].append('ROAPAC')
+        hcList.append('ROAPAC Headcount')
         hcCnt += 1
       else:
         raise
-    if (len(regionList) > 1):
-        rgnList.append(regionList)
+    if (regionDict['TYPE'] == 'GLOBAL'):
+        rgnDict['LIST'].append(regionDict['LIST'])
         hcList.append('Global Headcount')
         hcCnt += 1
 
@@ -212,8 +231,8 @@ class QueryFae(Query):
       weDate = super()._getWeDate(wcDate)
 
       rgnIdx = 0
-      for item in rgnList:
-        data[rgnIdx][colIdx] = int(self._queryHc(wcDate,weDate,rgnList[rgnIdx]))
+      for item in rgnDict['LIST']:
+        data[rgnIdx][colIdx] = int(self._queryHc(wcDate,weDate,item))
         rgnIdx += 1
 
     rowIdx = 0
@@ -230,26 +249,26 @@ class QueryFae(Query):
     return result
 
   #--------------------------------------------------------------------
-  def _queryHc(self,wcDate,weDate,regionList):
+  def _queryHc(self,wcDate,weDate,regionDict):
 
     sqlopt  = [wcDate,weDate]
     sqltxt  = 'SELECT fae.fname,fae.lname,fae.start_date,fae.end_date'
     sqltxt += '  FROM fae_team AS fae'
-    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionList,'fae.region')
+    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionDict,'fae.region')
     sqltxt += '    and (fae.start_date <= ? and fae.end_date >= ?)'
     sqltxt += '  ORDER BY fae.region,fae.prd_team,fae.lname,fae.fname'
 
     return len(super()._runQuery(sqlopt,sqltxt))
 
   #--------------------------------------------------------------------
-  def _queryAwh(self,wcDate,weDate,regionList):
+  def _queryAwh(self,wcDate,weDate,regionDict):
 
     sqlopt  = [wcDate,weDate]
     sqltxt  = 'SELECT ts.fname,ts.lname,sum(ts.hours)'
     sqltxt += '  FROM ts_entry AS ts'
     sqltxt += '  INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)'
     sqltxt += '  INNER JOIN ts_code  AS wbs ON (ts.wbs_code = wbs.code)'
-    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionList,'ts.region')
+    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionDict,'ts.region')
     sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?) and wbs.leave = 0'
     sqltxt += '  GROUP BY fae.fname,fae.lname'
     sqltxt += '  ORDER BY fae.region,fae.prd_team,fae.lname,fae.fname'
@@ -257,26 +276,26 @@ class QueryFae(Query):
     return super()._runQuery(sqlopt,sqltxt)
 
   #--------------------------------------------------------------------
-  def _queryWh(self,wcDate,weDate,regionList):
+  def _queryWh(self,wcDate,weDate,regionDict):
 
     sqlopt  = [wcDate,weDate]
     sqltxt  = 'SELECT ts.fname,ts.lname,sum(ts.hours)'
     sqltxt += '  FROM ts_entry AS ts'
     sqltxt += '  INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)'
     sqltxt += '  INNER JOIN ts_code  AS wbs ON (ts.wbs_code = wbs.code)'
-    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionList,'ts.region')
+    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionDict,'ts.region')
     sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?)'
     sqltxt += '  GROUP BY ts.fname,ts.lname'
 
     return super()._runQuery(sqlopt,sqltxt)
 
   #--------------------------------------------------------------------
-  def _queryOt(self,wcDate,weDate,regionList):
+  def _queryOt(self,wcDate,weDate,regionDict):
 
-    wkList = self._queryWk(wcDate,weDate,regionList)
-    lvList = self._queryLv(wcDate,weDate,regionList)
-    nmList = self._queryNm(wcDate,weDate,regionList)
-    afList = self._queryAf(wcDate,weDate,regionList)
+    wkList = self._queryWk(wcDate,weDate,regionDict)
+    lvList = self._queryLv(wcDate,weDate,regionDict)
+    nmList = self._queryNm(wcDate,weDate,regionDict)
+    afList = self._queryAf(wcDate,weDate,regionDict)
 
     wkDict = {}
     lvDict = {}
@@ -324,14 +343,14 @@ class QueryFae(Query):
     return result
 
   #--------------------------------------------------------------------
-  def _queryWk(self,wcDate,weDate,regionList):
+  def _queryWk(self,wcDate,weDate,regionDict):
 
     sqlopt  = [wcDate,weDate,wcDate,weDate]
     sqltxt  = 'SELECT ts.fname,ts.lname,sum(ts.hours)'
     sqltxt += '  FROM ts_entry AS ts'
     sqltxt += '  INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)'
     sqltxt += '  INNER JOIN ts_code  AS wbs ON (ts.wbs_code = wbs.code)'
-    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionList,'ts.region')
+    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionDict,'ts.region')
     sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?) and wbs.leave = 0'
     sqltxt += '    and (fae.start_date <= ? and fae.end_date >= ?)'
     sqltxt += '  GROUP BY ts.fname,ts.lname'
@@ -340,14 +359,14 @@ class QueryFae(Query):
     return super()._runQuery(sqlopt,sqltxt)
 
   #--------------------------------------------------------------------
-  def _queryLv(self,wcDate,weDate,regionList):
+  def _queryLv(self,wcDate,weDate,regionDict):
 
     sqlopt  = [wcDate,weDate,wcDate,weDate]
     sqltxt  = 'SELECT ts.fname,ts.lname,sum(ts.hours)'
     sqltxt += '  FROM ts_entry AS ts'
     sqltxt += '  INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)'
     sqltxt += '  INNER JOIN ts_code  AS wbs ON (ts.wbs_code = wbs.code)'
-    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionList,'ts.region')
+    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionDict,'ts.region')
     sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?) and wbs.leave = 1'
     sqltxt += '    and (fae.start_date <= ? and fae.end_date >= ?)'
     sqltxt += '  GROUP BY ts.fname,ts.lname'
@@ -356,34 +375,34 @@ class QueryFae(Query):
     return super()._runQuery(sqlopt,sqltxt)
 
   #--------------------------------------------------------------------
-  def _queryNm(self,wcDate,weDate,regionList):
+  def _queryNm(self,wcDate,weDate,regionDict):
     sqltxt  = 'SELECT fae.fname,fae.lname,fae.norm_hours,start_date,end_date'
 
     sqlopt  = []
     sqltxt  = 'SELECT fae.fname,fae.lname,fae.norm_hours'
     sqltxt += '  FROM fae_team AS fae'
-    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionList,'fae.region')
+    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionDict,'fae.region')
     sqltxt += '  GROUP BY fae.fname,fae.lname'
     sqltxt += '  ORDER BY fae.region,fae.prd_team,fae.lname,fae.fname'
 
     return super()._runQuery(sqlopt,sqltxt)
 
   #--------------------------------------------------------------------
-  def _queryAf(self,wcDate,weDate,regionList):
+  def _queryAf(self,wcDate,weDate,regionDict):
 
     sqlopt  = []
     sqltxt  = 'SELECT fae.fname,fae.lname'
     sqltxt += '  FROM fae_team AS fae'
-    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionList,'fae.region')
+    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionDict,'fae.region')
     sqltxt += '  GROUP BY fae.fname,fae.lname'
     sqltxt += '  ORDER BY fae.region,fae.prd_team,fae.lname,fae.fname'
 
     return super()._runQuery(sqlopt,sqltxt)
 
   #--------------------------------------------------------------------
-  def GetFaeData(self,regionList):
+  def GetFaeData(self,regionDict):
 
-    dbResult = self._queryFae(regionList)
+    dbResult = self._queryFae(regionDict)
     faeDict = {}
     for fae in dbResult:
       tup = (fae[0] + ' ' + fae[1])

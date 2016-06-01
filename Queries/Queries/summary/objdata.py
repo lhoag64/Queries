@@ -12,39 +12,51 @@ class ObjData:
     self.objType     = item.objType  # MATRIX
     self.objName     = item.objName  # UTL-CF
     self.period      = item.period
-    self.regionList  = None
-    self._calcRegionList(self.region)
+    self.regionDict  = None
+    self._calcregionDict(self.region)
 
   #--------------------------------------------------------------------
-  def _calcTitleText(self,text,regionList,period):
+  def _calcTitleText(self,text,regionDict,period):
     if (period == 'ALL'): period = 'YTD'
     title = text
     title += '\r'
-    if (len(regionList) == 1):
+    if (len(regionDict['LIST']) == 1):
        title += 'Region: '
     else:
        title += 'Regions: '
-    title += ','.join(regionList)
+    title += ','.join(regionDict['LIST'])
     title += '\r'
     title += 'Period: ' + period
 
     return title
 
   #--------------------------------------------------------------------
-  def _calcRegionList(self,region):
+  def _calcregionDict(self,region):
+
+    regionDict = {}
+    regionDict['TYPE'] = None
+    regionDict['LIST'] = []
 
     if (type(region) is list):
       if ('ALL' in region or 'GLOBAL' in region):
-        regionList = ['EMEA','AM','GC']
+        regionDict['TYPE'] = 'GLOBAL'
+        regionDict['LIST'] = ['EMEA','AM','GC','ROAPAC']
       else:
-        regionList = region
+        if (len(region) > 1):
+          regionDict['TYPE'] = 'GLOBAL'
+          regionDict['LIST'] = region
+        else:
+          regionDict['TYPE'] = 'LOCAL'
+          regionDict['LIST'] = [region]
     else:
       if (region == 'ALL' or region == 'GLOBAL'):
-        regionList = ['EMEA','AM','GC']
+        regionDict['TYPE'] = 'GLOBAL'
+        regionDict['LIST'] = ['EMEA','AM','GC','ROAPAC']
       else:
-        regionList = [region]
+        regionDict['TYPE'] = 'LOCAL'
+        regionDict['LIST'] = [region]
 
-    self.regionList = regionList
+    self.regionDict = regionDict
 
-    return regionList
+    return regionDict
 

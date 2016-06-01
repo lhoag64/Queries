@@ -97,7 +97,7 @@ class MatrixData(ObjData):
   #--------------------------------------------------------------------
   def _calcTitleDict(self,title,tblItem):
     result = self._initTblItem(tblItem)
-    result['DATA'] = [[self._calcTitleText(title,self.regionList,self.period)]]
+    result['DATA'] = [[self._calcTitleText(title,self.regionDict,self.period)]]
     result['ROWS'] = 1
     result['COLS'] = 1
 

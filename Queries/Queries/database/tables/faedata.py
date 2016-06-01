@@ -9,7 +9,9 @@ class Fae:
   ProductTeams = [('DMR','Digital Mobile Radio'),('MI','Modular Instruments'),('TVM','TeraVM'),('DAS','Coverage')]
   LaborTypes   = [('P','Direct Hire'),('C','Contractor')]
   Locatons     = [('N','North'),('S','South'),('E','East'),('W','West'),('R','Regional'), \
-                  ('UK','United Kindom'),('SE','Sweden'),('FI','Finland'),('FR','France'),('DE','Germany')]
+                  ('UK','United Kindom'),('SE','Sweden'),('FI','Finland'),('FR','France'),('DE','Germany'), \
+                  ('IN','India'),('JP','Japan'),('KO','Korea'),('SG','Singapore'),('AU','Austrailia') \
+                 ]
 
   def __init__(self,region,fname,fnalias,lname,lnalias,laborType,prodTeam,location,normHours,maxHours,startDate,endDate):
     self.region    = region
@@ -29,6 +31,7 @@ class FaeTeam:
   def __init__(self):
     faelist = []
 
+    # TODO: Remove hardcoded pathname
     wb = XlWorkBook()
     wb.Read(r'X:\Reporting\Timesheets\Global-FAEs.xlsx')
 
@@ -41,13 +44,20 @@ class FaeTeam:
       region  = ws.GetValue(wsRow,wsCol+ 0)
       if (region == None):
         break
-      fname   = ws.GetValue(wsRow,wsCol+ 1)
-      fnalias = ws.GetValue(wsRow,wsCol+ 2)
-      lname   = ws.GetValue(wsRow,wsCol+ 3)
-      lnalias = ws.GetValue(wsRow,wsCol+ 4)
-      lbrType = ws.GetValue(wsRow,wsCol+ 5)
-      prdTeam = ws.GetValue(wsRow,wsCol+ 6)
-      loc     = ws.GetValue(wsRow,wsCol+ 7)
+      region  = region.strip()
+      fname   = ws.GetValue(wsRow,wsCol+ 1).strip()
+      if (ws.GetValue(wsRow,wsCol+ 2) != None):
+        fnalias = ws.GetValue(wsRow,wsCol+ 2).strip()
+      else:
+        fnalias = None
+      lname   = ws.GetValue(wsRow,wsCol+ 3).strip()
+      if (ws.GetValue(wsRow,wsCol+ 4) != None):
+        lnalias = ws.GetValue(wsRow,wsCol+ 4).strip()
+      else:
+        lnalias = None
+      lbrType = ws.GetValue(wsRow,wsCol+ 5).strip()
+      prdTeam = ws.GetValue(wsRow,wsCol+ 6).strip()
+      loc     = ws.GetValue(wsRow,wsCol+ 7).strip()
       normHrs = ws.GetValue(wsRow,wsCol+ 8)
       maxHrs  = ws.GetValue(wsRow,wsCol+ 9)
       start   = ws.GetValue(wsRow,wsCol+10)

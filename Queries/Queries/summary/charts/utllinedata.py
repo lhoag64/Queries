@@ -10,9 +10,10 @@ class UtlLineData(ChartData):
 
     super().__init__(item,itemDict,nameDict,objNameDict)
 
-    regionList = self.regionList
+    regionDict = self.regionDict
     period     = self.period
-    region     = self.regionList[0]
+    # TODO: Fix Hack
+    region     = self.regionDict['LIST'][0]
     prefix     = 'MATRIX.' + region + '.' + period + '.'
 
     #------------------------------------------------------------------

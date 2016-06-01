@@ -41,19 +41,20 @@ class TsFileTable(Table):
       tsfiles.add(val)
 
   
-    dict = tsdata.tsdict
+    tsDict = tsdata.tsdict
  
     files = set([])
-    for week in dict:
-      for ts in dict[week]:  
-        filename = os.path.basename(ts.tsInfo.filename)
-        if (filename not in tsfiles):
-          if (filename not in files):
-            files.add(filename)
+    for week in tsDict:
+      if (tsDict[week] != None):
+        for name in tsDict[week]:  
+          filename = os.path.basename(tsDict[week][name].filename)
+          if (filename not in tsfiles):
+            if (filename not in files):
+              files.add(filename)
+            else:
+              logging.warn('Duplicate file found: ' + filename)
           else:
             logging.warn('Duplicate file found: ' + filename)
-        else:
-          logging.warn('Duplicate file found: ' + filename)
 
     filelist = list(files)
 
@@ -64,5 +65,5 @@ class TsFileTable(Table):
           c.execute('INSERT INTO ts_file VALUES (?)',(file,))
         except sqlite3.IntegrityError:
           logging.debug(file)
-
+    
       db.commit()

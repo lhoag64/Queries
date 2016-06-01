@@ -10,12 +10,12 @@ class QueryLType(Query):
     super().__init__(db)
 
   #--------------------------------------------------------------------
-  def GetData(self,regionList,weekDict,**kwargs):
+  def GetData(self,regionDict,weekDict,**kwargs):
     super()._getWeeks(weekDict)
     minWeeks = self.minWeekCnt
     maxWeeks = self.maxWeekCnt
 
-    data = self._getData(regionList,weekDict,maxWeeks,minWeeks,kwargs)
+    data = self._getData(regionDict,weekDict,maxWeeks,minWeeks,kwargs)
 
     colComp = super()._calcRowMetrics(data['DATA'])
     rowComp = super()._calcColMetrics(data['DATA'])
@@ -24,7 +24,7 @@ class QueryLType(Query):
     return {'TBL-DATA':data,'ROW-COMP':rowComp,'COL-COMP':colComp,'TBL-COMP':tblComp}
 
   #--------------------------------------------------------------------
-  def _getData(self,regionList,weekDict,maxWeeks,minWeeks,kwargs):
+  def _getData(self,regionDict,weekDict,maxWeeks,minWeeks,kwargs):
 
     ltDict = self._getLtDict()
     ltCnt  = len(ltDict)
@@ -37,7 +37,10 @@ class QueryLType(Query):
       wcDate = weekDict['MIN'][colIdx][0]
       weDate = super()._getWeDate(wcDate)
 
-      dbResult = self._query(wcDate,weDate,regionList)
+      dbResult = self._query(wcDate,weDate,regionDict)
+
+      if (len(dbResult) == 0):
+       continue
 
       for item in dbResult:
         if (item[0] not in ltDict):
@@ -70,14 +73,14 @@ class QueryLType(Query):
     return result
 
   #--------------------------------------------------------------------
-  def _query(self,wcDate,weDate,regionList):
+  def _query(self,wcDate,weDate,regionDict):
 
     sqlopt  = [wcDate,weDate,wcDate,weDate]
     sqltxt  = 'SELECT fae.lbr_type,sum(ts.hours)'
     sqltxt += '  FROM ts_entry AS ts'
     sqltxt += '  INNER JOIN fae_team AS fae ON (ts.fname = fae.fname and ts.lname = fae.lname)'
     sqltxt += '  INNER JOIN ts_code  AS wbs ON (ts.wbs_code = wbs.code)'
-    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionList,'ts.region')
+    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionDict,'ts.region')
     sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?)'
     sqltxt += '    and (fae.start_date <= ? and fae.end_date >= ?)'
     sqltxt += '  GROUP BY fae.lbr_type'

@@ -18,12 +18,12 @@ class StdData(SummaryData):
     #for name in nameDict:
     #  logging.debug(name)
 
-    # TODO: RegionList Hack
+    # TODO: regionDict Hack
     title      = 'Summary Statement'
-    regionList = self.regionList
+    regionDict = self.regionDict
     period     = self.period
-    if (len(regionList) == 1):
-      region = self.regionList[0]
+    if (len(regionDict['LIST']) == 1):
+      region = self.regionDict['LIST'][0]
     else:
       region = 'GLOBAL'
     prefix     = 'MATRIX.' + region + '.' + period + '.'
@@ -35,7 +35,7 @@ class StdData(SummaryData):
     #  COL-DATA-HDR
     #  TBL-DATA 
     #------------------------------------------------------------------
-    self.title = self._calcTitleText(title,regionList,period)
+    self.title = self._calcTitleText(title,regionDict,period)
 
     hdrDict          = OrderedDict()
     hdrDict['TITLE'] = OrderedDict()

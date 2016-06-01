@@ -7,13 +7,14 @@ import logging
 class Calendar:
 
   week    = {}
+  revWeek = None
   wsDates = None
   weDates = None
 
   def StrToDate(text):
-    year = int(text[0:4])
-    mon  = int(text[4:6])
-    day  = int(text[6:8])
+    year = int(text[0: 4])
+    mon  = int(text[5: 7])
+    day  = int(text[8:10])
     return datetime.date(year,mon,day)
 
 
@@ -37,10 +38,19 @@ class Calendar:
       if (d.year > year):
         break;
       i += 1
+    Calendar.revWeek = {v:k for k,v in Calendar.week.items()}
+    pass
 
   def GetWsDate(week):
     return Calendar.week[week]
  
   def GetWeDate(week):
     return Calendar.week[week] + datetime.timedelta(days=6)
+
+  def GetWeek(date):
+    curDate = Calendar.StrToDate(date)
+    day = curDate.weekday()
+    wcDate = curDate + datetime.timedelta(days=(7-day))
+    week = Calendar.revWeek[wcDate]
+    return week
  

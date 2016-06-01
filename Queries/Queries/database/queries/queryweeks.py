@@ -23,14 +23,17 @@ class QueryWeeks(Query):
     super().__init__(db)
 
   #--------------------------------------------------------------------
-  def GetData(self,regionList,period):
+  def GetData(self,regionDict,period):
 
     weekDict = {}
 
-    regions = regionList.copy()
-    regions.append('MAX')
+    regions = {}
+    regions['TYPE'] = regionDict['TYPE']
+    regions['LIST'] = regionDict['LIST'].copy()
+    #regions = regionDict.copy()
+    regions['LIST'].append('MAX')
 
-    for region in regions:
+    for region in regions['LIST']:
 
       sqlopt  = []
       sqltxt  = 'SELECT MAX(ts.entry_date)'

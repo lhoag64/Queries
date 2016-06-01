@@ -86,13 +86,15 @@ class TsEntryTable(Table):
     for val in c.fetchall():
       check['PRD'][val[0]] = (val[0],val[1])
 
-    dict = tsdata.tsdict
+    tsDict = tsdata.tsdict
 
     entries = [] 
-    for week in dict:
-      for ts in dict[week]:  
-        for entry in ts.entries:
-          entries.append(self.generateEntry(db,tsdata.region,ts,entry,check))
+    for week in tsDict:
+      if (tsDict[week] != None):
+        for name in tsDict[week]:
+          ts = tsDict[week][name].timeSheet
+          for entry in ts.entries:
+            entries.append(self.generateEntry(db,tsdata.region,ts,entry,check))
 
     c.executemany('INSERT INTO ts_entry VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',entries)
     db.commit()

@@ -25,8 +25,8 @@ class UtlData(MatrixData):
     #------------------------------------------------------------------
     # Fetch data from database
     #------------------------------------------------------------------
-    self.weekDict = Db.QueryWeeks.GetData(self.regionList,self.period)
-    self.dataDict = Db.QueryUtl.GetData(self.regionList,self.weekDict,qtype=self.objName)
+    self.weekDict = Db.QueryWeeks.GetData(self.regionDict,self.period)
+    self.dataDict = Db.QueryUtl.GetData(self.regionDict,self.weekDict,qtype=self.objName)
 
     for tblItem in self.tbl:
       if (tblItem in self.funcTbl):

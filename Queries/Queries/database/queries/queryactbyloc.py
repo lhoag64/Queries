@@ -3,7 +3,7 @@ from   collections            import OrderedDict
 from   database.queries.query import Query
 
 #----------------------------------------------------------------------
-KeyLocDict = { 'EMEA':'emea_key','AM':'am_key','GC':'gc_key'}
+KeyLocDict = { 'EMEA':'emea_key','AM':'am_key','GC':'gc_key','ROAPAC':'roapac_key'}
   
 NameLookup =                           \
   {                                    \
@@ -18,6 +18,10 @@ NameLookup =                           \
     12       :'CA-East',               \
     13       :'AM Other',              \
      9       :'Greater China',         \
+    14       :'Japan',                 \
+    15       :'Korea',                 \
+    16       :'India',                 \
+    17       :'ROAPAC Other',          \
     'OTHER'  :'Other (outside region)' \
   }
 
@@ -29,12 +33,12 @@ class QueryActByLoc(Query):
     super().__init__(db)
 
   #--------------------------------------------------------------------
-  def GetData(self,regionList,weekDict,**kwargs):
+  def GetData(self,regionDict,weekDict,**kwargs):
     super()._getWeeks(weekDict)
     minWeeks = self.minWeekCnt
     maxWeeks = self.maxWeekCnt
 
-    data = self._getData(regionList,weekDict,maxWeeks,minWeeks,kwargs)
+    data = self._getData(regionDict,weekDict,maxWeeks,minWeeks,kwargs)
 
     colComp = super()._calcRowMetrics(data['DATA'])
     rowComp = super()._calcColMetrics(data['DATA'])
@@ -43,11 +47,11 @@ class QueryActByLoc(Query):
     return {'TBL-DATA':data,'ROW-COMP':rowComp,'COL-COMP':colComp,'TBL-COMP':tblComp}
 
   #--------------------------------------------------------------------
-  def _getData(self,regionList,weekDict,maxWeeks,minWeeks,kwargs):
+  def _getData(self,regionDict,weekDict,maxWeeks,minWeeks,kwargs):
 
     act = kwargs['act']['ACT']
 
-    locDict = self._getLocDict(regionList)
+    locDict = self._getLocDict(regionDict)
     locCnt  = len(locDict['GRP'])
 
     data   = [[None for col in range(maxWeeks)] for row in range(locCnt)]
@@ -58,7 +62,10 @@ class QueryActByLoc(Query):
       wcDate = weekDict['MIN'][colIdx][0]
       weDate = super()._getWeDate(wcDate)
 
-      dbResult = self._query(wcDate,weDate,regionList,act)
+      dbResult = self._query(wcDate,weDate,regionDict,act)
+
+      if (len(dbResult) == 0):
+        continue
 
       other = 0.0
       for item in dbResult:
@@ -91,13 +98,13 @@ class QueryActByLoc(Query):
     return result
 
   #--------------------------------------------------------------------
-  def _query(self,wcDate,weDate,regionList,act):
+  def _query(self,wcDate,weDate,regionDict,act):
 
     sqlopt  = [wcDate,weDate,act]
     sqltxt  = 'SELECT loc.loc_group,SUM(ts.hours)'
     sqltxt += '  FROM ts_entry AS ts'
     sqltxt += '  INNER JOIN ts_loc  AS loc ON (ts.work_loc = loc.loc)'
-    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionList,'ts.region')
+    sqltxt += '  WHERE ' + super()._getRegionWhereClause(regionDict,'ts.region')
     sqltxt += '    and (ts.entry_date >= ? and ts.entry_date <= ?)'
     sqltxt += '    and ts.activity= ?'
     sqltxt += '  GROUP BY loc.loc_group'
@@ -116,7 +123,7 @@ class QueryActByLoc(Query):
     return super()._runQuery(sqlopt,sqltxt)
 
   #--------------------------------------------------------------------
-  def _getLocDict(self,regionList):
+  def _getLocDict(self,regionDict):
 
     result = {}
     result['KEY'   ] = OrderedDict()
@@ -127,7 +134,7 @@ class QueryActByLoc(Query):
     grpDict = {}
 
     #logging.debug('---------------------------------------')
-    for region in regionList:
+    for region in regionDict['LIST']:
       dbResult = self._queryRgnLoc(region)
 
       for item in dbResult:
@@ -159,7 +166,7 @@ class QueryActByLoc(Query):
     hdrDict = OrderedDict()
     grpDict = {}
 
-    for region in regionList:
+    for region in regionDict['LIST']:
       dbResult = self._queryRgnLoc(region)
       for item in dbResult:
         if (item[2] not in grpDict):

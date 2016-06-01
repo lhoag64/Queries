@@ -1,4 +1,6 @@
 import logging
+import datetime
+from collections          import OrderedDict
 from timesheet.calendar   import Calendar
 from timesheet.timesheet  import Timesheet
 
@@ -13,36 +15,45 @@ class TsData:
     self.team    = team
     self.weeks   = weeks
 
-    tslist      = self.GetFileList(flData,weeks,region)
-    self.tsdict = self.ReadTimesheets(tslist)
+    tsDict      = self.GetFileList(flData,weeks,region)
+    self.tsdict = self.ReadTimesheets(tsDict)
 
   #---------------------------------------------------------------------
   def GetFileList(self,flData,weeks,region):
-    tslist = []
+    tsDict = OrderedDict()
+    now = datetime.date.today().strftime("%Y-%m-%d")
+    week = Calendar.GetWeek(now)
+    for idx in range(1,week):
+      tsDict[Calendar.week[idx]] = None
+
     for i in weeks:
-      list = []
-      dict = {}
       wsDate = Calendar.week[i]
       if (wsDate in flData.weeks):
-        logging.debug('Building ' + region + ' Filelist for week ' + str(i+1).rjust(2) + ' ' + str(wsDate))
-        dict = flData.weeks[wsDate]
-        for key,value in dict.items():
-          list.append(value)
-        tslist.append(sorted(list))
-      else:
-        logging.debug('Skipping ' + region + ' Filelist for week ' + str(i+1).rjust(2) + ' ' + str(wsDate))
+        if (flData.weeks[wsDate] != None):
+          tsDict[wsDate] = OrderedDict()
+          for item in flData.weeks[wsDate]:
+            tsDict[wsDate][item] = flData.weeks[wsDate][item]
+        else:
+          logging.debug('Skipping ' + region + ' Filelist for week ' + str(i).rjust(2) + ' - ' + str(wsDate))
 
-    return tslist
+#        logging.debug('Building ' + region + ' Filelist for week ' + str(i+1).rjust(2) + ' ' + str(wsDate))
+#        dict = flData.weeks[wsDate]
+#        for key,value in dict.items():
+#          list.append(value)
+#        tslist.append(sorted(list))
+#      else:
+#        logging.debug('Skipping ' + region + ' Filelist for week ' + str(i+1).rjust(2) + ' ' + str(wsDate))
+
+    return tsDict
 
   #---------------------------------------------------------------------
-  def ReadTimesheets(self,tslist):
-    tsdict = {}
-    for i,week in enumerate(tslist):
-      wsDate = Calendar.week[self.weeks[i]]
-      tsdict[wsDate] = []
-      for j,tsdate in enumerate(week):
-        ts = Timesheet(tsdate,wsDate)
-        ts.ReadFile()
-        tsdict[wsDate].append(ts)
+  def ReadTimesheets(self,tsDict):
+    for wsDate in tsDict:
+      faeDict = tsDict[wsDate]
+      if (faeDict):
+        for name in faeDict:
+          ts = Timesheet(faeDict[name],wsDate)
+          ts.ReadFile()
+          tsDict[wsDate][name].timeSheet = ts
 
-    return tsdict
+    return tsDict

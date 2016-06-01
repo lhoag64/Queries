@@ -2,6 +2,7 @@ import os
 import os.path
 import string
 import datetime
+from   collections        import OrderedDict
 import logging
 import re
 from   timesheet.calendar import Calendar
@@ -10,14 +11,15 @@ from   timesheet.faeteam  import FaeTeam
 #-----------------------------------------------------------------------
 class FlFile:
   def __init__(self,filename,team,estweek):
-    self.fae      = None
-    self.fname    = None
-    self.lname    = None
-    self.fullname = None
-    self.filename = None
-    self.weDate   = None
-    self.wsDate   = None
-    self.valid    = False
+    self.fae       = None
+    self.fname     = None
+    self.lname     = None
+    self.fullname  = None
+    self.filename  = None
+    self.weDate    = None
+    self.wsDate    = None
+    self.valid     = False
+    self.timeSheet = None
 
     fullpath = filename
     filename = os.path.basename(filename)
@@ -67,6 +69,9 @@ class FlFile:
     matchList   = []
     for fae in team.list:
 
+      if (fae.lname == 'Cha'):
+        logging.debug('')
+
       lnaliasList = []
       lnaliasList.append(fae.lname)
       for alias in fae.lnalias:
@@ -109,7 +114,7 @@ class FlFile:
         fnaliasList.append(alias)
 
       for l in lnameList:
-        possln = self.CapName(l)
+        possln = l
         for lname in lnaliasList:
           if (lname.find('ouza') > 0):
             pass
@@ -117,7 +122,7 @@ class FlFile:
             lnMatch  += 1
 
       for f in fnameList:
-        possfn = self.CapName(f)
+        possfn = f
         for fname in fnaliasList:
           if (fname == possfn):
             fnMatch  += 1
@@ -138,16 +143,16 @@ class FlFile:
       index += 1
 
     if (faeIndex != None):
-      #logging.info('Filename|' + filename)
-      #logging.info('fae     |' + str(team.list[faeIndex].fullname))
-      #logging.info('found   |' + str(faeFound))
-      #logging.info('fndCnt  |' + str(faeFoundCnt))
+      logging.info('Filename|' + filename)
+      logging.info('fae     |' + str(team.list[faeIndex].fullname))
+      logging.info('found   |' + str(faeFound))
+      logging.info('fndCnt  |' + str(faeFoundCnt))
       pass
     else:
-      #logging.info('Filename|' + filename)
-      #logging.info('found   |' + str(faeFound))
-      #logging.info('fndCnt  |' + str(faeFoundCnt))
-     pass
+      logging.info('Filename|' + filename)
+      logging.info('found   |' + str(faeFound))
+      logging.info('fndCnt  |' + str(faeFoundCnt))
+      pass
 
     if (faeFoundCnt > 1):
       logging.error('Multpile FAEs matched filename|' + filename)
@@ -327,8 +332,13 @@ class FlFile:
 #-----------------------------------------------------------------------
 class FlData:
   def __init__(self,root,team):
-    self.weeks    = {}
+    self.weeks = OrderedDict()
     self.team  = team
+
+    now = datetime.date.today().strftime("%Y-%m-%d")
+    week = Calendar.GetWeek(now)
+    for idx in range(1,week):
+      self.weeks[Calendar.week[idx]] = None
 
     filelist = self.GetFiles(root)
 
@@ -356,7 +366,9 @@ class FlData:
   def AddFile(self,tsfile):
     date = tsfile.wsDate
     if (date not in self.weeks): 
-      self.weeks[date] = {}
+      raise
+    if (self.weeks[date] == None):
+      self.weeks[date] = OrderedDict()
     name = tsfile.fullname
     if (name not in self.weeks[date]):
       self.weeks[date][name] = tsfile
@@ -368,16 +380,17 @@ class FlData:
     for date in self.weeks:
       cnt = 0
       for name in self.team.dict:
-        if (name not in self.weeks[date]):
-          # Date is a Monday, so weDate should be a Friday
-          wsDate = date.strftime('%Y-%m-%d')
-          weDate = (date + datetime.timedelta(days=4)).strftime('%Y-%m-%d')
-          sDate = self.team.dict[name].startDate
-          tDate = self.team.dict[name].endDate
-          if (wsDate >= sDate and weDate <= tDate):
-            logging.error('Missing Timesheet for week starting ' + str(date) + ' ' + name)
-        else:
-          cnt += 1
+        if (self.weeks[date] != None):
+          if (name not in self.weeks[date]):
+            # Date is a Monday, so weDate should be a Friday
+            wsDate = date.strftime('%Y-%m-%d')
+            weDate = (date + datetime.timedelta(days=4)).strftime('%Y-%m-%d')
+            sDate = self.team.dict[name].startDate
+            tDate = self.team.dict[name].endDate
+            if (wsDate >= sDate and weDate <= tDate):
+              logging.error('Missing Timesheet for week starting ' + str(date) + ' ' + name)
+          else:
+            cnt += 1
 
   #---------------------------------------------------------------------
   def GetFiles(self,root):

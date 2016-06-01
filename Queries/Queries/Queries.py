@@ -37,9 +37,10 @@ def InitializeTimesheetTables():
 
   rng = range(1,51+1)
 
-  emea_team = FaeTeam('EMEA')
-  am_team   = FaeTeam('AM')
-  gc_team   = FaeTeam('GC')
+  emea_team   = FaeTeam('EMEA')
+  am_team     = FaeTeam('AM')
+  gc_team     = FaeTeam('GC')
+  roapac_team = FaeTeam('ROAPAC')
 
   fldata = FlData(r'X:\Reporting\Timesheets\EMEA',emea_team)
   tsdata = TsData('EMEA',emea_team,rng,fldata)
@@ -51,6 +52,10 @@ def InitializeTimesheetTables():
 
   fldata = FlData(r'X:\Reporting\Timesheets\GC',gc_team)
   tsdata = TsData('GC',gc_team,rng,fldata)
+  Db.InsertTimesheets(tsdata)
+
+  fldata = FlData(r'X:\Reporting\Timesheets\ROAPAC',roapac_team)
+  tsdata = TsData('ROAPAC',roapac_team,rng,fldata)
   Db.InsertTimesheets(tsdata)
 
 #----------------------------------------------------------------------
@@ -81,7 +86,7 @@ if (__name__ == '__main__'):
 
   Db(cfgDict['WORKDIR'],cfgDict['DATABASE'])
 
-  if (True):
+  if (False):
     InitializeDatabaseTables()
     InitializeTimesheetTables()
 

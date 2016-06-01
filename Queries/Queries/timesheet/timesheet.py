@@ -1,4 +1,5 @@
 import datetime
+import re
 import os.path
 import logging
 from   openpyxl import load_workbook
@@ -8,17 +9,17 @@ from   openpyxl import load_workbook
 #-----------------------------------------------------------------------
 class TsEntry:
   def __init__(self,date,partA,partB,partC,partD,hours,workType,note,file,tsname,tsdate):
-    self.date     = date
-    self.code     = partA
-    self.location = partB
-    self.activity = partC
-    self.product  = partD
-    self.hours    = hours
-    self.workType = workType
-    self.note     = note
-    self.tsfile   = os.path.basename(file)
-    self.tsname   = tsname
-    self.tsdate   = tsdate
+    self.date      = date
+    self.code      = partA
+    self.location  = partB
+    self.activity  = partC
+    self.product   = partD
+    self.hours     = hours
+    self.workType  = workType
+    self.note      = note
+    self.tsfile    = os.path.basename(file)
+    self.tsname    = tsname
+    self.tsdate    = tsdate
 
 #-----------------------------------------------------------------------
 # Class Timesheet
@@ -52,58 +53,71 @@ class Timesheet:
     if (sheet_names[0] != 'Timesheet'):
       logging.error(path + ' is not a valid Timesheet spreadsheet')
 
-    #logging.debug('Reading ' + path)
-    #if (path == r'X:\Reporting\Timesheets\AM\W10\Timesheet_Kapil_Bhardwaj_WE_2016-03-13.xlsx'):
-    #  pass
-    #if (path == r'X:\Reporting\Timesheets\AM\W11\Timesheet_Marco_Hofbeck_WE_2016-03-20.xlsx'):
-    #  pass
-
     try:
       ws = wb.get_sheet_by_name('Timesheet')
     except KeyError:
       logging.error('Can\' find worksheet Timesheet in ' + path)
       return
 
+    row = None
+    col = None
+    for rowIdx in range(1,9):
+      for colIdx in range(1,9):
+        val = ws.cell(row=rowIdx,column=colIdx).value
+        if (type(val) is str):
+          val = val.upper()
+          #logging.debug(str(rowIdx).rjust(1) + '|' + str(colIdx).rjust(1) + '|' + val)
+          match = re.search('CUSTOMER...PART A',val)
+          if (match != None):
+            row = rowIdx
+            col = colIdx
+            break
 
-    if (ws.cell(row=6,column=4).value == 'Customer - Part A'): 
-      startCol = 3
-    elif (ws.cell(row=6,column=5).value == 'Customer - Part A'):
-      startCol = 4
+    if (row != None and col != None):
+      startRow = row + 1
+      startCol = col - 1
+      #logging.debug('row: ' + str(startRow).rjust(1) + '|' + 'col: ' + str(startCol).rjust(1))
     else:
       logging.error('Couldn\'t sync to Timesheet spreadsheet')
       return
 
-    # Try to find name
-    found = False
-    wsRow = 3
-    wsCol = 1
-    while (wsCol < 10):
-      cellValue = str(ws.cell(row=wsRow,column=wsCol).value)
-      cellValue = cellValue.strip()
-      if (cellValue == 'Name:'):
-        found = True
-        break
-      wsCol += 1
-    if (found == True):
-      nameFromFile = str(ws.cell(row=wsRow,column=wsCol+2).value).strip()
+    row = None
+    col = None
+    for rowIdx in range(1,9):
+      for colIdx in range(1,9):
+        val = ws.cell(row=rowIdx,column=colIdx).value
+        if (type(val) is str):
+          val = val.upper()
+          #logging.debug(str(rowIdx).rjust(1) + '|' + str(colIdx).rjust(1) + '|' + val)
+          match = re.search('NAME:',val)
+          if (match != None):
+            row = rowIdx
+            col = colIdx
+            break
+
+    if (row != None and col != None):
+      nameFromFile = str(ws.cell(row=row,column=col+2).value).strip()
       if (nameFromFile[0:4] == 'Week'):
-        nameFromFile = str(ws.cell(row=wsRow,column=wsCol+1).value).strip()
+        nameFromFile = str(ws.cell(row=row,column=col+1).value).strip()
     else:
       nameFromFile = ''
 
-    # Try to find date
-    found = False
-    wsRow = 3
-    wsCol = 1
-    while (wsCol < 10):
-      cellValue = str(ws.cell(row=wsRow,column=wsCol).value)
-      cellValue = cellValue.strip()
-      if (cellValue[0:4] == 'Week'):
-        found = True
-        break
-      wsCol += 1
-    if (found == True):
-      dateFromFile = str(ws.cell(row=wsRow,column=wsCol+1).value).strip()
+    row = None
+    col = None
+    for rowIdx in range(1,9):
+      for colIdx in range(1,9):
+        val = ws.cell(row=rowIdx,column=colIdx).value
+        if (type(val) is str):
+          val = val.upper()
+          #logging.debug(str(rowIdx).rjust(1) + '|' + str(colIdx).rjust(1) + '|' + val)
+          match = re.search('WEEK COMMENCING',val)
+          if (match != None):
+            row = rowIdx
+            col = colIdx
+            break
+
+    if (row != None and col != None):
+      dateFromFile = str(ws.cell(row=row,column=col+1).value).strip()
       dateFromFile = dateFromFile[0:10]
     else:
       dateFromFile = ''
@@ -114,9 +128,9 @@ class Timesheet:
     #nameFromFile = nameFromFile.ljust(18)
     #dateFromFile = dateFromFile.ljust(15)
 
-    logging.debug(tsname.ljust(20) + '|' + tsdate.ljust(10) + '|Reading ' + path)
+    logging.debug(tsname.ljust(30) + '|' + tsdate.ljust(10) + '|Reading ' + path)
 
-    wsRow     = 7
+    wsRow     = startRow
     wsCol     = startCol
     sundayFlg = False
     sundayCnt = 0;
