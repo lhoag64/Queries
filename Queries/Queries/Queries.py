@@ -86,7 +86,7 @@ if (__name__ == '__main__'):
 
   Db(cfgDict['WORKDIR'],cfgDict['DATABASE'])
 
-  if (False):
+  if (True):
     InitializeDatabaseTables()
     InitializeTimesheetTables()
 
