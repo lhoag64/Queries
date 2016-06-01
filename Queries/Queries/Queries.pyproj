@@ -13,7 +13,7 @@
     <Name>Queries</Name>
     <RootNamespace>Queries</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>config.txt</CommandLineArguments>
+    <CommandLineArguments>X:\Reporting\Timesheets\config.txt</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
